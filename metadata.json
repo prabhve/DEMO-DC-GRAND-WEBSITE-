@@ -1,0 +1,6 @@
+{
+  "name": "D C Grand - 3D Interactive Hotel",
+  "description": "An immersive, cinematic 3D hotel experience and full management system for D C Grand, Bhelupur, Varanasi, India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
