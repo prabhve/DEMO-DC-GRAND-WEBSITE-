@@ -21,6 +21,7 @@ import { RestaurantScene } from './components/scenes/RestaurantScene';
 import { EventsScene } from './components/scenes/EventsScene';
 import { AboutScene } from './components/scenes/AboutScene';
 import { LocationScene } from './components/scenes/LocationScene';
+import { VaranasiSeoFaqSection } from './components/scenes/VaranasiSeoFaqSection';
 import { ContactScene } from './components/scenes/ContactScene';
 import { PoliciesScene } from './components/scenes/PoliciesScene';
 import { FinalCtaScene } from './components/scenes/FinalCtaScene';
@@ -83,6 +84,9 @@ const MainHotelApp: React.FC = () => {
 
         {/* Scene 11: Location, Proximity & Map */}
         <LocationScene />
+
+        {/* Scene 11b: Varanasi SEO & Local Proximity FAQ Guide */}
+        <VaranasiSeoFaqSection />
 
         {/* Scene 12: Front Desk & Contact */}
         <ContactScene />

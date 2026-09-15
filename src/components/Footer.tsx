@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Mail, MessageCircle, Lock } from 'lucide-react';
+import { MapPin, Phone, Mail, MessageCircle, Lock, Heart } from 'lucide-react';
 import { useHotel } from '../context/HotelContext';
 
 export const Footer: React.FC = () => {
@@ -171,21 +171,37 @@ export const Footer: React.FC = () => {
             <p className="text-xs text-[#c5a880] font-medium mb-4">
               ~2 km from Sankat Mochan Hanuman Temple
             </p>
-            <button
-              onClick={() => setIsAdminMode(!isAdminMode)}
-              className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#777166] hover:text-[#c5a880] transition-colors"
-              id="footer-admin-btn"
-            >
-              <Lock className="w-3 h-3" />
-              <span>Admin Management CMS</span>
-            </button>
+            <div className="pt-2">
+              <button
+                onClick={() => setIsAdminMode(!isAdminMode)}
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs uppercase tracking-wider font-semibold transition-all border ${
+                  isAdminMode
+                    ? 'bg-[#c5a880] text-[#0c0d10] border-[#c5a880] shadow-[0_0_15px_rgba(197,168,128,0.3)]'
+                    : 'bg-[#12141c] hover:bg-[#1a1c26] text-[#c5a880] border-[#2c2722] hover:border-[#c5a880]/50 shadow-sm'
+                }`}
+                id="footer-admin-btn"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>{isAdminMode ? 'Exit Admin Dashboard' : 'Admin CMS Portal'}</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Bottom copyright line */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#6b665c] gap-4">
+        {/* Bottom copyright and attribution line */}
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[11px] text-[#6b665c] gap-4">
           <p>© {new Date().getFullYear()} D C Grand, Bhelupur, Varanasi. All rights reserved.</p>
-          <div className="flex items-center gap-4">
+
+          <div className="flex items-center gap-1.5 text-[#8f8a80] font-medium tracking-wide">
+            <span>Designed With</span>
+            <Heart className="w-3.5 h-3.5 text-[#e05252] fill-[#e05252] inline-block animate-pulse" />
+            <span>love by</span>
+            <span className="text-[#c5a880] font-semibold tracking-wider hover:text-[#f3e5d0] transition-colors uppercase">
+              VYUVIK LABS
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-4">
             <button onClick={() => scrollTo('policies')} className="hover:text-[#a09a8e] transition-colors">
               Privacy Policy
             </button>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://hoteldcgrand.com/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&amp;w=1600&amp;auto=format&amp;fit=crop</image:loc>
+      <image:title>Hotel D C Grand Varanasi Exterior</image:title>
+      <image:caption>Premier Luxury Hotel in Bhelupur, Varanasi near Kashi Vishwanath Temple</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hoteldcgrand.com/#rooms</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&amp;w=1200&amp;auto=format&amp;fit=crop</image:loc>
+      <image:title>Luxury Rooms and Suites at Hotel D C Grand Varanasi</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hoteldcgrand.com/#dining</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&amp;w=1200&amp;auto=format&amp;fit=crop</image:loc>
+      <image:title>Food Express In-House Multi-Cuisine Restaurant Varanasi</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hoteldcgrand.com/#events</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&amp;w=1200&amp;auto=format&amp;fit=crop</image:loc>
+      <image:title>Banquets and Conference Halls in Varanasi - Hotel D C Grand</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hoteldcgrand.com/#contact</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>

@@ -27,6 +27,13 @@ import {
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { Room, GalleryItem, EventFacilityData, BookingRequest, Enquiry } from '../../types/hotel';
+import { HomeCmsTab } from './tabs/HomeCmsTab';
+import { RoomsCmsTab } from './tabs/RoomsCmsTab';
+import { RestaurantCmsTab } from './tabs/RestaurantCmsTab';
+import { EventsCmsTab } from './tabs/EventsCmsTab';
+import { GalleryCmsTab } from './tabs/GalleryCmsTab';
+import { ContactCmsTab } from './tabs/ContactCmsTab';
+import { PoliciesCmsTab } from './tabs/PoliciesCmsTab';
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -71,32 +78,6 @@ export const AdminDashboard: React.FC = () => {
   // Current Admin Tab
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [saveSuccessNotice, setSaveSuccessNotice] = useState<string>('');
-
-  // Editing states
-  const [editingRoom, setEditingRoom] = useState<Room | null>(null);
-  const [isAddingRoom, setIsAddingRoom] = useState<boolean>(false);
-  const [newRoomData, setNewRoomData] = useState<Omit<Room, 'id' | 'slug'>>({
-    name: '',
-    size: '190 sq ft / 18 sq mt',
-    maxGuests: 3,
-    bed: '1 Double Bed',
-    bathrooms: 1,
-    view: 'City View',
-    description: '',
-    amenities: ['High-speed Wi-Fi', 'Air Conditioning', 'Mineral Water', 'TV', 'Private Bathroom'],
-    features: ['Soundproofed', 'Reading Lights'],
-    images: ['https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80'],
-    coverImage: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80',
-    isFeatured: true,
-    isActive: true,
-    displayOrder: rooms.length + 1
-  });
-
-  // Gallery Add State
-  const [newGalleryUrl, setNewGalleryUrl] = useState('');
-  const [newGalleryTitle, setNewGalleryTitle] = useState('');
-  const [newGalleryCategory, setNewGalleryCategory] = useState<GalleryItem['category']>('HOTEL');
-  const [newGalleryCaption, setNewGalleryCaption] = useState('');
 
   // Booking & Enquiry Filter States
   const [bookingFilter, setBookingFilter] = useState<string>('ALL');
@@ -826,751 +807,72 @@ export const AdminDashboard: React.FC = () => {
 
           {/* TAB 4: ROOMS & SUITES CMS */}
           {activeTab === 'rooms' && (
-            <div className="max-w-6xl mx-auto space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                    Rooms & Accommodations CMS
-                  </h2>
-                  <p className="text-xs text-[#a09a8e]">
-                    Edit room categories, dimensions, beds, and amenities. Strictly: NO PRICES.
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => setIsAddingRoom(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-all"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Room Category</span>
-                </button>
-              </div>
-
-              {/* Add Room Modal / Drawer */}
-              {isAddingRoom && (
-                <div className="p-6 rounded-2xl bg-[#141620] border border-[#c5a880]/40 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#f3e5d0]">
-                      Add New Room Category
-                    </h3>
-                    <button onClick={() => setIsAddingRoom(false)}>
-                      <X className="w-5 h-5 text-[#a09a8e]" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div>
-                      <label className="block mb-1 text-[#a09a8e]">Room Name *</label>
-                      <input
-                        type="text"
-                        value={newRoomData.name}
-                        onChange={(e) => setNewRoomData({ ...newRoomData, name: e.target.value })}
-                        placeholder="e.g. Executive Suite"
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-[#a09a8e]">Size (sq ft / sq mt) *</label>
-                      <input
-                        type="text"
-                        value={newRoomData.size}
-                        onChange={(e) => setNewRoomData({ ...newRoomData, size: e.target.value })}
-                        placeholder="e.g. 210 sq ft / 19 sq mt"
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-[#a09a8e]">Bedding Format *</label>
-                      <input
-                        type="text"
-                        value={newRoomData.bed}
-                        onChange={(e) => setNewRoomData({ ...newRoomData, bed: e.target.value })}
-                        placeholder="e.g. 1 King Bed or 2 Twin Beds"
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-[#a09a8e]">Max Guests *</label>
-                      <input
-                        type="number"
-                        value={newRoomData.maxGuests}
-                        onChange={(e) => setNewRoomData({ ...newRoomData, maxGuests: Number(e.target.value) })}
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-[#a09a8e]">Cover Image URL</label>
-                      <input
-                        type="url"
-                        value={newRoomData.coverImage}
-                        onChange={(e) => setNewRoomData({ ...newRoomData, coverImage: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-[#a09a8e]">View Perspective</label>
-                      <input
-                        type="text"
-                        value={newRoomData.view}
-                        onChange={(e) => setNewRoomData({ ...newRoomData, view: e.target.value })}
-                        placeholder="e.g. City & Temple View"
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block mb-1 text-xs text-[#a09a8e]">Description</label>
-                    <textarea
-                      rows={3}
-                      value={newRoomData.description}
-                      onChange={(e) => setNewRoomData({ ...newRoomData, description: e.target.value })}
-                      placeholder="Room narrative and unique architecture..."
-                      className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-xs text-[#f3e5d0]"
-                    />
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      if (!newRoomData.name) return;
-                      addRoom(newRoomData);
-                      setIsAddingRoom(false);
-                      triggerToast(`Room "${newRoomData.name}" added successfully`);
-                    }}
-                    className="px-6 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase"
-                  >
-                    Save Room
-                  </button>
-                </div>
-              )}
-
-              {/* Existing Rooms List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {rooms.map((rm) => (
-                  <div
-                    key={rm.id}
-                    className="p-5 rounded-2xl bg-[#12141c] border border-[#202330] flex flex-col justify-between space-y-4"
-                  >
-                    <div className="flex items-start gap-4">
-                      <img
-                        src={rm.coverImage}
-                        alt={rm.name}
-                        className="w-24 h-24 rounded-xl object-cover shrink-0 border border-[#2a2723]"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <h4 className="text-base font-semibold text-[#f3e5d0]">{rm.name}</h4>
-                          <button
-                            onClick={() => {
-                              toggleRoomActive(rm.id);
-                              triggerToast(`${rm.name} visibility toggled`);
-                            }}
-                            className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
-                              rm.isActive ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'
-                            }`}
-                          >
-                            {rm.isActive ? 'Active' : 'Disabled'}
-                          </button>
-                        </div>
-                        <p className="text-xs text-[#c5a880] mb-1">{rm.size} • {rm.bed}</p>
-                        <p className="text-xs text-[#777166] line-clamp-2">{rm.description}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-3 border-t border-[#1c1e29] text-xs">
-                      <span className="text-[#777166]">Max {rm.maxGuests} Guests • {rm.bathrooms} Bath</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setEditingRoom(rm)}
-                          className="px-3 py-1 rounded-lg bg-[#1a1c26] hover:bg-[#c5a880] hover:text-[#0c0d10] transition-colors"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (window.confirm(`Delete ${rm.name}?`)) {
-                              deleteRoom(rm.id);
-                              triggerToast(`Deleted ${rm.name}`);
-                            }
-                          }}
-                          className="p-1 rounded-lg text-rose-400 hover:bg-rose-950/40"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Quick Edit Room Modal */}
-              {editingRoom && (
-                <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-                  <div className="w-full max-w-2xl p-6 rounded-3xl bg-[#141620] border border-[#c5a880]/40 max-h-[90vh] overflow-y-auto space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-base font-bold uppercase tracking-wider text-[#f3e5d0]">
-                        Edit: {editingRoom.name}
-                      </h3>
-                      <button onClick={() => setEditingRoom(null)}>
-                        <X className="w-5 h-5 text-[#a09a8e]" />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <label className="block mb-1 text-[#a09a8e]">Room Name</label>
-                        <input
-                          type="text"
-                          value={editingRoom.name}
-                          onChange={(e) => setEditingRoom({ ...editingRoom, name: e.target.value })}
-                          className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-1 text-[#a09a8e]">Dimensions</label>
-                        <input
-                          type="text"
-                          value={editingRoom.size}
-                          onChange={(e) => setEditingRoom({ ...editingRoom, size: e.target.value })}
-                          className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-1 text-[#a09a8e]">Bedding</label>
-                        <input
-                          type="text"
-                          value={editingRoom.bed}
-                          onChange={(e) => setEditingRoom({ ...editingRoom, bed: e.target.value })}
-                          className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-1 text-[#a09a8e]">Max Capacity</label>
-                        <input
-                          type="number"
-                          value={editingRoom.maxGuests}
-                          onChange={(e) => setEditingRoom({ ...editingRoom, maxGuests: Number(e.target.value) })}
-                          className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-xs text-[#a09a8e]">Description</label>
-                      <textarea
-                        rows={3}
-                        value={editingRoom.description}
-                        onChange={(e) => setEditingRoom({ ...editingRoom, description: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-xs text-[#f3e5d0]"
-                      />
-                    </div>
-
-                    <div className="flex justify-end gap-3 pt-4 border-t border-[#2a2723]">
-                      <button
-                        onClick={() => setEditingRoom(null)}
-                        className="px-4 py-2 rounded-xl text-xs text-[#a09a8e]"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={() => {
-                          updateRoom(editingRoom);
-                          setEditingRoom(null);
-                          triggerToast('Room updated successfully');
-                        }}
-                        className="px-6 py-2 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase"
-                      >
-                        Save Changes
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            <RoomsCmsTab
+              rooms={rooms}
+              addRoom={addRoom}
+              updateRoom={updateRoom}
+              deleteRoom={deleteRoom}
+              toggleRoomActive={toggleRoomActive}
+              triggerToast={triggerToast}
+            />
           )}
 
-          {/* TAB 5: HERO & STORY CMS */}
+          {/* TAB 5: HOME & VISUAL CMS */}
           {activeTab === 'homeCms' && (
-            <div className="max-w-4xl mx-auto space-y-6">
-              <div>
-                <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                  Hero & Introduction CMS
-                </h2>
-                <p className="text-xs text-[#a09a8e]">
-                  Manage the primary landing typography, cover imagery, and opening brand story.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#12141c] border border-[#202330] space-y-4">
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
-                    Hero Main Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={homeCms.heroHeadline}
-                    onChange={(e) => updateHomeCms({ ...homeCms, heroHeadline: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
-                    Hero Supporting Subtext
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={homeCms.heroSupportingText}
-                    onChange={(e) => updateHomeCms({ ...homeCms, heroSupportingText: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
-                    Hero Cover Background Image URL
-                  </label>
-                  <input
-                    type="url"
-                    value={homeCms.heroCoverImage}
-                    onChange={(e) => updateHomeCms({ ...homeCms, heroCoverImage: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
-                    Intro Scene Narrative
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={homeCms.introText}
-                    onChange={(e) => updateHomeCms({ ...homeCms, introText: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
-                    About Us Story
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={homeCms.aboutText}
-                    onChange={(e) => updateHomeCms({ ...homeCms, aboutText: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    onClick={() => triggerToast('Hero & Narrative CMS changes saved!')}
-                    className="px-6 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-colors"
-                  >
-                    Save All Texts
-                  </button>
-                </div>
-              </div>
-            </div>
+            <HomeCmsTab
+              homeCms={homeCms}
+              updateHomeCms={updateHomeCms}
+              triggerToast={triggerToast}
+            />
           )}
 
           {/* TAB 6: RESTAURANT CMS */}
           {activeTab === 'restaurant' && (
-            <div className="max-w-4xl mx-auto space-y-6">
-              <div>
-                <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                  Food Express Restaurant CMS
-                </h2>
-                <p className="text-xs text-[#a09a8e]">
-                  Update dining timings, special cuisines, facilities, and photography.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#12141c] border border-[#202330] space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5">
-                      Restaurant Name
-                    </label>
-                    <input
-                      type="text"
-                      value={restaurant.name}
-                      onChange={(e) => updateRestaurant({ ...restaurant, name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5">
-                      Tagline
-                    </label>
-                    <input
-                      type="text"
-                      value={restaurant.tagline}
-                      onChange={(e) => updateRestaurant({ ...restaurant, tagline: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5">
-                    Description
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={restaurant.description}
-                    onChange={(e) => updateRestaurant({ ...restaurant, description: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5">
-                    Timings
-                  </label>
-                  <input
-                    type="text"
-                    value={restaurant.timings}
-                    onChange={(e) => updateRestaurant({ ...restaurant, timings: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-sm text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    onClick={() => triggerToast('Food Express details updated!')}
-                    className="px-6 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase"
-                  >
-                    Save Dining Settings
-                  </button>
-                </div>
-              </div>
-            </div>
+            <RestaurantCmsTab
+              restaurant={restaurant}
+              updateRestaurant={updateRestaurant}
+              triggerToast={triggerToast}
+            />
           )}
 
-          {/* TAB 7: EVENTS CMS */}
+          {/* TAB 7: BANQUETS & EVENTS CMS */}
           {activeTab === 'events' && (
-            <div className="max-w-4xl mx-auto space-y-6">
-              <div>
-                <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                  Meetings & Events CMS
-                </h2>
-                <p className="text-xs text-[#a09a8e]">
-                  Manage banquet halls, capacities, facilities, and boardroom setups.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {events.map((ev) => (
-                  <div key={ev.id} className="p-6 rounded-2xl bg-[#12141c] border border-[#202330] space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold uppercase tracking-wider text-[#f3e5d0]">
-                        {ev.name}
-                      </h3>
-                      <span className="text-xs text-[#c5a880]">{ev.capacity}</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                      <div>
-                        <label className="block mb-1 text-[#a09a8e]">Venue Name</label>
-                        <input
-                          type="text"
-                          value={ev.name}
-                          onChange={(e) => updateEvent({ ...ev, name: e.target.value })}
-                          className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-1 text-[#a09a8e]">Capacity</label>
-                        <input
-                          type="text"
-                          value={ev.capacity}
-                          onChange={(e) => updateEvent({ ...ev, capacity: e.target.value })}
-                          className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block mb-1 text-xs text-[#a09a8e]">Description</label>
-                      <textarea
-                        rows={2}
-                        value={ev.description}
-                        onChange={(e) => updateEvent({ ...ev, description: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-xs text-[#f3e5d0]"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <EventsCmsTab
+              events={events}
+              addEvent={addEvent}
+              updateEvent={updateEvent}
+              deleteEvent={deleteEvent}
+              triggerToast={triggerToast}
+            />
           )}
 
-          {/* TAB 8: GALLERY CMS */}
+          {/* TAB 8: PHOTO GALLERY CMS */}
           {activeTab === 'gallery' && (
-            <div className="max-w-5xl mx-auto space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                    Photo Gallery Manager
-                  </h2>
-                  <p className="text-xs text-[#a09a8e]">
-                    Add, categorize, or curate photography across the 3D gallery.
-                  </p>
-                </div>
-              </div>
-
-              {/* Add Image Form */}
-              <div className="p-6 rounded-2xl bg-[#12141c] border border-[#202330] space-y-4">
-                <h3 className="text-xs uppercase tracking-widest text-[#c5a880] font-semibold">
-                  Add New Photo Asset
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                  <div>
-                    <label className="block mb-1 text-[#a09a8e]">Title</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Ambient Foyer"
-                      value={newGalleryTitle}
-                      onChange={(e) => setNewGalleryTitle(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block mb-1 text-[#a09a8e]">Category</label>
-                    <select
-                      value={newGalleryCategory}
-                      onChange={(e) => setNewGalleryCategory(e.target.value as GalleryItem['category'])}
-                      className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                    >
-                      <option value="HOTEL">HOTEL</option>
-                      <option value="ROOMS">ROOMS</option>
-                      <option value="RESTAURANT">RESTAURANT</option>
-                      <option value="MEETINGS & EVENTS">MEETINGS & EVENTS</option>
-                      <option value="ABOUT">ABOUT</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block mb-1 text-[#a09a8e]">Image URL</label>
-                    <input
-                      type="url"
-                      placeholder="https://..."
-                      value={newGalleryUrl}
-                      onChange={(e) => setNewGalleryUrl(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block mb-1 text-xs text-[#a09a8e]">Caption / Details</label>
-                  <input
-                    type="text"
-                    placeholder="Short description..."
-                    value={newGalleryCaption}
-                    onChange={(e) => setNewGalleryCaption(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-xs text-[#f3e5d0]"
-                  />
-                </div>
-
-                <button
-                  onClick={() => {
-                    if (!newGalleryUrl || !newGalleryTitle) return;
-                    addGalleryItem({
-                      title: newGalleryTitle,
-                      category: newGalleryCategory,
-                      url: newGalleryUrl,
-                      caption: newGalleryCaption,
-                      displayOrder: gallery.length + 1
-                    });
-                    setNewGalleryTitle('');
-                    setNewGalleryUrl('');
-                    setNewGalleryCaption('');
-                    triggerToast('New photo added to gallery!');
-                  }}
-                  className="px-6 py-2 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase"
-                >
-                  Add Image to Gallery
-                </button>
-              </div>
-
-              {/* Gallery Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                {gallery.map((item) => (
-                  <div key={item.id} className="relative rounded-xl overflow-hidden border border-[#202330] bg-[#12141c] group">
-                    <img src={item.url} alt={item.title} className="w-full h-36 object-cover" />
-                    <div className="p-3">
-                      <span className="text-[10px] uppercase text-[#c5a880] block">{item.category}</span>
-                      <h4 className="text-xs font-semibold text-[#f3e5d0] truncate">{item.title}</h4>
-                    </div>
-                    <button
-                      onClick={() => {
-                        deleteGalleryItem(item.id);
-                        triggerToast('Photo deleted');
-                      }}
-                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <GalleryCmsTab
+              gallery={gallery}
+              addGalleryItem={addGalleryItem}
+              updateGalleryItem={updateGalleryItem}
+              deleteGalleryItem={deleteGalleryItem}
+              triggerToast={triggerToast}
+            />
           )}
 
-          {/* TAB 9: CONTACT CMS */}
+          {/* TAB 9: CONTACT & PROXIMITY CMS */}
           {activeTab === 'contact' && (
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div>
-                <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                  Contact & Proximity CMS
-                </h2>
-                <p className="text-xs text-[#a09a8e]">
-                  Manage hotel phone numbers, WhatsApp, email, and postal address.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#12141c] border border-[#202330] space-y-4 text-xs">
-                <div>
-                  <label className="block mb-1 text-[#a09a8e]">Address Line</label>
-                  <input
-                    type="text"
-                    value={contact.address}
-                    onChange={(e) => updateContact({ ...contact, address: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block mb-1 text-[#a09a8e]">Phone Number</label>
-                    <input
-                      type="text"
-                      value={contact.phone}
-                      onChange={(e) => updateContact({ ...contact, phone: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block mb-1 text-[#a09a8e]">WhatsApp Number</label>
-                    <input
-                      type="text"
-                      value={contact.whatsapp}
-                      onChange={(e) => updateContact({ ...contact, whatsapp: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block mb-1 text-[#a09a8e]">Email Address</label>
-                  <input
-                    type="email"
-                    value={contact.email}
-                    onChange={(e) => updateContact({ ...contact, email: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1 text-[#a09a8e]">Google Maps Destination URL</label>
-                  <input
-                    type="url"
-                    value={contact.mapUrl}
-                    onChange={(e) => updateContact({ ...contact, mapUrl: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    onClick={() => triggerToast('Contact parameters updated successfully!')}
-                    className="px-6 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold uppercase"
-                  >
-                    Save Contact Details
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ContactCmsTab
+              contact={contact}
+              updateContact={updateContact}
+              triggerToast={triggerToast}
+            />
           )}
 
           {/* TAB 10: POLICIES CMS */}
           {activeTab === 'policies' && (
-            <div className="max-w-4xl mx-auto space-y-6">
-              <div>
-                <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
-                  Hotel Policies CMS
-                </h2>
-                <p className="text-xs text-[#a09a8e]">
-                  Edit cancellation rules, child stay guidelines, check-in requirements, and terms.
-                </p>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#12141c] border border-[#202330] space-y-4 text-xs">
-                <div>
-                  <label className="block mb-1 uppercase tracking-wider text-[#a09a8e] font-semibold">
-                    Cancellation Policy
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={policies.cancellation}
-                    onChange={(e) => updatePolicies({ ...policies, cancellation: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1 uppercase tracking-wider text-[#a09a8e] font-semibold">
-                    Child & Extra Bed Policy
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={policies.childPolicy}
-                    onChange={(e) => updatePolicies({ ...policies, childPolicy: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1 uppercase tracking-wider text-[#a09a8e] font-semibold">
-                    Check-in / Hotel Guidelines
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={policies.hotelPolicy}
-                    onChange={(e) => updatePolicies({ ...policies, hotelPolicy: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block mb-1 uppercase tracking-wider text-[#a09a8e] font-semibold">
-                    Terms & Conditions
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={policies.termsAndConditions}
-                    onChange={(e) => updatePolicies({ ...policies, termsAndConditions: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[#f3e5d0]"
-                  />
-                </div>
-
-                <button
-                  onClick={() => triggerToast('Hotel policies updated!')}
-                  className="px-6 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold uppercase"
-                >
-                  Save Policies
-                </button>
-              </div>
-            </div>
+            <PoliciesCmsTab
+              policies={policies}
+              updatePolicies={updatePolicies}
+              triggerToast={triggerToast}
+            />
           )}
 
           {/* TAB 11: 3D ENGINE CONTROLS */}

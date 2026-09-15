@@ -32,7 +32,7 @@ export const IntroScene: React.FC = () => {
               {/* Main Image Card */}
               <div className="relative rounded-xl overflow-hidden border border-[#c5a880]/30 shadow-[0_20px_50px_rgba(0,0,0,0.8)] bg-[#15171e]">
                 <img
-                  src="https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1000&q=80"
+                  src={homeCms.introImage || 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1000&q=80'}
                   alt="D C Grand Hotel Lobby and Reception"
                   className="w-full h-[420px] object-cover hover:scale-105 transition-transform duration-700"
                 />
@@ -41,10 +41,12 @@ export const IntroScene: React.FC = () => {
                 <div className="absolute bottom-4 left-4 right-4 p-4 rounded-lg bg-[#0c0d10]/80 backdrop-blur-md border border-[#c5a880]/20">
                   <div className="flex items-center gap-2 text-[#c5a880] mb-1">
                     <Sparkles className="w-4 h-4" />
-                    <span className="text-xs uppercase tracking-widest font-semibold">Grand Welcome</span>
+                    <span className="text-xs uppercase tracking-widest font-semibold">
+                      {homeCms.introImageBadgeTitle || 'Grand Welcome'}
+                    </span>
                   </div>
                   <p className="text-xs text-[#d1ccc0]">
-                    Double-height reception foyer with crystal chandeliers and warm hospitality.
+                    {homeCms.introImageBadgeDesc || 'Double-height reception foyer with crystal chandeliers and warm hospitality.'}
                   </p>
                 </div>
               </div>
@@ -77,7 +79,7 @@ export const IntroScene: React.FC = () => {
               <div className="inline-flex items-center gap-2 mb-4 text-[#c5a880]">
                 <span className="w-8 h-[1px] bg-[#c5a880]" />
                 <span className="text-xs uppercase tracking-[0.3em] font-medium font-sans">
-                  The Sanctuary
+                  {homeCms.introBadge || 'The Sanctuary'}
                 </span>
               </div>
 
@@ -97,10 +99,10 @@ export const IntroScene: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-[#f3e5d0] uppercase tracking-wider mb-1">
-                      Peace of Mind
+                      {homeCms.introPillar1Title || 'Peace of Mind'}
                     </h3>
                     <p className="text-xs text-[#a09a8e] leading-relaxed">
-                      24/7 dedicated security, CCTV surveillance, continuous power backup, and pristine hygiene protocols.
+                      {homeCms.introPillar1Desc || '24/7 dedicated security, CCTV surveillance, continuous power backup, and pristine hygiene protocols.'}
                     </p>
                   </div>
                 </div>
@@ -111,10 +113,10 @@ export const IntroScene: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-[#f3e5d0] uppercase tracking-wider mb-1">
-                      Personalized Service
+                      {homeCms.introPillar2Title || 'Personalized Service'}
                     </h3>
                     <p className="text-xs text-[#a09a8e] leading-relaxed">
-                      Warm, traditional Banarasi care paired with prompt attention for your spiritual itinerary and temple visits.
+                      {homeCms.introPillar2Desc || 'Warm, traditional Banarasi care paired with prompt attention for your spiritual itinerary and temple visits.'}
                     </p>
                   </div>
                 </div>

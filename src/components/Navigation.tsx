@@ -1,195 +1,333 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Calendar, Lock, Phone, MessageSquare } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  Menu,
+  X,
+  Calendar,
+  Phone,
+  MessageCircle,
+  MapPin,
+  Clock,
+  ExternalLink,
+  ChevronRight
+} from 'lucide-react';
 import { useHotel } from '../context/HotelContext';
+
+interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+}
 
 export const Navigation: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('hero');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { openBookingModal, openEnquiryModal, setIsAdminMode, isAdminMode, contact } = useHotel();
+  const [isPhonePopoverOpen, setIsPhonePopoverOpen] = useState(false);
 
+  const { openBookingModal, contact } = useHotel();
+  const phoneRef = useRef<HTMLDivElement>(null);
+
+  // Core navigation items in precise order matching Image 2
+  const navItems: NavItem[] = [
+    { id: 'hero', label: 'HOME', href: '#hero' },
+    { id: 'rooms', label: 'ROOMS', href: '#rooms' },
+    { id: 'restaurant', label: 'FOOD EXPRESS', href: '#restaurant' },
+    { id: 'events', label: 'EVENTS', href: '#events' },
+    { id: 'gallery', label: 'GALLERY', href: '#gallery' },
+    { id: 'about', label: 'ABOUT', href: '#about' },
+    { id: 'location', label: 'LOCATION', href: '#location' },
+    { id: 'contact', label: 'CONTACT', href: '#contact' }
+  ];
+
+  // Handle scroll detection and active section spy
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 20);
+
+      // Active section spy
+      const sectionIds = ['hero', 'rooms', 'restaurant', 'events', 'gallery', 'about', 'location', 'contact'];
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 200 && rect.bottom >= 150) {
+            setActiveSection(id);
+            break;
+          }
+        }
+      }
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = [
-    { label: 'Home', href: '#hero' },
-    { label: 'Rooms', href: '#rooms' },
-    { label: 'Food Express', href: '#restaurant' },
-    { label: 'Events', href: '#events' },
-    { label: 'Gallery', href: '#gallery' },
-    { label: 'About', href: '#about' },
-    { label: 'Location', href: '#location' },
-    { label: 'Contact', href: '#contact' }
-  ];
+  // Close phone popover on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (phoneRef.current && !phoneRef.current.contains(e.target as Node)) {
+        setIsPhonePopoverOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  const handleNavClick = (href: string) => {
-    setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
     }
+    setMobileMenuOpen(false);
   };
 
+  const cleanPhone = contact.phone.replace(/[^0-9]/g, '');
+  const cleanWhatsApp = contact.whatsapp.replace(/[^0-9]/g, '');
+
   return (
-    <>
-      <header
-        id="main-navigation"
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-          isScrolled
-            ? 'bg-[#0c0d10]/85 backdrop-blur-md border-b border-[#c5a880]/15 py-3 shadow-lg shadow-black/40'
-            : 'bg-gradient-to-b from-[#0c0d10]/80 via-[#0c0d10]/40 to-transparent py-5'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Brand Logo / Monogram */}
+    <header className="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300">
+      {/* 1. Top Concierge & Utility Ribbon (Matching Image 2) */}
+      <div className="w-full bg-[#08090c] border-b border-[#1f212d]/80 text-[11px] text-[#9b9589] py-1.5 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+          {/* Left: Location & Check-in info */}
+          <div className="flex items-center gap-4 sm:gap-6 text-[11px] tracking-wide">
+            <div className="flex items-center gap-1.5 text-[#a8a295]">
+              <MapPin className="w-3.5 h-3.5 text-[#c5a880] shrink-0" />
+              <span>
+                <strong className="font-medium text-[#c5a880]">Bhelupur, Varanasi</strong>
+                <span className="text-[#686359] mx-1.5">•</span>
+                <span className="text-[#a8a295] hidden sm:inline">Newly Opened Hotel</span>
+              </span>
+            </div>
+            <div className="hidden md:flex items-center gap-1.5 text-[#888277]">
+              <Clock className="w-3.5 h-3.5 text-[#c5a880]/70 shrink-0" />
+              <span>Check-in: 12:00 PM</span>
+            </div>
+          </div>
+
+          {/* Right: Hotline & WhatsApp Concierge (No Adjuster!) */}
+          <div className="flex items-center gap-4 sm:gap-6 text-[11px]">
             <a
-              href="#hero"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('#hero');
-              }}
-              className="flex items-center gap-3 group focus:outline-none"
-              id="brand-logo-link"
+              href={`tel:${contact.phone}`}
+              className="flex items-center gap-1.5 text-[#c5a880] hover:text-[#e2caa8] transition-colors font-medium whitespace-nowrap"
             >
-              <div className="w-10 h-10 rounded-full border border-[#c5a880]/50 flex items-center justify-center bg-[#13141a]/90 group-hover:border-[#c5a880] transition-colors shadow-[0_0_15px_rgba(197,168,128,0.1)]">
-                <span className="font-display text-[#c5a880] text-sm font-semibold tracking-wider">DC</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-serif-luxury text-xl sm:text-2xl text-[#f3e5d0] tracking-[0.18em] font-normal uppercase leading-tight group-hover:text-white transition-colors">
-                  D C Grand
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.3em] text-[#c5a880] font-sans font-medium">
-                  Bhelupur • Varanasi
-                </span>
-              </div>
+              <Phone className="w-3 h-3 text-[#c5a880]" />
+              <span className="hidden sm:inline text-[#9b9589]">Reception:</span>
+              <span>{contact.phone}</span>
             </a>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center space-x-7" aria-label="Main Navigation">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick(item.href);
-                  }}
-                  className="text-xs uppercase tracking-[0.18em] text-[#d1ccc0] hover:text-[#c5a880] transition-colors py-1 relative group"
-                >
-                  {item.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#c5a880] transition-all duration-300 group-hover:w-full" />
-                </a>
-              ))}
-            </nav>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Quick Call */}
-              <a
-                href={`tel:${contact.phone}`}
-                className="hidden sm:flex items-center justify-center w-9 h-9 rounded-full border border-[#c5a880]/30 text-[#c5a880] hover:bg-[#c5a880]/15 hover:border-[#c5a880] transition-all"
-                title="Call Front Desk"
-                id="header-call-button"
-              >
-                <Phone className="w-3.5 h-3.5" />
-              </a>
-
-              {/* Admin Portal Toggle */}
-              <button
-                onClick={() => setIsAdminMode(!isAdminMode)}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-[11px] uppercase tracking-wider transition-all ${
-                  isAdminMode
-                    ? 'bg-[#c5a880] text-[#0c0d10] border-[#c5a880] font-semibold'
-                    : 'border-[#c5a880]/30 text-[#a09a8e] hover:text-[#f3e5d0] hover:border-[#c5a880]/60'
-                }`}
-                title="Open Hotel Management CMS"
-                id="admin-mode-toggle"
-              >
-                <Lock className="w-3 h-3" />
-                <span className="hidden md:inline">{isAdminMode ? 'Exit Admin' : 'Admin CMS'}</span>
-              </button>
-
-              {/* Request Booking Primary CTA */}
-              <button
-                onClick={() => openBookingModal()}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#c5a880] to-[#b39366] text-[#0c0d10] font-semibold text-xs tracking-wider uppercase hover:shadow-[0_0_20px_rgba(197,168,128,0.4)] transition-all transform hover:-translate-y-0.5 active:translate-y-0"
-                id="header-booking-button"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span className="whitespace-nowrap">Request Stay</span>
-              </button>
-
-              {/* Mobile Menu Toggle Button */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-lg text-[#e5e3dc] hover:text-[#c5a880] hover:bg-[#15171e] transition-colors focus:outline-none"
-                aria-label="Toggle menu"
-                id="mobile-menu-toggle"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
+            <a
+              href={`https://wa.me/${cleanWhatsApp}?text=Hello%20DC%20Grand%20Varanasi%2C%20I%20would%20like%20to%20inquire%20about%20booking%20a%20stay.`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-[#25D366] hover:text-[#45e080] transition-colors font-medium whitespace-nowrap"
+            >
+              <MessageCircle className="w-3 h-3" />
+              <span>WhatsApp Concierge</span>
+            </a>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0c0d10]/95 backdrop-blur-xl border-b border-[#c5a880]/20 px-6 py-6 shadow-2xl animate-in slide-in-from-top duration-300">
-            <div className="flex flex-col space-y-4">
-              {navItems.map((item) => (
+      {/* 2. Main Full-Width Navigation Bar (Matching Image 2) */}
+      <nav
+        className={`w-full transition-all duration-300 ${
+          isScrolled
+            ? 'bg-[#0c0d10]/95 backdrop-blur-xl border-b border-[#c5a880]/30 shadow-2xl shadow-black/60 py-3'
+            : 'bg-[#0c0d10]/90 backdrop-blur-md border-b border-[#c5a880]/20 py-3.5'
+        } px-4 sm:px-6 lg:px-8`}
+      >
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4 lg:gap-8">
+          {/* Brand Crest & Monogram */}
+          <a
+            href="#hero"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo('hero');
+            }}
+            className="flex items-center gap-3 sm:gap-3.5 group shrink-0"
+          >
+            <div className="w-10 h-10 rounded-full border border-[#c5a880]/60 flex items-center justify-center bg-[#13141b] shadow-[0_0_15px_rgba(197,168,128,0.15)] group-hover:border-[#c5a880] transition-all">
+              <span className="font-display text-[#c5a880] text-sm font-semibold tracking-wider">DC</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-serif-luxury text-xl sm:text-2xl text-[#f3e5d0] tracking-wider uppercase leading-none group-hover:text-white transition-colors">
+                D C Grand
+              </span>
+              <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.26em] text-[#c5a880] font-sans font-medium mt-1">
+                Bhelupur • Varanasi
+              </span>
+            </div>
+          </a>
+
+          {/* Desktop Navigation Links - Single Horizontal Axis (strictly non-wrapping) */}
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2 text-[11px] xl:text-xs tracking-[0.14em] font-medium">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
                 <a
-                  key={item.label}
+                  key={item.id}
                   href={item.href}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNavClick(item.href);
+                    scrollTo(item.id);
                   }}
-                  className="text-sm uppercase tracking-[0.2em] text-[#d1ccc0] hover:text-[#c5a880] py-1 border-b border-[#2a2723]/40"
+                  className={`relative px-3 xl:px-4 py-1.5 rounded-full transition-all duration-200 whitespace-nowrap uppercase flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-[#1e1c18] text-[#f3e5d0] border border-[#c5a880]/40 font-semibold shadow-[0_0_12px_rgba(197,168,128,0.2)]'
+                      : 'text-[#9e988c] hover:text-[#f3e5d0] hover:bg-white/[0.04]'
+                  }`}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#c5a880] shadow-[0_0_6px_#c5a880]" />
+                  )}
                 </a>
-              ))}
-              <div className="pt-2 flex flex-col gap-2.5">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openBookingModal();
-                  }}
-                  className="w-full py-2.5 rounded-full bg-[#c5a880] text-[#0c0d10] font-semibold text-xs tracking-widest uppercase flex items-center justify-center gap-2"
+              );
+            })}
+          </div>
+
+          {/* Right Action Deck: Quick Call & Primary CTA (No Adjuster, No Admin) */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Phone Quick Popover */}
+            <div className="relative" ref={phoneRef}>
+              <button
+                type="button"
+                onClick={() => setIsPhonePopoverOpen(!isPhonePopoverOpen)}
+                aria-label="Front Desk Telephone"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#151720] border border-[#2b2824] text-[#c5a880] hover:border-[#c5a880] hover:text-[#f3e5d0] hover:bg-[#1a1c26] flex items-center justify-center transition-all shadow-sm"
+              >
+                <Phone className="w-4 h-4" />
+              </button>
+
+              <AnimatePresence>
+                {isPhonePopoverOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-64 p-4 rounded-2xl bg-[#0e1017] border border-[#2c2823] shadow-2xl shadow-black z-50 text-xs"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] uppercase tracking-widest text-[#c5a880] font-semibold">
+                        Front Desk & Concierge
+                      </span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    </div>
+                    <p className="text-[#a09a8e] text-[11px] mb-3 leading-relaxed">
+                      Assistance with room reservations, banquet booking, and temple tours.
+                    </p>
+                    <a
+                      href={`tel:${contact.phone}`}
+                      className="block w-full py-2.5 px-3 rounded-xl bg-[#c5a880] hover:bg-[#d8bf9a] text-[#0c0d10] font-bold text-center text-xs uppercase tracking-wider transition-colors shadow-md"
+                    >
+                      Call {contact.phone}
+                    </a>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Primary CTA: REQUEST STAY */}
+            <button
+              onClick={() => openBookingModal()}
+              className="bg-gradient-to-r from-[#d8bf9a] via-[#c5a880] to-[#b3956c] text-[#0c0d10] font-bold text-xs uppercase tracking-wider px-4 sm:px-5 py-2.5 rounded-xl shadow-[0_4px_20px_rgba(197,168,128,0.25)] hover:shadow-[0_6px_25px_rgba(197,168,128,0.4)] hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2 shrink-0"
+              id="header-request-stay-btn"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Request Stay</span>
+            </button>
+
+            {/* Mobile Menu Button (< lg) */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#151720] border border-[#2b2824] text-[#f3e5d0] flex items-center justify-center hover:border-[#c5a880] transition-colors"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* 3. Mobile Navigation Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+            className="lg:hidden bg-[#0c0d10]/98 border-b border-[#2c2823] backdrop-blur-2xl px-5 py-6 space-y-5 shadow-2xl overflow-hidden"
+          >
+            {/* Nav list */}
+            <div className="grid grid-cols-2 gap-2 text-xs uppercase tracking-wider font-medium">
+              {navItems.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollTo(item.id);
+                    }}
+                    className={`p-3 rounded-xl flex items-center justify-between transition-colors ${
+                      isActive
+                        ? 'bg-[#c5a880]/15 text-[#f3e5d0] border border-[#c5a880]/40 font-semibold'
+                        : 'bg-[#12141c] text-[#a09a8e] hover:text-[#f3e5d0] border border-transparent'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    {isActive ? (
+                      <span className="w-2 h-2 rounded-full bg-[#c5a880]" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#555]" />
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Mobile Actions */}
+            <div className="pt-2 border-t border-[#1e2029] space-y-2.5">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openBookingModal();
+                }}
+                className="w-full py-3 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg"
+              >
+                <Calendar className="w-4 h-4" />
+                <span>Request Room Booking</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <a
+                  href={`tel:${contact.phone}`}
+                  className="py-2.5 px-3 rounded-xl bg-[#151720] border border-[#2b2824] text-[#c5a880] flex items-center justify-center gap-1.5 font-medium"
                 >
-                  <Calendar className="w-4 h-4" />
-                  Request Booking
-                </button>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openEnquiryModal('General Enquiry');
-                  }}
-                  className="w-full py-2 rounded-full border border-[#c5a880]/40 text-[#f3e5d0] text-xs tracking-widest uppercase flex items-center justify-center gap-2"
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Call Desk</span>
+                </a>
+                <a
+                  href={`https://wa.me/${cleanWhatsApp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2.5 px-3 rounded-xl bg-[#151720] border border-[#2b2824] text-[#25D366] flex items-center justify-center gap-1.5 font-medium"
                 >
-                  <MessageSquare className="w-4 h-4" />
-                  Make an Enquiry
-                </button>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    setIsAdminMode(!isAdminMode);
-                  }}
-                  className="w-full py-2 rounded-full border border-[#a09a8e]/30 text-[#a09a8e] text-xs tracking-widest uppercase flex items-center justify-center gap-2"
-                >
-                  <Lock className="w-3.5 h-3.5" />
-                  {isAdminMode ? 'Close Admin Dashboard' : 'Open Admin CMS'}
-                </button>
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>WhatsApp</span>
+                </a>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
-      </header>
-    </>
+      </AnimatePresence>
+    </header>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "D C Grand - 3D Interactive Hotel",
-  "description": "An immersive, cinematic 3D hotel experience and full management system for D C Grand, Bhelupur, Varanasi, India.",
+  "description": "Book your stay at Hotel D C Grand, Bhelupur, Varanasi. Luxury accommodation near Kashi Vishwanath Temple, Dashashwamedh Ghat & BHU with Food Express restaurant, elevator & 24/7 service.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -24,12 +24,12 @@ export const AboutScene: React.FC = () => {
               <div className="inline-flex items-center gap-2 mb-3 text-[#c5a880]">
                 <Compass className="w-4 h-4" />
                 <span className="text-xs uppercase tracking-[0.3em] font-medium font-sans">
-                  Our Philosophy
+                  {homeCms.aboutBadge || 'Our Philosophy'}
                 </span>
               </div>
 
               <h2 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl text-[#f3e5d0] font-normal leading-tight mb-6">
-                A Gracious Base in the Eternal City
+                {homeCms.aboutHeading || 'A Gracious Base in the Eternal City'}
               </h2>
 
               <p className="text-base sm:text-lg text-[#d1ccc0] font-light leading-relaxed mb-6">
@@ -37,45 +37,25 @@ export const AboutScene: React.FC = () => {
               </p>
 
               <p className="text-sm sm:text-base text-[#a09a8e] font-light leading-relaxed mb-8">
-                Varanasi is a sacred convergence of time, devotion, and timeless ghats. Situated in the well-connected neighbourhood of Bhelupur, D C Grand is designed to be your serene oasis—where contemporary comforts, dedicated power backup, and authentic culinary hospitality meet the warmth of Banarasi traditions.
+                {homeCms.aboutSecondaryText || 'Varanasi is a sacred convergence of time, devotion, and timeless ghats. Situated in the well-connected neighbourhood of Bhelupur, D C Grand is designed to be your serene oasis—where contemporary comforts, dedicated power backup, and authentic culinary hospitality meet the warmth of Banarasi traditions.'}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-[#2a2723]">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#c5a880]/15 flex items-center justify-center text-[#c5a880] shrink-0">
-                    <CheckCircle className="w-4 h-4" />
+                {(homeCms.aboutFeatures && homeCms.aboutFeatures.length > 0 ? homeCms.aboutFeatures : [
+                  '2 km from Sankat Mochan Temple',
+                  'Close to Assi Ghat & BHU',
+                  'Modern Elevator & Generator Backup',
+                  'In-House Food Express Dining'
+                ]).map((feat, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#c5a880]/15 flex items-center justify-center text-[#c5a880] shrink-0">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs sm:text-sm text-[#f3e5d0] font-medium">
+                      {feat}
+                    </span>
                   </div>
-                  <span className="text-xs sm:text-sm text-[#f3e5d0] font-medium">
-                    2 km from Sankat Mochan Temple
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#c5a880]/15 flex items-center justify-center text-[#c5a880] shrink-0">
-                    <CheckCircle className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm text-[#f3e5d0] font-medium">
-                    Close to Assi Ghat & BHU
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#c5a880]/15 flex items-center justify-center text-[#c5a880] shrink-0">
-                    <CheckCircle className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm text-[#f3e5d0] font-medium">
-                    Modern Elevator & Generator Backup
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#c5a880]/15 flex items-center justify-center text-[#c5a880] shrink-0">
-                    <CheckCircle className="w-4 h-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm text-[#f3e5d0] font-medium">
-                    In-House Food Express Dining
-                  </span>
-                </div>
+                ))}
               </div>
             </motion.div>
           </div>
@@ -91,7 +71,7 @@ export const AboutScene: React.FC = () => {
             >
               <div className="rounded-2xl overflow-hidden border border-[#c5a880]/30 shadow-2xl bg-[#151720]">
                 <img
-                  src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80"
+                  src={homeCms.aboutImage || 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80'}
                   alt="Varanasi Ganga Ghats near D C Grand"
                   className="w-full h-[460px] object-cover hover:scale-105 transition-transform duration-700"
                 />
@@ -103,7 +83,7 @@ export const AboutScene: React.FC = () => {
                     <span className="text-xs uppercase tracking-widest font-semibold">Bhelupur, Kashi</span>
                   </div>
                   <p className="text-xs text-[#d1ccc0]">
-                    {contact.address}
+                    {homeCms.aboutImageCaption || contact.address}
                   </p>
                 </div>
               </div>

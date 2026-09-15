@@ -491,3 +491,6 @@ export const useHotel = () => {
   }
   return context;
 };
+
+export const useHotelContext = useHotel;
+

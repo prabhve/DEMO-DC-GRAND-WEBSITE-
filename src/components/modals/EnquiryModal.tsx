@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Send, CheckCircle2, MessageSquare, Sparkles } from 'lucide-react';
+import {
+  X,
+  Send,
+  CheckCircle2,
+  MessageSquare,
+  Sparkles,
+  MessageCircle,
+  Mail,
+  Phone
+} from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { Enquiry } from '../../types/hotel';
+import {
+  sanitizeHtml,
+  sanitizePhone,
+  validateEmail,
+  createWhatsAppLink,
+  createMailtoLink
+} from '../../utils/security';
 
 export const EnquiryModal: React.FC = () => {
-  const { isEnquiryModalOpen, setIsEnquiryModalOpen, initialEnquiryType, addEnquiry } = useHotel();
+  const { isEnquiryModalOpen, setIsEnquiryModalOpen, initialEnquiryType, addEnquiry, contact } = useHotel();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -18,6 +34,7 @@ export const EnquiryModal: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedId, setGeneratedId] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string>('');
 
   useEffect(() => {
     if (initialEnquiryType) {
@@ -29,21 +46,48 @@ export const EnquiryModal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.message) return;
+    setValidationError('');
+
+    const cleanName = sanitizeHtml(formData.name);
+    const cleanPhone = sanitizePhone(formData.phone);
+    const cleanEmail = sanitizeHtml(formData.email);
+    const cleanSubject = sanitizeHtml(formData.subject);
+    const cleanMessage = sanitizeHtml(formData.message);
+
+    if (!cleanName || cleanName.length < 2) {
+      setValidationError('Please provide a valid name.');
+      return;
+    }
+
+    if (!cleanPhone || cleanPhone.replace(/\D/g, '').length < 8) {
+      setValidationError('Please provide a valid phone number.');
+      return;
+    }
+
+    if (cleanEmail && !validateEmail(cleanEmail)) {
+      setValidationError('Please provide a valid email address.');
+      return;
+    }
+
+    if (!cleanMessage || cleanMessage.length < 5) {
+      setValidationError('Please write a brief message or enquiry description.');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
       const id = await addEnquiry({
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        subject: formData.subject || `${formData.enquiryType} from ${formData.name}`,
+        name: cleanName,
+        phone: cleanPhone,
+        email: cleanEmail,
+        subject: cleanSubject || `${formData.enquiryType} from ${cleanName}`,
         enquiryType: formData.enquiryType as Enquiry['enquiryType'],
-        message: formData.message
+        message: cleanMessage
       });
       setGeneratedId(id);
     } catch (err) {
       console.error(err);
+      setValidationError('An error occurred while submitting your enquiry.');
     } finally {
       setIsSubmitting(false);
     }
@@ -52,6 +96,7 @@ export const EnquiryModal: React.FC = () => {
   const handleClose = () => {
     setIsEnquiryModalOpen(false);
     setGeneratedId(null);
+    setValidationError('');
     setFormData({
       name: '',
       phone: '',
@@ -61,6 +106,29 @@ export const EnquiryModal: React.FC = () => {
       message: ''
     });
   };
+
+  const hotelWhatsAppPhone = contact.whatsapp || '+919415204991';
+  const customerWhatsAppMessage = `*New Customer Enquiry - Hotel D C Grand*%0A%0A*Reference:* ${generatedId}%0A*Name:* ${formData.name}%0A*Type:* ${formData.enquiryType}%0A*Subject:* ${formData.subject || 'General Enquiry'}%0A*Message:* ${formData.message}%0A%0ANamaste! I submitted this enquiry on your website. Please advise.`;
+
+  const customerEmailSubject = `Customer Enquiry [Ref: ${generatedId}] - ${formData.name}`;
+  const customerEmailBody = `Dear Hotel D C Grand Management,
+
+Reference ID: ${generatedId}
+Name: ${formData.name}
+Phone: ${formData.phone}
+Type: ${formData.enquiryType}
+Subject: ${formData.subject || 'General Enquiry'}
+
+Message:
+${formData.message}
+
+Please get back to me at your earliest convenience.
+
+Warm regards,
+${formData.name}`;
+
+  const customerWhatsAppLink = createWhatsAppLink(hotelWhatsAppPhone, decodeURIComponent(customerWhatsAppMessage));
+  const customerEmailLink = createMailtoLink(contact.email || 'info@hoteldcgrand.com', customerEmailSubject, customerEmailBody);
 
   return (
     <AnimatePresence>
@@ -121,7 +189,7 @@ export const EnquiryModal: React.FC = () => {
                   Thank you for reaching out to D C Grand. Your enquiry has been registered and assigned to our guest relations team.
                 </p>
 
-                <div className="p-4 rounded-xl bg-[#0c0d10] border border-[#c5a880]/30 max-w-sm mx-auto mb-8">
+                <div className="p-4 rounded-xl bg-[#0c0d10] border border-[#c5a880]/30 max-w-sm mx-auto mb-6">
                   <span className="text-[10px] uppercase tracking-widest text-[#777166] block">
                     Your Reference ID
                   </span>
@@ -130,9 +198,45 @@ export const EnquiryModal: React.FC = () => {
                   </span>
                 </div>
 
+                <div className="space-y-3 max-w-sm mx-auto mb-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {/* Direct WhatsApp */}
+                    <a
+                      href={customerWhatsAppLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-[#0c0d10] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md transition-colors"
+                      id="enquiry-confirm-whatsapp-btn"
+                    >
+                      <MessageCircle className="w-4 h-4 text-[#0c0d10]" />
+                      <span>WhatsApp Us</span>
+                    </a>
+
+                    {/* Direct Email */}
+                    <a
+                      href={customerEmailLink}
+                      className="py-2.5 px-3 rounded-xl bg-[#1d2232] hover:bg-[#262c40] text-[#f3e5d0] border border-[#3b435c] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors"
+                      id="enquiry-confirm-email-btn"
+                    >
+                      <Mail className="w-4 h-4 text-[#c5a880]" />
+                      <span>Email Us</span>
+                    </a>
+                  </div>
+
+                  <div className="text-center pt-1">
+                    <a
+                      href={`tel:${hotelWhatsAppPhone}`}
+                      className="text-xs text-[#a09a8e] hover:text-[#f3e5d0] transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-[#c5a880]" />
+                      <span>Call Front Desk: <strong>{contact.phone}</strong></span>
+                    </a>
+                  </div>
+                </div>
+
                 <button
                   onClick={handleClose}
-                  className="px-8 py-3 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-colors"
+                  className="px-8 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-colors"
                 >
                   Done
                 </button>
@@ -140,6 +244,11 @@ export const EnquiryModal: React.FC = () => {
             ) : (
               /* Form */
               <form onSubmit={handleSubmit} className="space-y-4">
+                {validationError && (
+                  <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-800 text-xs text-rose-300">
+                    {validationError}
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">

@@ -4,7 +4,7 @@ import { Calendar, Phone, Sparkles } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 
 export const FinalCtaScene: React.FC = () => {
-  const { openBookingModal } = useHotel();
+  const { openBookingModal, homeCms } = useHotel();
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -35,7 +35,7 @@ export const FinalCtaScene: React.FC = () => {
           viewport={{ once: true }}
           className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-[#f3e5d0] font-normal leading-tight mb-4"
         >
-          Your Varanasi Stay Starts Here.
+          {homeCms.finalCtaHeading || 'Your Varanasi Stay Starts Here.'}
         </motion.h2>
 
         <motion.p
@@ -45,7 +45,7 @@ export const FinalCtaScene: React.FC = () => {
           transition={{ delay: 0.1 }}
           className="text-base sm:text-xl text-[#cbc6bc] font-light max-w-xl mx-auto mb-10 tracking-wide"
         >
-          D C Grand — Comfortable hospitality in Bhelupur, Varanasi.
+          {homeCms.finalCtaSubtitle || 'D C Grand — Comfortable hospitality in Bhelupur, Varanasi.'}
         </motion.p>
 
         {/* Buttons */}
@@ -62,7 +62,7 @@ export const FinalCtaScene: React.FC = () => {
             id="final-cta-request-booking-btn"
           >
             <Calendar className="w-4 h-4" />
-            <span>Request Booking</span>
+            <span>{homeCms.finalCtaBookingBtnText || 'Request Booking'}</span>
           </button>
 
           <button
@@ -71,7 +71,7 @@ export const FinalCtaScene: React.FC = () => {
             id="final-cta-contact-btn"
           >
             <Phone className="w-4 h-4 text-[#c5a880]" />
-            <span>Contact Front Desk</span>
+            <span>{homeCms.finalCtaContactBtnText || 'Contact Front Desk'}</span>
           </button>
         </motion.div>
       </div>

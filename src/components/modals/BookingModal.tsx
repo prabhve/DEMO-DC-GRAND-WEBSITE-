@@ -11,14 +11,30 @@ import {
   CheckCircle2,
   Sparkles,
   ShieldCheck,
-  MessageSquareText
+  MessageSquareText,
+  MessageCircle,
+  ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useHotel } from '../../context/HotelContext';
 import { BookingRequest } from '../../types/hotel';
+import {
+  sanitizeHtml,
+  sanitizePhone,
+  createWhatsAppLink,
+  createMailtoLink,
+  validateEmail
+} from '../../utils/security';
 
 export const BookingModal: React.FC = () => {
-  const { isBookingModalOpen, setIsBookingModalOpen, preselectedRoomId, rooms, addBookingRequest } = useHotel();
+  const {
+    isBookingModalOpen,
+    setIsBookingModalOpen,
+    preselectedRoomId,
+    rooms,
+    addBookingRequest,
+    contact
+  } = useHotel();
   const activeRooms = rooms.filter((r) => r.isActive);
 
   // Today and Tomorrow default dates
@@ -41,6 +57,7 @@ export const BookingModal: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmedId, setConfirmedId] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string>('');
 
   useEffect(() => {
     if (preselectedRoomId) {
@@ -54,7 +71,33 @@ export const BookingModal: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.customerName || !formData.phone || !formData.roomId) return;
+    setValidationError('');
+
+    // Security Sanitization & Validation
+    const cleanName = sanitizeHtml(formData.customerName);
+    const cleanPhone = sanitizePhone(formData.phone);
+    const cleanEmail = sanitizeHtml(formData.email);
+    const cleanSpecialReq = sanitizeHtml(formData.specialRequest);
+
+    if (!cleanName || cleanName.length < 2) {
+      setValidationError('Please enter a valid guest name.');
+      return;
+    }
+
+    if (!cleanPhone || cleanPhone.replace(/\D/g, '').length < 8) {
+      setValidationError('Please provide a valid contact phone number.');
+      return;
+    }
+
+    if (cleanEmail && !validateEmail(cleanEmail)) {
+      setValidationError('Please provide a valid email address.');
+      return;
+    }
+
+    if (formData.checkOutDate <= formData.checkInDate) {
+      setValidationError('Check-out date must be strictly after check-in date.');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -62,15 +105,15 @@ export const BookingModal: React.FC = () => {
       const roomName = selectedRoom ? selectedRoom.name : 'Super Deluxe Room';
 
       const newId = await addBookingRequest({
-        customerName: formData.customerName,
-        phone: formData.phone,
-        email: formData.email,
+        customerName: cleanName,
+        phone: cleanPhone,
+        email: cleanEmail,
         roomId: formData.roomId,
         roomName,
         checkInDate: formData.checkInDate,
         checkOutDate: formData.checkOutDate,
         guests: Number(formData.guests),
-        specialRequest: formData.specialRequest,
+        specialRequest: cleanSpecialReq,
         preferredContact: formData.preferredContact
       });
 
@@ -89,6 +132,7 @@ export const BookingModal: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
+      setValidationError('An error occurred while submitting your request.');
     } finally {
       setIsSubmitting(false);
     }
@@ -97,6 +141,7 @@ export const BookingModal: React.FC = () => {
   const handleClose = () => {
     setIsBookingModalOpen(false);
     setConfirmedId(null);
+    setValidationError('');
     setFormData({
       customerName: '',
       phone: '',
@@ -111,6 +156,32 @@ export const BookingModal: React.FC = () => {
   };
 
   const selectedRoomObj = activeRooms.find((r) => r.id === formData.roomId);
+
+  // WhatsApp and Email message builders for the customer
+  const hotelWhatsAppPhone = contact.whatsapp || '+919415204991';
+  const customerWhatsAppMessage = `*New Stay Request - Hotel D C Grand, Varanasi*%0A%0A*Reference:* ${confirmedId}%0A*Guest Name:* ${formData.customerName}%0A*Room Sanctuary:* ${selectedRoomObj?.name}%0A*Stay Dates:* ${formData.checkInDate} to ${formData.checkOutDate}%0A*Guests:* ${formData.guests}%0A*Special Requests:* ${formData.specialRequest || 'None'}%0A%0ANamaste! I have submitted this booking request on your website. Kindly confirm room availability and tariff.`;
+
+  const customerEmailSubject = `Booking Request [Ref: ${confirmedId}] - ${formData.customerName}`;
+  const customerEmailBody = `Dear Hotel D C Grand Team,
+
+I have submitted a stay reservation request through your website. Here are my booking details:
+
+Reference ID: ${confirmedId}
+Guest Name: ${formData.customerName}
+Room Category: ${selectedRoomObj?.name}
+Check-In: ${formData.checkInDate}
+Check-Out: ${formData.checkOutDate}
+Guests: ${formData.guests}
+Contact: ${formData.phone}
+Special Request: ${formData.specialRequest || 'None'}
+
+Please confirm availability and share advance payment instructions or arrival guidelines.
+
+Warm regards,
+${formData.customerName}`;
+
+  const customerWhatsAppLink = createWhatsAppLink(hotelWhatsAppPhone, decodeURIComponent(customerWhatsAppMessage));
+  const customerEmailLink = createMailtoLink(contact.email || 'info@hoteldcgrand.com', customerEmailSubject, customerEmailBody);
 
   return (
     <AnimatePresence>
@@ -189,18 +260,65 @@ export const BookingModal: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center gap-3">
+                <div className="space-y-3 max-w-md mx-auto mb-6">
+                  <div className="text-xs text-[#c5a880] font-semibold uppercase tracking-wider text-center">
+                    Instant Connect with Front Desk
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {/* Direct WhatsApp Button */}
+                    <a
+                      href={customerWhatsAppLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-[#0c0d10] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:shadow-[0_0_20px_rgba(37,211,102,0.4)] transition-all"
+                      id="customer-confirm-whatsapp-btn"
+                    >
+                      <MessageCircle className="w-4 h-4 text-[#0c0d10]" />
+                      <span>Chat on WhatsApp</span>
+                    </a>
+
+                    {/* Direct Email Button */}
+                    <a
+                      href={customerEmailLink}
+                      className="py-3 px-4 rounded-xl bg-[#1e2333] hover:bg-[#262c40] text-[#f3e5d0] border border-[#3b435c] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all"
+                      id="customer-confirm-email-btn"
+                    >
+                      <Mail className="w-4 h-4 text-[#c5a880]" />
+                      <span>Email Front Desk</span>
+                    </a>
+                  </div>
+
+                  <div className="text-center pt-2">
+                    <a
+                      href={`tel:${hotelWhatsAppPhone}`}
+                      className="text-xs text-[#a09a8e] hover:text-[#f3e5d0] transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-[#c5a880]" />
+                      <span>Or Call Direct: <strong>{contact.phone}</strong></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex justify-center gap-3 pt-2 border-t border-[#1c1f2b]">
                   <button
                     onClick={handleClose}
-                    className="px-8 py-3 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-colors"
+                    className="px-8 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-colors"
                   >
-                    Close Window
+                    Done / Close
                   </button>
                 </div>
               </div>
             ) : (
               /* Request Form */
               <form onSubmit={handleSubmit} className="space-y-4">
+                {validationError && (
+                  <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-800 text-xs text-rose-300 flex items-center gap-2">
+                    <X className="w-4 h-4 shrink-0 text-rose-400" />
+                    <span>{validationError}</span>
+                  </div>
+                )}
+
                 {/* Notice banner */}
                 <div className="p-3.5 rounded-xl bg-[#0c0d10] border border-[#c5a880]/20 flex items-center gap-3 text-xs text-[#d1ccc0]">
                   <ShieldCheck className="w-4 h-4 text-[#c5a880] shrink-0" />

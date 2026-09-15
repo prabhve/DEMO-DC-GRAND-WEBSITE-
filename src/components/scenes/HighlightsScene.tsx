@@ -8,76 +8,109 @@ import {
   Sparkles,
   ConciergeBell,
   ThermometerSnowflake,
-  Refrigerator
+  Refrigerator,
+  ShieldCheck,
+  Building2,
+  Tv,
+  Coffee,
+  CheckCircle2
 } from 'lucide-react';
+import { useHotel } from '../../context/HotelContext';
 
-interface HighlightItem {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  subtitle: string;
-  description: string;
-  tag: string;
-}
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  'Food Express Restaurant': UtensilsCrossed,
+  'LAN & High-Speed Wi-Fi': Wifi,
+  '100% Power Backup': Zap,
+  'Modern Elevator / Lift': ArrowUpDown,
+  'In-Room Refrigerator': Refrigerator,
+  'Impeccable Housekeeping': Sparkles,
+  'Climate-Controlled AC': ThermometerSnowflake,
+  'Dedicated Room Service': ConciergeBell,
+};
+
+const DEFAULT_ICONS = [
+  UtensilsCrossed,
+  Wifi,
+  Zap,
+  ArrowUpDown,
+  Refrigerator,
+  Sparkles,
+  ThermometerSnowflake,
+  ConciergeBell,
+  ShieldCheck,
+  Building2,
+  Tv,
+  Coffee
+];
 
 export const HighlightsScene: React.FC = () => {
-  const highlights: HighlightItem[] = [
-    {
-      icon: UtensilsCrossed,
-      title: 'Food Express Restaurant',
-      subtitle: 'Exquisite In-House Dining',
-      description: 'Delight in vegetarian, North Indian, tandoori delicacies, and Chinese specialties prepared fresh daily.',
-      tag: 'Cuisine'
-    },
-    {
-      icon: Wifi,
-      title: 'LAN & High-Speed Wi-Fi',
-      subtitle: 'Seamless Connectivity',
-      description: 'Ultra-fast internet access throughout guest chambers, lobby, and meeting venues.',
-      tag: 'Technology'
-    },
-    {
-      icon: Zap,
-      title: '100% Power Backup',
-      subtitle: 'Uninterrupted Comfort',
-      description: 'Heavy-duty on-site generator ensuring zero disruption to lighting, elevators, and air conditioning.',
-      tag: 'Reliability'
-    },
-    {
-      icon: ArrowUpDown,
-      title: 'Modern Elevator / Lift',
-      subtitle: 'Effortless Accessibility',
-      description: 'Smooth passenger elevator connecting all floor levels, especially comfortable for elders and families.',
-      tag: 'Convenience'
-    },
-    {
-      icon: Refrigerator,
-      title: 'In-Room Refrigerator',
-      subtitle: 'Chilled Refreshments',
-      description: 'Keep beverages, fruits, and snacks cool and fresh in your private accommodation.',
-      tag: 'In-Room'
-    },
-    {
-      icon: Sparkles,
-      title: 'Impeccable Housekeeping',
-      subtitle: 'Pristine Cleanliness',
-      description: 'Daily meticulous linen changes, thorough sanitization, and attentive guest chamber upkeep.',
-      tag: 'Sanitation'
-    },
-    {
-      icon: ThermometerSnowflake,
-      title: 'Climate-Controlled AC',
-      subtitle: 'Year-Round Serenity',
-      description: 'Individual temperature regulation to ensure relaxing cool refuge after sunny temple tours.',
-      tag: 'Comfort'
-    },
-    {
-      icon: ConciergeBell,
-      title: 'Dedicated Room Service',
-      subtitle: 'At Your Beck and Call',
-      description: 'Prompt in-room dining, fresh morning tea, and personalized assistance from our front desk.',
-      tag: 'Hospitality'
-    }
-  ];
+  const { homeCms } = useHotel();
+
+  const dynamicHighlights = (homeCms.highlights && homeCms.highlights.length > 0)
+    ? homeCms.highlights
+    : [
+        {
+          id: 'hl-1',
+          title: 'Food Express Restaurant',
+          subtitle: 'Exquisite In-House Dining',
+          description: 'Delight in vegetarian, North Indian, tandoori delicacies, and Chinese specialties prepared fresh daily.',
+          tag: 'Cuisine'
+        },
+        {
+          id: 'hl-2',
+          title: 'LAN & High-Speed Wi-Fi',
+          subtitle: 'Seamless Connectivity',
+          description: 'Ultra-fast internet access throughout guest chambers, lobby, and meeting venues.',
+          tag: 'Technology'
+        },
+        {
+          id: 'hl-3',
+          title: '100% Power Backup',
+          subtitle: 'Uninterrupted Comfort',
+          description: 'Heavy-duty on-site generator ensuring zero disruption to lighting, elevators, and air conditioning.',
+          tag: 'Reliability'
+        },
+        {
+          id: 'hl-4',
+          title: 'Modern Elevator / Lift',
+          subtitle: 'Effortless Accessibility',
+          description: 'Smooth passenger elevator connecting all floor levels, especially comfortable for elders and families.',
+          tag: 'Convenience'
+        },
+        {
+          id: 'hl-5',
+          title: 'In-Room Refrigerator',
+          subtitle: 'Chilled Refreshments',
+          description: 'Keep beverages, fruits, and snacks cool and fresh in your private accommodation.',
+          tag: 'In-Room'
+        },
+        {
+          id: 'hl-6',
+          title: 'Impeccable Housekeeping',
+          subtitle: 'Pristine Cleanliness',
+          description: 'Daily meticulous linen changes, thorough sanitization, and attentive guest chamber upkeep.',
+          tag: 'Sanitation'
+        },
+        {
+          id: 'hl-7',
+          title: 'Climate-Controlled AC',
+          subtitle: 'Year-Round Serenity',
+          description: 'Individual temperature regulation to ensure relaxing cool refuge after sunny temple tours.',
+          tag: 'Comfort'
+        },
+        {
+          id: 'hl-8',
+          title: 'Dedicated Room Service',
+          subtitle: 'At Your Beck and Call',
+          description: 'Prompt in-room dining, fresh morning tea, and personalized assistance from our front desk.',
+          tag: 'Hospitality'
+        }
+      ];
+
+  const highlights = dynamicHighlights.map((item, idx) => ({
+    ...item,
+    icon: ICON_MAP[item.title] || DEFAULT_ICONS[idx % DEFAULT_ICONS.length] || CheckCircle2
+  }));
 
   return (
     <section
@@ -111,7 +144,7 @@ export const HighlightsScene: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="font-serif-luxury text-3xl sm:text-5xl text-[#f3e5d0] font-normal leading-tight mb-4"
           >
-            Curated For Supreme Convenience
+            {homeCms.highlightsHeading || 'Curated For Supreme Convenience'}
           </motion.h2>
 
           <motion.p
@@ -121,7 +154,7 @@ export const HighlightsScene: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-sm sm:text-base text-[#a09a8e] font-light leading-relaxed"
           >
-            Every modern facility thoughtfully provided at D C Grand ensures your pilgrimage or vacation in Varanasi is smooth, restful, and dignified.
+            {homeCms.highlightsSubtitle || 'Every modern facility thoughtfully provided at D C Grand ensures your pilgrimage or vacation in Varanasi is smooth, restful, and dignified.'}
           </motion.p>
         </div>
 

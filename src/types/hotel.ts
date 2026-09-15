@@ -108,27 +108,42 @@ export interface PolicyData {
   termsAndConditions: string;
 }
 
+export type HotelPolicies = PolicyData;
+
 export interface LandmarkItem {
   id: string;
   name: string;
   distance: string;
-  desc: string;
-  category: 'TEMPLE' | 'GHAT' | 'CAMPUS' | 'TRANSIT';
-  travelTimeDrive: string;
+  desc?: string;
+  description?: string;
+  category?: string;
+  duration?: string;
+  travelTimeDrive?: string;
   travelTimeWalk?: string;
-  coordinates: { lat: number; lng: number };
-  mapPosition: { x: number; y: number }; // percentage on 2D/3D map canvas (0-100)
-  bestTimeToVisit: string;
-  image: string;
-  highlights: string[];
+  coordinates?: { lat: number; lng: number };
+  mapPosition?: { x: number; y: number };
+  bestTimeToVisit?: string;
+  image?: string;
+  highlights?: string[];
+}
+
+export interface AmenityHighlightItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  tag: string;
 }
 
 export interface ContactData {
   hotelName: string;
+  tagline?: string;
   address: string;
   phone: string;
   whatsapp: string;
   email: string;
+  checkInTime?: string;
+  checkOutTime?: string;
   mapUrl: string;
   googleReviewUrl: string;
   tripAdvisorUrl: string;
@@ -136,12 +151,46 @@ export interface ContactData {
 }
 
 export interface HomeCmsData {
+  // Hero
+  heroBadge?: string;
+  heroSubtitle?: string;
   heroHeadline: string;
   heroSupportingText: string;
   heroCoverImage: string;
+  heroExploreBtnText?: string;
+  heroBookingBtnText?: string;
+
+  // Intro / Sanctuary
+  introBadge?: string;
   introHeading: string;
   introText: string;
+  introImage?: string;
+  introImageBadgeTitle?: string;
+  introImageBadgeDesc?: string;
+  introPillar1Title?: string;
+  introPillar1Desc?: string;
+  introPillar2Title?: string;
+  introPillar2Desc?: string;
+
+  // About / Philosophy
+  aboutBadge?: string;
+  aboutHeading?: string;
   aboutText: string;
+  aboutSecondaryText?: string;
+  aboutImage?: string;
+  aboutImageCaption?: string;
+  aboutFeatures?: string[];
+
+  // Highlights
+  highlightsHeading?: string;
+  highlightsSubtitle?: string;
+  highlights?: AmenityHighlightItem[];
+
+  // Final CTA
+  finalCtaHeading?: string;
+  finalCtaSubtitle?: string;
+  finalCtaBookingBtnText?: string;
+  finalCtaContactBtnText?: string;
 }
 
 export type LODTier = 'high' | 'medium' | 'low';

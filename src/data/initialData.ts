@@ -314,10 +314,13 @@ export const INITIAL_POLICIES: PolicyData = {
 
 export const INITIAL_CONTACT: ContactData = {
   hotelName: 'D C GRAND',
+  tagline: 'Newly Opened Boutique Hospitality',
   address: '22/24P, Kasmiganj Mohalla, Bhelupur, Varanasi, Uttar Pradesh, 221010, India',
   phone: '+91 94520 12345',
   whatsapp: '+91 94520 12345',
   email: 'stay@dcgrandvaranasi.com',
+  checkInTime: '12:00 PM',
+  checkOutTime: '11:00 AM',
   mapUrl: 'https://maps.google.com/?q=Bhelupur+Varanasi+India',
   googleReviewUrl: 'https://google.com/search?q=DC+Grand+Bhelupur+Varanasi',
   tripAdvisorUrl: 'https://tripadvisor.com',
@@ -331,12 +334,108 @@ export const INITIAL_CONTACT: ContactData = {
 };
 
 export const INITIAL_HOME_CMS: HomeCmsData = {
+  // Hero
+  heroBadge: 'Bhelupur, Varanasi • Newly Opened Property',
+  heroSubtitle: 'Welcome To D C Grand',
   heroHeadline: 'Comfortable Stay in the Heart of Varanasi',
   heroSupportingText: "A convenient stay in Bhelupur, Varanasi, close to the city's spiritual and cultural attractions.",
   heroCoverImage: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=85',
+  heroExploreBtnText: 'Explore Rooms',
+  heroBookingBtnText: 'Request Booking',
+
+  // Intro / Sanctuary
+  introBadge: 'The Sanctuary',
   introHeading: 'D C Grand',
   introText: "D C Grand is a newly opened property in Bhelupur, Varanasi, offering a convenient stay for guests exploring the city's spiritual and cultural attractions.",
-  aboutText: "D C Grand offers a convenient stay in Bhelupur, Varanasi, providing guests with a comfortable base for exploring the city's spiritual and cultural attractions."
+  introImage: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1000&q=80',
+  introImageBadgeTitle: 'Grand Welcome',
+  introImageBadgeDesc: 'Double-height reception foyer with crystal chandeliers and warm hospitality.',
+  introPillar1Title: 'Peace of Mind',
+  introPillar1Desc: '24/7 dedicated security, CCTV surveillance, continuous power backup, and pristine hygiene protocols.',
+  introPillar2Title: 'Personalized Service',
+  introPillar2Desc: 'Warm, traditional Banarasi care paired with prompt attention for your spiritual itinerary and temple visits.',
+
+  // About / Philosophy
+  aboutBadge: 'Our Philosophy',
+  aboutHeading: 'A Gracious Base in the Eternal City',
+  aboutText: "D C Grand offers a convenient stay in Bhelupur, Varanasi, providing guests with a comfortable base for exploring the city's spiritual and cultural attractions.",
+  aboutSecondaryText: 'Varanasi is a sacred convergence of time, devotion, and timeless ghats. Situated in the well-connected neighbourhood of Bhelupur, D C Grand is designed to be your serene oasis—where contemporary comforts, dedicated power backup, and authentic culinary hospitality meet the warmth of Banarasi traditions.',
+  aboutImage: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80',
+  aboutImageCaption: 'Timeless spiritual heritage along the sacred Ganga Ghats, moments from D C Grand',
+  aboutFeatures: [
+    '2 km from Sankat Mochan Temple',
+    'Close to Assi Ghat & BHU',
+    'Modern Elevator & Generator Backup',
+    'In-House Food Express Dining'
+  ],
+
+  // Highlights
+  highlightsHeading: 'Modern Conveniences & Banarasi Hospitality',
+  highlightsSubtitle: 'Every modern essential curated to make your spiritual voyage and family vacation seamless and deeply relaxing.',
+  highlights: [
+    {
+      id: 'hl-1',
+      title: 'Food Express Restaurant',
+      subtitle: 'Exquisite In-House Dining',
+      description: 'Delight in vegetarian, North Indian, tandoori delicacies, and Chinese specialties prepared fresh daily.',
+      tag: 'Cuisine'
+    },
+    {
+      id: 'hl-2',
+      title: 'LAN & High-Speed Wi-Fi',
+      subtitle: 'Seamless Connectivity',
+      description: 'Ultra-fast internet access throughout guest chambers, lobby, and meeting venues.',
+      tag: 'Technology'
+    },
+    {
+      id: 'hl-3',
+      title: '100% Power Backup',
+      subtitle: 'Uninterrupted Comfort',
+      description: 'Heavy-duty on-site generator ensuring zero disruption to lighting, elevators, and air conditioning.',
+      tag: 'Reliability'
+    },
+    {
+      id: 'hl-4',
+      title: 'Modern Elevator / Lift',
+      subtitle: 'Effortless Accessibility',
+      description: 'Smooth passenger elevator connecting all floor levels, especially comfortable for elders and families.',
+      tag: 'Convenience'
+    },
+    {
+      id: 'hl-5',
+      title: 'In-Room Refrigerator',
+      subtitle: 'Chilled Refreshments',
+      description: 'Keep beverages, fruits, and snacks cool and fresh in your private accommodation.',
+      tag: 'In-Room'
+    },
+    {
+      id: 'hl-6',
+      title: 'Impeccable Housekeeping',
+      subtitle: 'Pristine Cleanliness',
+      description: 'Daily meticulous linen changes, thorough sanitization, and attentive guest chamber upkeep.',
+      tag: 'Sanitation'
+    },
+    {
+      id: 'hl-7',
+      title: 'Climate-Controlled AC',
+      subtitle: 'Year-Round Serenity',
+      description: 'Individual temperature regulation to ensure relaxing cool refuge after sunny temple tours.',
+      tag: 'Comfort'
+    },
+    {
+      id: 'hl-8',
+      title: 'Dedicated Room Service',
+      subtitle: 'At Your Beck and Call',
+      description: 'Prompt in-room dining, fresh morning tea, and personalized assistance from our front desk.',
+      tag: 'Hospitality'
+    }
+  ],
+
+  // Final CTA
+  finalCtaHeading: 'Your Varanasi Stay Starts Here.',
+  finalCtaSubtitle: 'D C Grand — Comfortable hospitality in Bhelupur, Varanasi.',
+  finalCtaBookingBtnText: 'Request Booking',
+  finalCtaContactBtnText: 'Contact Front Desk'
 };
 
 export const INITIAL_3D_SETTINGS: ThreeDSettings = {

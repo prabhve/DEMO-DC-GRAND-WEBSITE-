@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Calendar, Compass, ArrowDown, MapPin, Sparkles } from 'lucide-react';
+import { Calendar, Compass, MapPin, Sparkles } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 
 export const HeroScene: React.FC = () => {
@@ -33,7 +33,7 @@ export const HeroScene: React.FC = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-16 perspective-container"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 sm:pt-32 pb-16 perspective-container"
     >
       {/* Background Architectural Imagery with 3D Depth Parallax */}
       <motion.div
@@ -60,8 +60,8 @@ export const HeroScene: React.FC = () => {
         }}
       >
         {/* Subtle Luxury Gold Corner Brackets */}
-        <div className="absolute top-24 left-6 sm:left-12 w-16 h-16 border-t border-l border-[#c5a880]/30 hidden md:block" />
-        <div className="absolute top-24 right-6 sm:right-12 w-16 h-16 border-t border-r border-[#c5a880]/30 hidden md:block" />
+        <div className="absolute top-28 sm:top-32 left-6 sm:left-12 w-16 h-16 border-t border-l border-[#c5a880]/30 hidden md:block" />
+        <div className="absolute top-28 sm:top-32 right-6 sm:right-12 w-16 h-16 border-t border-r border-[#c5a880]/30 hidden md:block" />
         <div className="absolute bottom-20 left-6 sm:left-12 w-16 h-16 border-b border-l border-[#c5a880]/30 hidden md:block" />
         <div className="absolute bottom-20 right-6 sm:right-12 w-16 h-16 border-b border-r border-[#c5a880]/30 hidden md:block" />
       </div>
@@ -80,7 +80,7 @@ export const HeroScene: React.FC = () => {
         >
           <Sparkles className="w-3.5 h-3.5 text-[#c5a880]" />
           <span className="text-[11px] uppercase tracking-[0.25em] text-[#e8d7be] font-sans font-medium">
-            Bhelupur, Varanasi • Newly Opened Property
+            {homeCms.heroBadge || 'Bhelupur, Varanasi • Newly Opened Property'}
           </span>
           <MapPin className="w-3.5 h-3.5 text-[#c5a880] ml-1" />
         </motion.div>
@@ -93,7 +93,7 @@ export const HeroScene: React.FC = () => {
           className="mb-4"
         >
           <span className="font-display text-sm tracking-[0.4em] uppercase text-[#c5a880]">
-            Welcome To D C Grand
+            {homeCms.heroSubtitle || 'Welcome To D C Grand'}
           </span>
         </motion.div>
 
@@ -130,7 +130,7 @@ export const HeroScene: React.FC = () => {
             id="hero-explore-rooms-btn"
           >
             <Compass className="w-4 h-4 text-[#c5a880] group-hover:text-[#0c0d10] transition-colors" />
-            <span>Explore Rooms</span>
+            <span>{homeCms.heroExploreBtnText || 'Explore Rooms'}</span>
           </button>
 
           <button
@@ -139,23 +139,9 @@ export const HeroScene: React.FC = () => {
             id="hero-request-booking-btn"
           >
             <Calendar className="w-4 h-4" />
-            <span>Request Booking</span>
+            <span>{homeCms.heroBookingBtnText || 'Request Booking'}</span>
           </button>
         </motion.div>
-      </motion.div>
-
-      {/* Floating Scroll Down Prompt */}
-      <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-        onClick={() => scrollToSection('intro')}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-[#a09a8e] hover:text-[#c5a880] transition-colors cursor-pointer"
-        id="hero-scroll-down-hint"
-      >
-        <span className="text-[10px] uppercase tracking-[0.3em] font-sans font-light">
-          Scroll To Discover
-        </span>
-        <ArrowDown className="w-4 h-4 text-[#c5a880]" />
       </motion.div>
     </section>
   );
