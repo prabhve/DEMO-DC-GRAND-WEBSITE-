@@ -23,10 +23,17 @@ import {
   CheckCircle2,
   X,
   Sparkles,
-  Search
+  Search,
+  Mail,
+  Send,
+  MessageCircle,
+  ExternalLink,
+  Copy,
+  CheckCheck
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { Room, GalleryItem, EventFacilityData, BookingRequest, Enquiry } from '../../types/hotel';
+import { createWhatsAppLink, createMailtoLink, sanitizePhone, validateEmail } from '../../utils/security';
 import { HomeCmsTab } from './tabs/HomeCmsTab';
 import { RoomsCmsTab } from './tabs/RoomsCmsTab';
 import { RestaurantCmsTab } from './tabs/RestaurantCmsTab';
@@ -87,6 +94,118 @@ export const AdminDashboard: React.FC = () => {
   const triggerToast = (msg: string) => {
     setSaveSuccessNotice(msg);
     setTimeout(() => setSaveSuccessNotice(''), 3500);
+  };
+
+  // --- DIRECT COMMUNICATION ACTIONS (WHATSAPP & AUTOMATIC EMAIL) ---
+  const handleWhatsAppBooking = (bk: BookingRequest) => {
+    const msg = `Namaste ${bk.customerName}! 🏨 Greetings from Hotel D C Grand, Varanasi.\n\n` +
+      `Regarding your Booking Request #${bk.id}:\n` +
+      `• Room Type: ${bk.roomName}\n` +
+      `• Stay Dates: ${bk.checkInDate} to ${bk.checkOutDate} (${bk.guests} Guest(s))\n` +
+      `• Reservation Status: ${bk.status}\n` +
+      (bk.specialRequest ? `• Note: ${bk.specialRequest}\n` : '') +
+      `\nWe are pleased to assist you with your reservation and any special requirements (e.g. Cantt Station/Airport pickup or Kashi Vishwanath temple tour).\n\n` +
+      `Hotel D C Grand, Cantt, Varanasi\n📞 +91 94152 04547 / 0542-2220045`;
+
+    const url = createWhatsAppLink(bk.phone, msg);
+    window.open(url, '_blank');
+    triggerToast(`Directing to WhatsApp for ${bk.customerName} (${bk.phone})...`);
+
+    if (bk.status === 'New') {
+      updateBookingStatus(bk.id, 'Contacted', bk.adminNotes);
+    }
+  };
+
+  const handleEmailBooking = (bk: BookingRequest) => {
+    if (!bk.email || !bk.email.trim()) {
+      triggerToast(`Customer ${bk.customerName} did not enter an email. Directing to WhatsApp instead...`);
+      handleWhatsAppBooking(bk);
+      return;
+    }
+
+    const subject = `Booking Confirmation & Update #${bk.id} - Hotel D C Grand Varanasi`;
+    const body = `Dear ${bk.customerName},\n\n` +
+      `Thank you for choosing Hotel D C Grand, Varanasi. We have received your reservation request and are delighted to assist you with your upcoming stay.\n\n` +
+      `===============================================\n` +
+      `RESERVATION DETAILS (#${bk.id})\n` +
+      `===============================================\n` +
+      `• Guest Name: ${bk.customerName}\n` +
+      `• Room Category: ${bk.roomName}\n` +
+      `• Check-In Date: ${bk.checkInDate}\n` +
+      `• Check-Out Date: ${bk.checkOutDate}\n` +
+      `• Number of Guests: ${bk.guests}\n` +
+      `• Contact Phone: ${bk.phone}\n` +
+      `• Booking Status: ${bk.status}\n` +
+      (bk.specialRequest ? `• Special Request: ${bk.specialRequest}\n` : '') +
+      `===============================================\n\n` +
+      `LOCATION & HOTEL AMENITIES:\n` +
+      `Hotel D C Grand is located in the prime Cantt area of Varanasi, just minutes from Varanasi Cantt Junction, with convenient access to Kashi Vishwanath Temple corridor, Assi Ghat, and Dashashwamedh Ghat.\n\n` +
+      `We offer luxurious air-conditioned rooms, multi-cuisine dining at Ambrosia Restaurant, 24/7 room service, and travel assistance for Ganga Aarti & temple darshan.\n\n` +
+      `If you have any questions, need early check-in, or require pickup arrangements, simply reply directly to this email or call our 24/7 reception desk:\n\n` +
+      `📞 Front Desk: +91 94152 04547 / 0542-2220045\n` +
+      `✉️ Email: dcgrandvaranasi@gmail.com\n` +
+      `🏨 Address: Hotel D C Grand, Cantt, Varanasi - 221002, Uttar Pradesh\n\n` +
+      `Warm Regards,\n` +
+      `Front Office & Reservations Team\n` +
+      `Hotel D C Grand, Varanasi`;
+
+    const mailUrl = createMailtoLink(bk.email, subject, body);
+    window.location.href = mailUrl;
+    triggerToast(`Opening email client to notify ${bk.email}...`);
+
+    if (bk.status === 'New') {
+      updateBookingStatus(bk.id, 'Contacted', bk.adminNotes);
+    }
+  };
+
+  const handleCopyBooking = (bk: BookingRequest) => {
+    const summary = `Hotel D C Grand - Booking Request #${bk.id}\nGuest: ${bk.customerName}\nPhone: ${bk.phone}\nEmail: ${bk.email || 'N/A'}\nRoom: ${bk.roomName}\nDates: ${bk.checkInDate} to ${bk.checkOutDate} (${bk.guests} Guests)\nStatus: ${bk.status}${bk.specialRequest ? `\nRequest: ${bk.specialRequest}` : ''}`;
+    navigator.clipboard.writeText(summary);
+    triggerToast(`Booking #${bk.id} details copied to clipboard!`);
+  };
+
+  const handleWhatsAppEnquiry = (enq: Enquiry) => {
+    const msg = `Namaste ${enq.name}! 🏨 Greetings from Hotel D C Grand, Varanasi.\n\n` +
+      `Regarding your enquiry #${enq.id} ("${enq.subject}" - ${enq.enquiryType}):\n` +
+      `"${enq.message}"\n\n` +
+      `We would love to provide you with all details, banquet/room packages, and assistance.\n\n` +
+      `Hotel D C Grand, Cantt, Varanasi\n📞 +91 94152 04547 / 0542-2220045`;
+
+    const url = createWhatsAppLink(enq.phone, msg);
+    window.open(url, '_blank');
+    triggerToast(`Directing to WhatsApp for ${enq.name} (${enq.phone})...`);
+
+    if (enq.status === 'New') {
+      updateEnquiryStatus(enq.id, 'Contacted');
+    }
+  };
+
+  const handleEmailEnquiry = (enq: Enquiry) => {
+    if (!enq.email || !enq.email.trim()) {
+      triggerToast(`Customer ${enq.name} did not provide an email. Directing to WhatsApp instead...`);
+      handleWhatsAppEnquiry(enq);
+      return;
+    }
+
+    const subject = `Regarding your enquiry with Hotel D C Grand Varanasi (#${enq.id})`;
+    const body = `Dear ${enq.name},\n\n` +
+      `Thank you for reaching out to Hotel D C Grand, Varanasi.\n\n` +
+      `We have received your enquiry regarding "${enq.subject}" [Type: ${enq.enquiryType}]:\n` +
+      `"${enq.message}"\n\n` +
+      `Our reservations and hospitality team is eager to provide you with personalized assistance. Please feel free to reply directly to this email or call our 24/7 reception desk at +91 94152 04547.\n\n` +
+      `Warm Regards,\n` +
+      `Customer Relations & Front Office\n` +
+      `Hotel D C Grand, Varanasi\n` +
+      `Phone: +91 94152 04547 / 0542-2220045\n` +
+      `Email: dcgrandvaranasi@gmail.com`;
+
+    const mailUrl = createMailtoLink(enq.email, subject, body);
+    window.location.href = mailUrl;
+    triggerToast(`Opening email client to notify ${enq.email}...`);
+
+    if (enq.status === 'New') {
+      updateEnquiryStatus(enq.id, 'Contacted');
+    }
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -695,6 +814,50 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                       )}
 
+                      {/* Quick Communication & Direct Notification Toolbar */}
+                      <div className="pt-2 border-t border-[#1c1e29] flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          {/* Direct WhatsApp Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleWhatsAppBooking(bk)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/40 text-[#25D366] text-xs font-medium transition-all shadow-sm active:scale-95"
+                            title={`Chat directly with ${bk.customerName} on WhatsApp (+91 ${bk.phone})`}
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                            <span>WhatsApp Guest</span>
+                            <ExternalLink className="w-3 h-3 opacity-60 ml-0.5" />
+                          </button>
+
+                          {/* Direct Automatic Email Notification Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleEmailBooking(bk)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#c5a880]/15 hover:bg-[#c5a880]/25 border border-[#c5a880]/40 text-[#f3e5d0] text-xs font-medium transition-all shadow-sm active:scale-95"
+                            title={bk.email ? `Send automatic booking confirmation email to ${bk.email}` : `No email entered - Click to open WhatsApp`}
+                          >
+                            <Mail className="w-3.5 h-3.5 text-[#c5a880]" />
+                            <span>{bk.email ? 'Email Notification' : 'Email (No Email, Use WA)'}</span>
+                            <Send className="w-3 h-3 text-[#c5a880] ml-0.5" />
+                          </button>
+
+                          {/* Quick Copy Booking Details */}
+                          <button
+                            type="button"
+                            onClick={() => handleCopyBooking(bk)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#14161f] hover:bg-[#1f2230] border border-[#262a3a] text-[#a09a8e] hover:text-[#f3e5d0] text-xs transition-colors"
+                            title="Copy formatted booking summary"
+                          >
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy Details</span>
+                          </button>
+                        </div>
+
+                        <span className="text-[11px] text-[#777166] font-mono">
+                          Pref: {bk.preferredContact.toUpperCase()} • Received: {bk.id}
+                        </span>
+                      </div>
+
                       {/* Admin Notes Field */}
                       <div className="flex items-center gap-2 pt-1">
                         <input
@@ -799,6 +962,39 @@ export const AdminDashboard: React.FC = () => {
                     <p className="p-3 rounded-xl bg-[#0c0d10] text-xs text-[#d1ccc0] leading-relaxed border border-[#1f222d]">
                       {enq.message}
                     </p>
+
+                    {/* Quick Reply & Notification Toolbar */}
+                    <div className="pt-2 border-t border-[#1c1e29] flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {/* Direct WhatsApp Response */}
+                        <button
+                          type="button"
+                          onClick={() => handleWhatsAppEnquiry(enq)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/40 text-[#25D366] text-xs font-medium transition-all shadow-sm active:scale-95"
+                          title={`Chat on WhatsApp with ${enq.name} (+91 ${enq.phone})`}
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>WhatsApp Customer</span>
+                          <ExternalLink className="w-3 h-3 opacity-60 ml-0.5" />
+                        </button>
+
+                        {/* Direct Email Notification Response */}
+                        <button
+                          type="button"
+                          onClick={() => handleEmailEnquiry(enq)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#c5a880]/15 hover:bg-[#c5a880]/25 border border-[#c5a880]/40 text-[#f3e5d0] text-xs font-medium transition-all shadow-sm active:scale-95"
+                          title={enq.email ? `Send email reply to ${enq.email}` : `No email provided`}
+                        >
+                          <Mail className="w-3.5 h-3.5 text-[#c5a880]" />
+                          <span>{enq.email ? 'Email Customer' : 'Email (None, Use WA)'}</span>
+                          <Send className="w-3 h-3 text-[#c5a880] ml-0.5" />
+                        </button>
+                      </div>
+
+                      <span className="text-[11px] text-[#777166] font-mono">
+                        Type: {enq.enquiryType} • #{enq.id}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
