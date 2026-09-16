@@ -29,7 +29,9 @@ import {
   MessageCircle,
   ExternalLink,
   Copy,
-  CheckCheck
+  CheckCheck,
+  Menu,
+  ChevronRight
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { Room, GalleryItem, EventFacilityData, BookingRequest, Enquiry } from '../../types/hotel';
@@ -84,6 +86,7 @@ export const AdminDashboard: React.FC = () => {
 
   // Current Admin Tab
   const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [mobileAdminMenuOpen, setMobileAdminMenuOpen] = useState<boolean>(false);
   const [saveSuccessNotice, setSaveSuccessNotice] = useState<string>('');
 
   // Booking & Enquiry Filter States
@@ -287,37 +290,55 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 bg-[#0a0b0e] text-[#d1ccc0] flex flex-col overflow-hidden">
       {/* Top Header Bar */}
-      <header className="h-16 px-6 bg-[#11131a] border-b border-[#242733] flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-9 h-9 rounded-full border border-[#c5a880]/50 flex items-center justify-center bg-[#181a24]">
+      <header className="h-16 px-3 sm:px-6 bg-[#11131a] border-b border-[#242733] flex items-center justify-between shrink-0 z-20">
+        <div className="flex items-center gap-2.5 sm:gap-4">
+          {/* Mobile Drawer Hamburger Button */}
+          <button
+            type="button"
+            onClick={() => setMobileAdminMenuOpen(!mobileAdminMenuOpen)}
+            className="md:hidden w-9 h-9 rounded-xl bg-[#181a24] border border-[#2b2f40] text-[#f3e5d0] flex items-center justify-center hover:border-[#c5a880] transition-colors"
+            aria-label="Toggle admin tabs drawer"
+          >
+            {mobileAdminMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#c5a880]/50 flex items-center justify-center bg-[#181a24] shrink-0">
             <span className="font-display text-[#c5a880] text-xs font-semibold">DC</span>
           </div>
-          <div>
-            <span className="text-sm font-semibold text-[#f3e5d0] tracking-wide block leading-none">
-              D C GRAND MANAGEMENT CMS
-            </span>
-            <span className="text-[10px] text-[#c5a880] uppercase tracking-widest font-mono">
-              Bhelupur, Varanasi • Live Sync Active
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="text-xs sm:text-sm font-semibold text-[#f3e5d0] tracking-wide block leading-tight truncate">
+                D C GRAND CMS
+              </span>
+              <span className="hidden xs:inline-block px-1.5 py-0.5 rounded bg-[#c5a880]/15 text-[#c5a880] text-[9px] font-mono uppercase font-bold border border-[#c5a880]/30">
+                LIVE
+              </span>
+            </div>
+            <span className="text-[10px] text-[#8e897e] uppercase tracking-wider font-mono block truncate">
+              Bhelupur, Varanasi
             </span>
           </div>
         </div>
 
         {/* Status notice */}
         {saveSuccessNotice && (
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs animate-fade-in">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>{saveSuccessNotice}</span>
+          <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs animate-fade-in truncate max-w-xs">
+            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">{saveSuccessNotice}</span>
           </div>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setIsAdminMode(false)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#c5a880] text-[#0c0d10] font-semibold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-all"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl bg-[#c5a880] text-[#0c0d10] font-semibold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-all shadow-sm"
             id="admin-view-live-site-btn"
+            title="View Live Guest Website"
           >
             <Eye className="w-3.5 h-3.5" />
-            <span>View Live Website</span>
+            <span className="hidden sm:inline">View Website</span>
+            <span className="sm:hidden text-[11px]">Site</span>
           </button>
 
           <button
@@ -330,10 +351,250 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </header>
 
+      {/* Mobile Drawer (Slide-in Navigation Overlay) */}
+      {mobileAdminMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-40 flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setMobileAdminMenuOpen(false)}
+          />
+
+          {/* Drawer Menu */}
+          <div className="relative w-[85%] max-w-xs bg-[#0e1017] border-r border-[#242838] flex flex-col justify-between h-full z-10 pt-16 overflow-y-auto">
+            <div className="p-3 space-y-1">
+              <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-[#666259]">
+                Overview & Analytics
+              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('dashboard');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'dashboard'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Executive Dashboard</span>
+                </div>
+                {activeTab === 'dashboard' && <span className="w-1.5 h-1.5 rounded-full bg-[#0c0d10]" />}
+              </button>
+
+              <div className="pt-3 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-[#666259]">
+                Live Inquiries & Stays
+              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('bookings');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'bookings'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <CalendarCheck className="w-4 h-4" />
+                  <span>Booking Requests</span>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === 'bookings' ? 'bg-[#0c0d10] text-[#c5a880]' : 'bg-[#1b1e2a] text-[#a09a8e]'
+                }`}>
+                  {bookingRequests.length}
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('enquiries');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'enquiries'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Customer Enquiries</span>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === 'enquiries' ? 'bg-[#0c0d10] text-[#c5a880]' : 'bg-[#1b1e2a] text-[#a09a8e]'
+                }`}>
+                  {enquiries.length}
+                </span>
+              </button>
+
+              <div className="pt-3 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-[#666259]">
+                Property Content CMS
+              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('homeCms');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'homeCms'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <Home className="w-4 h-4" />
+                <span>Hero & Story CMS</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('rooms');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'rooms'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <BedDouble className="w-4 h-4" />
+                  <span>Rooms & Suites</span>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === 'rooms' ? 'bg-[#0c0d10] text-[#c5a880]' : 'bg-[#1b1e2a] text-[#a09a8e]'
+                }`}>
+                  {rooms.length}
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('restaurant');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'restaurant'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <UtensilsCrossed className="w-4 h-4" />
+                <span>Food Express Dining</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('events');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'events'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <PartyPopper className="w-4 h-4" />
+                <span>Banquets & Events</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('gallery');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'gallery'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <ImageIcon className="w-4 h-4" />
+                  <span>Photo Gallery</span>
+                </div>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === 'gallery' ? 'bg-[#0c0d10] text-[#c5a880]' : 'bg-[#1b1e2a] text-[#a09a8e]'
+                }`}>
+                  {gallery.length}
+                </span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('contact');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'contact'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <Phone className="w-4 h-4" />
+                <span>Contact & Location</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('policies');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'policies'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>Hotel Policies</span>
+              </button>
+
+              <div className="pt-3 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-[#666259]">
+                Configuration
+              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('threeSettings');
+                  setMobileAdminMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                  activeTab === 'threeSettings'
+                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold'
+                    : 'text-[#a09a8e] hover:bg-[#151722] hover:text-[#f3e5d0]'
+                }`}
+              >
+                <Sliders className="w-4 h-4" />
+                <span>3D Engine Controls</span>
+              </button>
+            </div>
+
+            <div className="p-4 border-t border-[#202330]">
+              <button
+                onClick={() => {
+                  if (window.confirm('Reset all CMS customizations back to authentic default D C Grand data?')) {
+                    resetToDefaults();
+                    triggerToast('Reset to authentic hotel defaults complete!');
+                    setMobileAdminMenuOpen(false);
+                  }
+                }}
+                className="w-full py-2.5 px-3 rounded-xl border border-red-900/30 text-red-400 hover:bg-red-950/30 text-xs font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset to Defaults</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Layout: Sidebar & Content Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar Nav */}
-        <aside className="w-64 bg-[#0e1017] border-r border-[#202330] flex flex-col justify-between shrink-0 overflow-y-auto">
+        {/* Desktop Sidebar Nav (hidden on mobile) */}
+        <aside className="hidden md:flex md:w-64 bg-[#0e1017] border-r border-[#202330] flex-col justify-between shrink-0 overflow-y-auto">
           <div className="p-3 space-y-1">
             <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-[#666259]">
               Overview & Analytics
@@ -518,7 +779,129 @@ export const AdminDashboard: React.FC = () => {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8 bg-[#0a0b0e]">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#0a0b0e]">
+          {/* Mobile Horizontal Quick Tab Selector (< md) */}
+          <div className="md:hidden flex items-center gap-1.5 overflow-x-auto pb-3 mb-4 scrollbar-none border-b border-[#1c1f2b]">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'dashboard'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Overview</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('bookings')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'bookings'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <CalendarCheck className="w-3.5 h-3.5" />
+              <span>Bookings ({bookingRequests.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('enquiries')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'enquiries'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>Enquiries ({enquiries.length})</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('rooms')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'rooms'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <BedDouble className="w-3.5 h-3.5" />
+              <span>Rooms</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('homeCms')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'homeCms'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <Home className="w-3.5 h-3.5" />
+              <span>Hero CMS</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('restaurant')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'restaurant'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <UtensilsCrossed className="w-3.5 h-3.5" />
+              <span>Dining</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('events')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'events'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <PartyPopper className="w-3.5 h-3.5" />
+              <span>Events</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('gallery')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'gallery'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Gallery</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('contact')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'contact'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <Phone className="w-3.5 h-3.5" />
+              <span>Contact</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('policies')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                activeTab === 'policies'
+                  ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-sm'
+                  : 'bg-[#141620] text-[#a09a8e] border border-[#232738]'
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Policies</span>
+            </button>
+          </div>
           {/* TAB 1: EXECUTIVE DASHBOARD */}
           {activeTab === 'dashboard' && (
             <div className="max-w-6xl mx-auto space-y-8">
@@ -689,7 +1072,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="max-w-6xl mx-auto space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
+                  <h2 className="font-serif-luxury text-2xl sm:text-3xl text-[#f3e5d0] mb-1">
                     Booking Requests
                   </h2>
                   <p className="text-xs text-[#a09a8e]">
@@ -698,22 +1081,22 @@ export const AdminDashboard: React.FC = () => {
                 </div>
 
                 {/* Filter & Search Bar */}
-                <div className="flex items-center gap-3">
-                  <div className="relative">
+                <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+                  <div className="relative flex-1 xs:w-56">
                     <Search className="w-4 h-4 text-[#777166] absolute left-3 top-2.5" />
                     <input
                       type="text"
                       placeholder="Search guest or ID..."
                       value={bookingSearch}
                       onChange={(e) => setBookingSearch(e.target.value)}
-                      className="pl-9 pr-3 py-1.5 rounded-xl bg-[#12141c] border border-[#202330] text-xs text-[#f3e5d0] focus:outline-none focus:border-[#c5a880]"
+                      className="w-full pl-9 pr-3 py-2 sm:py-1.5 rounded-xl bg-[#12141c] border border-[#202330] text-xs text-[#f3e5d0] focus:outline-none focus:border-[#c5a880]"
                     />
                   </div>
 
                   <select
                     value={bookingFilter}
                     onChange={(e) => setBookingFilter(e.target.value)}
-                    className="px-3 py-1.5 rounded-xl bg-[#12141c] border border-[#202330] text-xs text-[#f3e5d0] focus:outline-none"
+                    className="px-3 py-2 sm:py-1.5 rounded-xl bg-[#12141c] border border-[#202330] text-xs text-[#f3e5d0] focus:outline-none"
                   >
                     <option value="ALL">All Statuses</option>
                     <option value="New">New</option>
@@ -881,9 +1264,9 @@ export const AdminDashboard: React.FC = () => {
           {/* TAB 3: CUSTOMER ENQUIRIES */}
           {activeTab === 'enquiries' && (
             <div className="max-w-6xl mx-auto space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-1">
+                  <h2 className="font-serif-luxury text-2xl sm:text-3xl text-[#f3e5d0] mb-1">
                     Customer Enquiries
                   </h2>
                   <p className="text-xs text-[#a09a8e]">
@@ -894,7 +1277,7 @@ export const AdminDashboard: React.FC = () => {
                 <select
                   value={enquiryFilter}
                   onChange={(e) => setEnquiryFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl bg-[#12141c] border border-[#202330] text-xs text-[#f3e5d0] focus:outline-none"
+                  className="px-3 py-2 sm:py-1.5 rounded-xl bg-[#12141c] border border-[#202330] text-xs text-[#f3e5d0] focus:outline-none w-full sm:w-auto"
                 >
                   <option value="ALL">All Categories</option>
                   <option value="New">New</option>
@@ -907,10 +1290,10 @@ export const AdminDashboard: React.FC = () => {
                 {filteredEnquiries.map((enq) => (
                   <div
                     key={enq.id}
-                    className="p-5 rounded-2xl bg-[#12141c] border border-[#202330] space-y-3"
+                    className="p-4 sm:p-5 rounded-2xl bg-[#12141c] border border-[#202330] space-y-3"
                   >
-                    <div className="flex items-center justify-between border-b border-[#1c1e29] pb-3">
-                      <div className="flex items-center gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1c1e29] pb-3">
+                      <div className="flex items-center gap-2.5 flex-wrap">
                         <span className="font-mono text-sm font-bold text-[#c5a880]">
                           {enq.id}
                         </span>
@@ -953,7 +1336,7 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="text-xs text-[#a09a8e] flex items-center gap-4">
+                    <div className="text-xs text-[#a09a8e] flex flex-wrap items-center gap-x-4 gap-y-1">
                       <span>Phone: <strong className="text-[#f3e5d0]">{enq.phone}</strong></span>
                       {enq.email && <span>Email: <strong className="text-[#f3e5d0]">{enq.email}</strong></span>}
                       <span>Subject: <strong className="text-[#f3e5d0]">{enq.subject}</strong></span>
