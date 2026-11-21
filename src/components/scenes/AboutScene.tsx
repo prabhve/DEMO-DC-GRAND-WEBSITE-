@@ -2,9 +2,9 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_VARANASI_IMG =
-  'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=80';
+const FALLBACK_VARANASI_IMG = HOTEL_ASSETS.varanasiGangaAartiEvening.optimizedPath;
 
 const CURATED_DESTINATIONS = [
   {

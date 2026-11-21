@@ -186,7 +186,7 @@ export const GalleryCmsTab: React.FC<GalleryCmsTabProps> = ({
               <img
                 src={
                   item.url?.trim() ||
-                  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80'
+                  '/assets/dc-grand/optimized/hero/reception-front-desk-wide.webp'
                 }
                 alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

@@ -17,9 +17,9 @@ import {
 } from 'lucide-react';
 import { VARANASI_LANDMARKS, HOTEL_LOCATION_COORDINATES } from '../../data/landmarksData';
 import { LandmarkItem } from '../../types/hotel';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_LANDMARK_IMG =
-  'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80';
+const FALLBACK_LANDMARK_IMG = HOTEL_ASSETS.varanasiGhatsSunrise.optimizedPath;
 
 export const VaranasiInteractiveMap: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>('sankat-mochan');

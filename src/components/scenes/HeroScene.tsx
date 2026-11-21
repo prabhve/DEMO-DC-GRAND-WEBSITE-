@@ -14,9 +14,9 @@ import {
   SlidersHorizontal
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_HERO_IMAGE =
-  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=85';
+const FALLBACK_HERO_IMAGE = HOTEL_ASSETS.deluxeRoomWindowArmchair.optimizedPath;
 
 interface HeroPerspective {
   id: string;
@@ -27,7 +27,7 @@ interface HeroPerspective {
 }
 
 export const HeroScene: React.FC = () => {
-  const { homeCms, rooms, gallery, openBookingModal, openVirtualTour } = useHotel();
+  const { homeCms, rooms, openBookingModal, openVirtualTour } = useHotel();
   const prefersReducedMotion = useReducedMotion();
 
   const primaryCover =
@@ -35,34 +35,32 @@ export const HeroScene: React.FC = () => {
       ? homeCms.heroCoverImage.trim()
       : FALLBACK_HERO_IMAGE;
 
-  const lobbyImage =
-    gallery.find((g) => g.id === 'gal-2')?.url?.trim() ||
-    'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1600&q=80';
+  const lobbyImage = HOTEL_ASSETS.receptionFrontDeskWide.optimizedPath;
 
   const suiteImage =
-    rooms.find((r) => r.isActive)?.coverImage?.trim() ||
-    'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80';
+    rooms.find((r) => r.id === 'room-premium')?.coverImage?.trim() ||
+    HOTEL_ASSETS.premiumRoomArchFeatureWide.optimizedPath;
 
   const perspectives: HeroPerspective[] = [
     {
-      id: 'exterior',
-      label: '01 · Dusk Arrival',
-      shortLabel: '01 · Facade',
-      caption: 'Illuminated Facade · Bhelupur, Varanasi',
+      id: 'deluxe-sanctuary',
+      label: '01 · Deluxe Room',
+      shortLabel: '01 · Deluxe',
+      caption: 'Sunlit Deluxe King Room · Hotel D.C. Grand, Bhelupur',
       image: primaryCover
     },
     {
-      id: 'foyer',
-      label: '02 · Reception Foyer',
-      shortLabel: '02 · Foyer',
-      caption: 'Double-Height Lobby & Concierge Desk',
+      id: 'reception-foyer',
+      label: '02 · Reception & Lobby',
+      shortLabel: '02 · Reception',
+      caption: '24/7 Front Desk & Marble Reception Foyer · Kashmiri Ganj, Bhelupur',
       image: lobbyImage
     },
     {
-      id: 'sanctuary',
-      label: '03 · Guest Chambers',
-      shortLabel: '03 · Suites',
-      caption: 'Super Deluxe Sanctuary & Custom Millwork',
+      id: 'premium-chamber',
+      label: '03 · Premium Room',
+      shortLabel: '03 · Premium',
+      caption: 'Signature Arch Headboard & Warm Ambient Lighting',
       image: suiteImage
     }
   ];
@@ -80,7 +78,7 @@ export const HeroScene: React.FC = () => {
   const [checkOutDate, setCheckOutDate] = useState<string>(twoDaysLater);
   const [guests, setGuests] = useState<number>(2);
   const [selectedRoomId, setSelectedRoomId] = useState<string>(
-    rooms.find((r) => r.isActive)?.id || 'room-super-deluxe'
+    rooms.find((r) => r.isActive)?.id || 'room-deluxe'
   );
 
   // Auto-advance checkOutDate if checkInDate moves past or equal to checkOutDate
@@ -114,7 +112,7 @@ export const HeroScene: React.FC = () => {
 
   const activeRooms = rooms.filter((r) => r.isActive);
   const selectedRoomName =
-    activeRooms.find((r) => r.id === selectedRoomId)?.name || 'Super Deluxe Room';
+    activeRooms.find((r) => r.id === selectedRoomId)?.name || 'Deluxe Room';
 
   const handleQuickAvailabilitySubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,7 +129,7 @@ export const HeroScene: React.FC = () => {
       id="hero"
       className="relative min-h-[100svh] flex flex-col justify-between overflow-hidden pt-20 sm:pt-24 lg:pt-[88px] pb-8 sm:pb-12 bg-[#201D19]"
     >
-      {/* Full-Bleed Architectural Hero Photograph with Crossfade & Atmospheric Scrim */}
+      {/* Full-Bleed Authentic D.C. Grand Photograph with Crossfade & Atmospheric Scrim */}
       <motion.div
         style={{ scale }}
         className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
@@ -146,7 +144,6 @@ export const HeroScene: React.FC = () => {
             exit={{ opacity: 0.35 }}
             transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
             fetchPriority="high"
-            referrerPolicy="no-referrer"
             onError={(e) => {
               const target = e.currentTarget;
               if (target.src !== FALLBACK_HERO_IMAGE) {
@@ -178,12 +175,12 @@ export const HeroScene: React.FC = () => {
             >
               <span className="w-6 sm:w-8 h-[1px] bg-[#B69A69] hidden sm:inline-block" />
               <span className="text-[11px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#B69A69] font-medium">
-                {homeCms.heroBadge || 'Bhelupur, Varanasi · Boutique Hospitality'}
+                {homeCms.heroBadge || 'Bhelupur, Varanasi · Hotel D.C. Grand'}
               </span>
               <span className="text-[#D9D1C5]/40">·</span>
               <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.16em] text-[#F5F1E9]">
                 <Star className="w-3.5 h-3.5 fill-[#B69A69] text-[#B69A69]" />
-                <span className="tabular-nums font-medium">4.8 Google Rated</span>
+                <span className="tabular-nums font-medium">572 Verified Google Reviews</span>
               </span>
             </motion.div>
 
@@ -194,7 +191,7 @@ export const HeroScene: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
               className="font-serif-luxury heading-hero-fluid text-[#F5F1E9] font-normal mb-4 sm:mb-6 max-w-3xl"
             >
-              {homeCms.heroHeadline || 'Your Story of Comfort Begins in Varanasi.'}
+              {homeCms.heroHeadline || 'Your Stay in Varanasi, Thoughtfully Hosted.'}
             </motion.h1>
 
             {/* 3. Supporting Narrative */}
@@ -205,7 +202,7 @@ export const HeroScene: React.FC = () => {
               className="text-sm sm:text-lg lg:text-xl text-[#D9D1C5]/90 font-light leading-relaxed max-w-[54ch] mb-6 sm:mb-9"
             >
               {homeCms.heroSupportingText ||
-                'Discover thoughtful hospitality, inviting spaces and a memorable stay in the spiritual heart of Varanasi.'}
+                'Discover comfortable rooms, warm hospitality and convenient access to the spiritual heart of Varanasi.'}
             </motion.p>
 
             {/* 4 & 5 & 6. Primary & Secondary Action Hierarchy (Touch-Optimized 48px Targets) */}
@@ -241,7 +238,7 @@ export const HeroScene: React.FC = () => {
                   id="hero-explore-rooms-btn"
                   className="min-h-[48px] px-3 sm:px-8 py-3.5 sm:py-4 border border-[#D9D1C5]/35 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] bg-[#201D19]/50 backdrop-blur-xs text-[11px] sm:text-xs font-medium uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>{homeCms.heroExploreBtnText || 'Explore the Hotel'}</span>
+                  <span>{homeCms.heroExploreBtnText || 'Explore Rooms'}</span>
                 </button>
 
                 <button
@@ -258,7 +255,7 @@ export const HeroScene: React.FC = () => {
             {/* Compact Mobile & Tablet Perspective Switcher (< lg) */}
             <div className="mt-6 pt-4 border-t border-[#D9D1C5]/15 flex items-center justify-between gap-2 lg:hidden">
               <span className="text-[10px] uppercase tracking-[0.18em] text-[#B69A69] font-medium shrink-0">
-                View:
+                Real Photos:
               </span>
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                 {perspectives.map((p, idx) => {
@@ -290,7 +287,7 @@ export const HeroScene: React.FC = () => {
             className="lg:col-span-4 border-l border-[#D9D1C5]/20 pl-6 hidden lg:flex flex-col justify-end space-y-4"
           >
             <span className="text-[10px] uppercase tracking-[0.24em] text-[#B69A69] font-medium">
-              Architectural Perspectives
+              Authentic Property Photography
             </span>
             <div className="space-y-2.5">
               {perspectives.map((p, idx) => {
@@ -339,7 +336,7 @@ export const HeroScene: React.FC = () => {
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-[#B69A69] font-medium">
                   <SlidersHorizontal className="w-3 h-3" />
-                  <span>Direct Booking · Best Rate</span>
+                  <span>Direct Front Desk Reservation</span>
                 </div>
                 <div className="text-xs sm:text-sm text-[#F5F1E9] font-medium truncate mt-0.5 tabular-nums">
                   {checkInDate} → {checkOutDate} · {guests} {guests === 1 ? 'Guest' : 'Guests'}
@@ -604,14 +601,14 @@ export const HeroScene: React.FC = () => {
           <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-1.5">
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-[#B69A69] shrink-0" />
-              <span>Direct Cab Access · Bhelupur</span>
+              <span>B 24/22-P, Kashmiri Ganj · Bhelupur</span>
             </span>
             <span className="hidden sm:inline text-[#B69A69]">·</span>
-            <span className="hidden sm:inline tabular-nums">2.0 km to Sankat Mochan & Assi Ghat</span>
+            <span className="hidden sm:inline tabular-nums">Near Shri Ram Janki Temple · 221005</span>
             <span className="hidden md:inline text-[#B69A69]">·</span>
             <span className="hidden md:inline-flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#B69A69]" />
-              <span>All-Floor Lift · 100% Power Backup · Food Express Dining</span>
+              <span>In-House Restaurant (7 AM – 11 PM) · Banquet Hall · +91 70840 03000</span>
             </span>
           </div>
 
@@ -620,7 +617,7 @@ export const HeroScene: React.FC = () => {
             onClick={() => scrollToSection('intro')}
             className="min-h-[36px] flex items-center gap-2 text-[#F5F1E9] hover:text-[#B69A69] transition-colors cursor-pointer ml-auto"
           >
-            <span>Discover the Sanctuary</span>
+            <span>Discover the Hotel</span>
             <ChevronDown className="w-3.5 h-3.5 text-[#B69A69]" />
           </button>
         </div>

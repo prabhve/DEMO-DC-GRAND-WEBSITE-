@@ -35,9 +35,9 @@ export const RoomsCmsTab: React.FC<RoomsCmsTabProps> = ({
     amenities: ['High-speed Wi-Fi', 'Individual AC', 'In-Room Refrigerator', 'Electric Kettle', 'Power Backup'],
     features: ['Soundproof Windows', 'Writing Desk', 'Rain Shower'],
     images: [
-      'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=1600&q=80'
+      '/assets/dc-grand/optimized/rooms/deluxe-room-window-armchair.webp'
     ],
-    coverImage: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=1600&q=80',
+    coverImage: '/assets/dc-grand/optimized/rooms/deluxe-room-window-armchair.webp',
     isFeatured: true,
     isActive: true,
     displayOrder: rooms.length + 1
@@ -261,7 +261,7 @@ export const RoomsCmsTab: React.FC<RoomsCmsTabProps> = ({
                 src={
                   room.coverImage?.trim() ||
                   room.images?.find((img) => img && img.trim()) ||
-                  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80'
+                  '/assets/dc-grand/optimized/rooms/deluxe-room-window-armchair.webp'
                 }
                 alt={room.name}
                 className="w-full h-full object-cover"

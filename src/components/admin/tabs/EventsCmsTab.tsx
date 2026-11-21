@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { PartyPopper, Plus, Trash2, Edit, X, Sparkles } from 'lucide-react';
+import { Plus, Trash2, Edit, X, Sparkles } from 'lucide-react';
 import { EventFacilityData } from '../../../types/hotel';
 import { MediaUploadInput } from '../MediaUploadInput';
+import { HOTEL_ASSETS } from '../../../data/hotelAssets';
 
 interface EventsCmsTabProps {
   events: EventFacilityData[];
@@ -29,7 +30,7 @@ export const EventsCmsTab: React.FC<EventsCmsTabProps> = ({
     description: 'A versatile hall equipped with high-definition projection, acoustic ceiling treatment, and customizable banquet seating for wedding receptions, family functions, and business conferences.',
     timings: 'Flexible Slot Bookings (Morning, Evening, Full Day)',
     images: [
-      'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'
+      HOTEL_ASSETS.banquetConferenceHall.optimizedPath
     ],
     facilities: [
       'State-of-the-art Sound System',
@@ -230,7 +231,7 @@ export const EventsCmsTab: React.FC<EventsCmsTabProps> = ({
               <img
                 src={
                   evt.images?.find((u) => u && u.trim()) ||
-                  'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'
+                  HOTEL_ASSETS.banquetConferenceHall.optimizedPath
                 }
                 alt={evt.name}
                 className="w-full h-full object-cover"

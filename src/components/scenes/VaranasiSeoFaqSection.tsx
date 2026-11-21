@@ -187,7 +187,7 @@ export const VaranasiSeoFaqSection: React.FC = () => {
               </div>
               <p>{contact.address}</p>
               <p className="text-[11px] text-[#D9D1C5]/50 tabular-nums">
-                Coordinates: 25.3005° N, 82.9972° E · PIN 221010
+                Coordinates: 25.2927° N, 82.9994° E · PIN 221005
               </p>
             </div>
           </div>

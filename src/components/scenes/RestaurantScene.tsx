@@ -7,9 +7,9 @@ import {
   PhoneCall
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_RESTAURANT_IMG =
-  'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80';
+const FALLBACK_RESTAURANT_IMG = HOTEL_ASSETS.inHouseRestaurantDining.optimizedPath;
 
 export const RestaurantScene: React.FC = () => {
   const { restaurant, contact, openEnquiryModal } = useHotel();

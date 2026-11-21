@@ -127,7 +127,7 @@ export const BookingModal: React.FC = () => {
     setIsSubmitting(true);
     try {
       const selectedRoom = activeRooms.find((r) => r.id === formData.roomId);
-      const roomName = selectedRoom ? selectedRoom.name : 'Super Deluxe Room';
+      const roomName = selectedRoom ? selectedRoom.name : 'Deluxe Room';
 
       const newId = await addBookingRequest({
         customerName: cleanName,
@@ -181,7 +181,7 @@ export const BookingModal: React.FC = () => {
 
   const selectedRoomObj = activeRooms.find((r) => r.id === formData.roomId);
 
-  const hotelWhatsAppPhone = contact.whatsapp || '+919415204991';
+  const hotelWhatsAppPhone = contact.whatsapp || '+917084003000';
   const customerWhatsAppMessage = `*New Stay Request - Hotel D.C. Grand, Varanasi*%0A%0A*Reference:* ${confirmedId}%0A*Guest Name:* ${formData.customerName}%0A*Room Sanctuary:* ${selectedRoomObj?.name}%0A*Stay Dates:* ${formData.checkInDate} to ${formData.checkOutDate}%0A*Guests:* ${formData.guests}%0A*Special Requests:* ${formData.specialRequest || 'None'}%0A%0ANamaste! I have submitted this booking request on your website. Kindly confirm room availability and tariff.`;
 
   const customerEmailSubject = `Booking Request [Ref: ${confirmedId}] - ${formData.customerName}`;
@@ -204,7 +204,7 @@ Warm regards,
 ${formData.customerName}`;
 
   const customerWhatsAppLink = createWhatsAppLink(hotelWhatsAppPhone, decodeURIComponent(customerWhatsAppMessage));
-  const customerEmailLink = createMailtoLink(contact.email || 'stay@dcgrandvaranasi.com', customerEmailSubject, customerEmailBody);
+  const customerEmailLink = createMailtoLink(contact.email || 'hoteldcgrand@gmail.com', customerEmailSubject, customerEmailBody);
 
   return (
     <AnimatePresence>

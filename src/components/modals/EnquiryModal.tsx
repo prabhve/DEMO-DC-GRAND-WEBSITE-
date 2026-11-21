@@ -114,7 +114,7 @@ export const EnquiryModal: React.FC = () => {
     });
   };
 
-  const hotelWhatsAppPhone = contact.whatsapp || '+919415204991';
+  const hotelWhatsAppPhone = contact.whatsapp || '+917084003000';
   const customerWhatsAppMessage = `*New Customer Enquiry - Hotel D.C. Grand*%0A%0A*Reference:* ${generatedId}%0A*Name:* ${formData.name}%0A*Type:* ${formData.enquiryType}%0A*Subject:* ${formData.subject || 'General Enquiry'}%0A*Message:* ${formData.message}%0A%0ANamaste! I submitted this enquiry on your website. Please advise.`;
 
   const customerEmailSubject = `Customer Enquiry [Ref: ${generatedId}] - ${formData.name}`;
@@ -135,7 +135,7 @@ Warm regards,
 ${formData.name}`;
 
   const customerWhatsAppLink = createWhatsAppLink(hotelWhatsAppPhone, decodeURIComponent(customerWhatsAppMessage));
-  const customerEmailLink = createMailtoLink(contact.email || 'stay@dcgrandvaranasi.com', customerEmailSubject, customerEmailBody);
+  const customerEmailLink = createMailtoLink(contact.email || 'hoteldcgrand@gmail.com', customerEmailSubject, customerEmailBody);
 
   return (
     <AnimatePresence>

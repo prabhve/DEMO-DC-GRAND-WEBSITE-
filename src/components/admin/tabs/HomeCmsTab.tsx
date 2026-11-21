@@ -178,7 +178,7 @@ export const HomeCmsTab: React.FC<HomeCmsTabProps> = ({
             label="Hero Cover Background Photography"
             value={homeCms.heroCoverImage}
             onChange={(url) => updateHomeCms({ heroCoverImage: url })}
-            placeholder="https://images.unsplash.com/... or upload photo"
+            placeholder="/assets/dc-grand/optimized/hero/... or upload photo"
             helperText="Appears as the full-bleed background of your 3D Hero scene. We recommend a high-resolution hotel exterior, lobby, or architectural shot."
             previewHeightClass="h-48"
           />
@@ -265,7 +265,7 @@ export const HomeCmsTab: React.FC<HomeCmsTabProps> = ({
           {/* Intro Media Upload */}
           <MediaUploadInput
             label="Intro Card Photography (Reception / Lobby Foyer)"
-            value={homeCms.introImage || 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1000&q=80'}
+            value={homeCms.introImage || '/assets/dc-grand/optimized/hero/reception-front-desk-wide.webp'}
             onChange={(url) => updateHomeCms({ introImage: url })}
             helperText="The focal photo showcased on the left side of the sanctuary introduction."
             previewHeightClass="h-44"
@@ -416,7 +416,7 @@ export const HomeCmsTab: React.FC<HomeCmsTabProps> = ({
           {/* About Image with Upload and Curated Selector */}
           <MediaUploadInput
             label="About Scene Photography (Ganga Ghats / Heritage)"
-            value={homeCms.aboutImage || 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80'}
+            value={homeCms.aboutImage || '/assets/dc-grand/optimized/varanasi/varanasi-ganga-aarti-evening.webp'}
             onChange={(url) => updateHomeCms({ aboutImage: url })}
             helperText="The vertical visual collage picture shown in the philosophy section."
             previewHeightClass="h-44"
@@ -428,7 +428,7 @@ export const HomeCmsTab: React.FC<HomeCmsTabProps> = ({
             </label>
             <input
               type="text"
-              value={homeCms.aboutImageCaption || '22/24P, Kasmiganj Mohalla, Bhelupur, Varanasi, Uttar Pradesh, 221010, India'}
+              value={homeCms.aboutImageCaption || 'B 24/22-P, near Shri Ram Janki Temple, Kashmiri Ganj, Gurudham, Bhelupur, Varanasi, Uttar Pradesh 221005'}
               onChange={(e) => updateHomeCms({ aboutImageCaption: e.target.value })}
               className="w-full px-3.5 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] text-xs text-[#f3e5d0]"
             />

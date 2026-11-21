@@ -97,16 +97,16 @@ interface HotelContextType {
 const HotelContext = createContext<HotelContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  ROOMS: 'dc_grand_rooms',
-  GALLERY: 'dc_grand_gallery',
-  RESTAURANT: 'dc_grand_restaurant',
-  EVENTS: 'dc_grand_events',
-  POLICIES: 'dc_grand_policies',
-  CONTACT: 'dc_grand_contact',
-  HOME_CMS: 'dc_grand_home_cms',
-  THREE_SETTINGS: 'dc_grand_three_settings',
-  BOOKINGS: 'dc_grand_bookings',
-  ENQUIRIES: 'dc_grand_enquiries'
+  ROOMS: 'dc_grand_authentic_v4_rooms',
+  GALLERY: 'dc_grand_authentic_v4_gallery',
+  RESTAURANT: 'dc_grand_authentic_v4_restaurant',
+  EVENTS: 'dc_grand_authentic_v4_events',
+  POLICIES: 'dc_grand_authentic_v4_policies',
+  CONTACT: 'dc_grand_authentic_v4_contact',
+  HOME_CMS: 'dc_grand_authentic_v4_home_cms',
+  THREE_SETTINGS: 'dc_grand_authentic_v4_three_settings',
+  BOOKINGS: 'dc_grand_authentic_v4_bookings',
+  ENQUIRIES: 'dc_grand_authentic_v4_enquiries'
 };
 
 export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -268,8 +268,8 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         customerName: 'Aarav Sharma',
         phone: '+91 98765 43210',
         email: 'aarav.sharma@example.com',
-        roomId: 'room-super-deluxe',
-        roomName: 'Super Deluxe Room',
+        roomId: 'room-deluxe',
+        roomName: 'Deluxe Room',
         checkInDate: '2026-10-15',
         checkOutDate: '2026-10-18',
         guests: 2,
@@ -283,7 +283,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         customerName: 'Meera Patel',
         phone: '+91 98111 22334',
         email: 'meera.p@example.com',
-        roomId: 'room-family-room',
+        roomId: 'room-family',
         roomName: 'Family Room',
         checkInDate: '2026-10-22',
         checkOutDate: '2026-10-25',
@@ -308,7 +308,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         email: 'rajesh.v@varanasi.org',
         subject: 'Family Get-together & Dinner Booking',
         enquiryType: 'Restaurant Enquiry',
-        message: 'We are planning a family dinner for 25 people on Sunday evening at Food Express. Please let us know buffet options and advance reservation.',
+        message: 'We are planning a family dinner for 25 people on Sunday evening at the Hotel D.C. Grand restaurant. Please let us know buffet options and advance reservation.',
         status: 'New',
         createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
       },
@@ -317,9 +317,9 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         name: 'Sunita Mishra',
         phone: '+91 91234 56789',
         email: 'sunita.m@gmail.com',
-        subject: 'Birthday Party Hall Availability',
+        subject: 'Anniversary Party Hall Availability',
         enquiryType: 'Meeting / Event Enquiry',
-        message: 'Looking to book The Grand Celebration Hall for my sons 10th birthday with balloon decoration.',
+        message: 'Looking to book the Banquet Hall for an anniversary celebration with balloon decoration.',
         status: 'Contacted',
         adminNotes: 'Emailed banquet brochure and decor menu.',
         createdAt: new Date(Date.now() - 3600000 * 18).toISOString()
@@ -401,7 +401,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const openVirtualTour = (roomId?: string) => {
-    setVirtualTourRoomId(roomId || rooms[0]?.id || 'room-super-deluxe');
+    setVirtualTourRoomId(roomId || rooms[0]?.id || 'room-deluxe');
     setIsVirtualTourOpen(true);
   };
 

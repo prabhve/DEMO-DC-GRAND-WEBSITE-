@@ -8,9 +8,9 @@ import {
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { EventFacilityData } from '../../types/hotel';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_EVENT_IMG =
-  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80';
+const FALLBACK_EVENT_IMG = HOTEL_ASSETS.banquetConferenceHall.optimizedPath;
 
 export const EventsScene: React.FC = () => {
   const { events, openEnquiryModal } = useHotel();

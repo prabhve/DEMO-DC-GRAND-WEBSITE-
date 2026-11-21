@@ -11,9 +11,9 @@ import {
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { Room } from '../../types/hotel';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_ROOM_IMAGE =
-  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80';
+const FALLBACK_ROOM_IMAGE = HOTEL_ASSETS.deluxeRoomWindowArmchair.optimizedPath;
 
 export const RoomShowcaseScene: React.FC = () => {
   const { rooms, setActiveRoomForDetail, openBookingModal, openVirtualTour } = useHotel();

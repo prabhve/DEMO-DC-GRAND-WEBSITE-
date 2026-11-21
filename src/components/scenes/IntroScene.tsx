@@ -2,23 +2,20 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_INTRO_IMG =
-  'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80';
-const FALLBACK_SECONDARY_IMG =
-  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80';
+const FALLBACK_INTRO_IMG = HOTEL_ASSETS.receptionFrontDeskWide.optimizedPath;
+const FALLBACK_SECONDARY_IMG = HOTEL_ASSETS.lobbyTealVelvetLounge.optimizedPath;
 
 export const IntroScene: React.FC = () => {
-  const { homeCms, gallery, openBookingModal } = useHotel();
+  const { homeCms, openBookingModal } = useHotel();
 
   const primaryImage =
     homeCms.introImage && homeCms.introImage.trim().length > 0
       ? homeCms.introImage.trim()
       : FALLBACK_INTRO_IMG;
 
-  const secondaryImage =
-    gallery.find((g) => g.category === 'HOTEL' && g.url !== primaryImage)?.url?.trim() ||
-    FALLBACK_SECONDARY_IMG;
+  const secondaryImage = FALLBACK_SECONDARY_IMG;
 
   return (
     <section
@@ -38,13 +35,13 @@ export const IntroScene: React.FC = () => {
             <div className="flex items-center gap-3 mb-4 sm:mb-5">
               <span className="w-8 h-[1px] bg-[#536E68]" />
               <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#536E68] font-semibold">
-                {homeCms.introBadge || 'The Sanctuary · Bhelupur'}
+                {homeCms.introBadge || 'Welcome to Hotel D.C. Grand · Bhelupur'}
               </span>
             </div>
 
             <h2 className="font-serif-luxury heading-section-fluid text-[#201D19] font-normal">
               {homeCms.introHeading ||
-                'Thoughtful Architecture Meets Timeless Banarasi Warmth.'}
+                'Thoughtful Hospitality in the Heart of Varanasi.'}
             </h2>
           </motion.div>
 
@@ -56,9 +53,9 @@ export const IntroScene: React.FC = () => {
             className="lg:col-span-4 lg:pb-2"
           >
             <p className="text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#201D19]/65 leading-relaxed">
-              22/24P, Kasmiganj Mohalla · Bhelupur · Varanasi
+              B 24/22-P, near Shri Ram Janki Temple · Kashmiri Ganj, Gurudham, Bhelupur
               <span className="block mt-1 text-[#536E68] font-medium">
-                2.0 km to Sankat Mochan · 2.1 km to Assi Ghat
+                Varanasi, Uttar Pradesh 221005 · +91 70840 03000
               </span>
             </p>
           </motion.div>
@@ -77,9 +74,8 @@ export const IntroScene: React.FC = () => {
             >
               <img
                 src={primaryImage}
-                alt="Hotel D.C. Grand Double-Height Reception and Lobby"
+                alt="Hotel D.C. Grand Reception Desk and Lobby in Bhelupur, Varanasi"
                 loading="lazy"
-                referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.currentTarget;
                   if (target.src !== FALLBACK_INTRO_IMG) target.src = FALLBACK_INTRO_IMG;
@@ -99,9 +95,8 @@ export const IntroScene: React.FC = () => {
               <div className="overflow-hidden mb-3.5 sm:mb-4 h-36 sm:h-44 bg-[#161412]">
                 <img
                   src={secondaryImage}
-                  alt="Hotel D.C. Grand Evening Facade in Varanasi"
+                  alt="Hotel D.C. Grand Reception Waiting Lounge"
                   loading="lazy"
-                  referrerPolicy="no-referrer"
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (target.src !== FALLBACK_SECONDARY_IMG) target.src = FALLBACK_SECONDARY_IMG;
@@ -110,11 +105,11 @@ export const IntroScene: React.FC = () => {
                 />
               </div>
               <div className="text-[10px] uppercase tracking-[0.22em] text-[#B69A69] mb-1">
-                {homeCms.introImageBadgeTitle || 'Grand Arrival'}
+                {homeCms.introImageBadgeTitle || '24/7 Front Desk & Concierge'}
               </div>
               <p className="text-xs text-[#D9D1C5] leading-relaxed font-light">
                 {homeCms.introImageBadgeDesc ||
-                  'Double-height reception foyer with ambient chandelier lighting and 24/7 concierge care.'}
+                  'Warm marble reception foyer with travel assistance, boat ride bookings, and daily dining service from 7 AM to 11 PM.'}
               </p>
             </motion.div>
           </div>
@@ -129,7 +124,7 @@ export const IntroScene: React.FC = () => {
           >
             <div>
               <p className="font-serif-luxury text-xl sm:text-3xl text-[#201D19] leading-[1.35] mb-5 sm:mb-6">
-                “A serene architectural haven where the spiritual rhythm of Kashi meets effortless contemporary comfort.”
+                “A welcoming Bhelupur sanctuary where the spiritual rhythm of Kashi meets attentive contemporary comfort.”
               </p>
 
               <p className="text-sm sm:text-base text-[#201D19]/80 leading-relaxed font-normal mb-8 sm:mb-10 max-w-[60ch]">
@@ -144,11 +139,11 @@ export const IntroScene: React.FC = () => {
                   </span>
                   <div>
                     <h3 className="font-serif-luxury text-xl sm:text-2xl text-[#201D19] font-medium mb-1.5">
-                      {homeCms.introPillar1Title || 'Uninterrupted Peace of Mind'}
+                      {homeCms.introPillar1Title || 'Well-Equipped Guest Rooms'}
                     </h3>
                     <p className="text-sm text-[#201D19]/75 leading-relaxed">
                       {homeCms.introPillar1Desc ||
-                        '24/7 security, 100% heavy-duty power backup, modern elevator access across all floors, and meticulous housekeeping.'}
+                        'Air-conditioned Deluxe, Premium, Family, and Couple rooms featuring crafted wooden interiors, flat-screen TVs, and daily housekeeping.'}
                     </p>
                   </div>
                 </div>
@@ -159,11 +154,11 @@ export const IntroScene: React.FC = () => {
                   </span>
                   <div>
                     <h3 className="font-serif-luxury text-xl sm:text-2xl text-[#201D19] font-medium mb-1.5">
-                      {homeCms.introPillar2Title || 'Personalized Banarasi Care'}
+                      {homeCms.introPillar2Title || 'Dedicated Varanasi Travel Desk'}
                     </h3>
                     <p className="text-sm text-[#201D19]/75 leading-relaxed">
                       {homeCms.introPillar2Desc ||
-                        'Attentive local hosts dedicated to arranging temple darshan logistics, dawn boat rides, and curated dining.'}
+                        'On-site support for Ganga boat rides, local guides on demand, car/taxi service, money exchange, train & flight tickets, and doctor on call.'}
                     </p>
                   </div>
                 </div>
@@ -173,7 +168,7 @@ export const IntroScene: React.FC = () => {
             {/* Editorial Link CTA */}
             <div className="pt-6 border-t border-[#201D19]/15 flex flex-wrap items-center justify-between gap-4">
               <div className="text-xs uppercase tracking-[0.16em] text-[#201D19]/70">
-                5 Room Categories · Lift Access · Food Express Dining
+                5 Room Categories · Restaurant (7 AM – 11 PM) · Banquet Hall
               </div>
 
               <button

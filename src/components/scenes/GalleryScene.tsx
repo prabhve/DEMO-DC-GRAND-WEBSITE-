@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { GalleryItem } from '../../types/hotel';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
-const FALLBACK_GALLERY_IMG =
-  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80';
+const FALLBACK_GALLERY_IMG = HOTEL_ASSETS.receptionFrontDeskWide.optimizedPath;
 
 export const GalleryScene: React.FC = () => {
   const { gallery } = useHotel();

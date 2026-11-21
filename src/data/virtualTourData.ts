@@ -1,4 +1,5 @@
 import { RoomPerspective, RoomHotspot } from '../types/hotel';
+import { HOTEL_ASSETS } from './hotelAssets';
 
 export interface RoomTourData {
   roomId: string;
@@ -8,289 +9,242 @@ export interface RoomTourData {
   hotspots: RoomHotspot[];
 }
 
+/**
+ * HOTEL D.C. GRAND — VARANASI
+ * 360° Room & Property Interior Inspector Data
+ * Uses 100% locally served, authentic photographs of Hotel D.C. Grand rooms and reception.
+ */
 export const VIRTUAL_TOUR_ROOMS: Record<string, RoomTourData> = {
-  'room-super-deluxe': {
-    roomId: 'room-super-deluxe',
-    roomName: 'Super Deluxe Room',
-    defaultPerspectiveId: 'super-deluxe-main',
-    perspectives: [
-      {
-        id: 'super-deluxe-main',
-        label: 'Bed Chamber Angle',
-        image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=2000&q=85',
-        description: 'Centered on the double bed with geometric gold accent wall and warm cove illumination.'
-      },
-      {
-        id: 'super-deluxe-workstation',
-        label: 'Workstation & Lounge',
-        image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=2000&q=85',
-        description: 'Ergonomic wooden desk, high-speed optical Wi-Fi, and plush armchair seating.'
-      },
-      {
-        id: 'super-deluxe-window',
-        label: 'Acoustic City View Bay',
-        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=2000&q=85',
-        description: 'Double-glazed soundproof window overlooking Bhelupur with blackout velvet drapery.'
-      },
-      {
-        id: 'super-deluxe-bath',
-        label: 'En-Suite Rain Shower Bath',
-        image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=2000&q=85',
-        description: 'Private bathroom with vitreous sanitary fittings, rain shower, and 24/7 hot water.'
-      }
-    ],
-    hotspots: [
-      {
-        id: 'sd-bed',
-        title: 'Plush Double Bed & 400-TC Linens',
-        description: 'Engineered for deep restorative rest after temple visits, dressed in crisp white hypoallergenic cotton.',
-        tag: 'Comfort Bedding',
-        position: [0, -20, -180],
-        perspective: 'super-deluxe-main'
-      },
-      {
-        id: 'sd-lighting',
-        title: 'Geometric Accent & Ambient Cove Lighting',
-        description: 'Warm gold leaf wall treatment designed to create an intimate sanctuary atmosphere at dusk.',
-        tag: 'Ambience',
-        position: [80, 70, -160],
-        perspective: 'super-deluxe-main'
-      },
-      {
-        id: 'sd-ac',
-        title: 'Climate-Controlled Air Conditioning',
-        description: 'Whisper-quiet inverter AC ensuring your preferred temperature in every season.',
-        tag: 'Climate',
-        position: [-140, 110, -100],
-        perspective: 'super-deluxe-main'
-      },
-      {
-        id: 'sd-desk',
-        title: 'Workstation & Tea Station',
-        description: 'Equipped with electric kettle, premium tea/coffee selection, and dedicated power sockets.',
-        tag: 'Refreshment & Work',
-        position: [150, -40, 60],
-        perspective: 'super-deluxe-workstation'
-      },
-      {
-        id: 'sd-window',
-        title: 'Double-Glazed Soundproof Glass',
-        description: 'Shields your suite from street ambient noise while offering bright natural daylight.',
-        tag: 'Acoustics & View',
-        position: [-170, 10, -50],
-        perspective: 'super-deluxe-window'
-      },
-      {
-        id: 'sd-bath',
-        title: 'Vitreous En-Suite Bathroom',
-        description: 'Contemporary bathroom with rain shower, plush bath towels, and luxury toiletries.',
-        tag: 'Sanitary',
-        position: [120, -10, -130],
-        perspective: 'super-deluxe-bath'
-      }
-    ]
-  },
-  'room-villa-deluxe': {
-    roomId: 'room-villa-deluxe',
-    roomName: 'Villa Deluxe Room',
-    defaultPerspectiveId: 'villa-deluxe-main',
-    perspectives: [
-      {
-        id: 'villa-deluxe-main',
-        label: 'Villa Bed Chamber',
-        image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=2000&q=85',
-        description: 'Peaceful bed chamber with quiet courtyard garden orientation and warm wooden accents.'
-      },
-      {
-        id: 'villa-deluxe-lounge',
-        label: 'Lounge & Dresser Bay',
-        image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=2000&q=85',
-        description: 'Vanity mirror, custom wood wardrobe, and luggage bench.'
-      },
-      {
-        id: 'villa-deluxe-bath',
-        label: 'Private Bathroom',
-        image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=2000&q=85',
-        description: 'Immaculately clean private en-suite with modern fittings.'
-      }
-    ],
-    hotspots: [
-      {
-        id: 'vd-bed',
-        title: 'Double Bed with Orthopedic Base',
-        description: 'Designed for optimal spinal alignment and superior comfort.',
-        tag: 'Bedding',
-        position: [0, -30, -190],
-        perspective: 'villa-deluxe-main'
-      },
-      {
-        id: 'vd-tv',
-        title: 'Smart LED Television',
-        description: 'Equipped with satellite channels and streaming connectivity.',
-        tag: 'Entertainment',
-        position: [160, 20, -40],
-        perspective: 'villa-deluxe-main'
-      },
-      {
-        id: 'vd-garden',
-        title: 'Courtyard Garden View',
-        description: 'Peaceful natural daylight filtering through custom drapery.',
-        tag: 'Quietude',
-        position: [-160, 30, -70],
-        perspective: 'villa-deluxe-main'
-      }
-    ]
-  },
-  'room-villa-family': {
-    roomId: 'room-villa-family',
-    roomName: 'Villa Family Room',
-    defaultPerspectiveId: 'villa-family-main',
-    perspectives: [
-      {
-        id: 'villa-family-main',
-        label: 'Family Suite Main View',
-        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=2000&q=85',
-        description: 'Expansive 200 sq ft chamber with extra plush King Bed for family traveling with a child.'
-      },
-      {
-        id: 'villa-family-wardrobe',
-        label: 'Wardrobe & Seating Zone',
-        image: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=2000&q=85',
-        description: 'Spacious luggage storage, dressing table, and ample floor space.'
-      },
-      {
-        id: 'villa-family-bath',
-        label: 'En-Suite Bathroom',
-        image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=2000&q=85',
-        description: 'Family-friendly bathroom layout with non-slip flooring.'
-      }
-    ],
-    hotspots: [
-      {
-        id: 'vf-bed',
-        title: 'Expanded King Bed',
-        description: 'Ample room for two adults and a child with luxury duvet and pillows.',
-        tag: 'Family Comfort',
-        position: [10, -20, -190],
-        perspective: 'villa-family-main'
-      },
-      {
-        id: 'vf-floor',
-        title: 'Polished Vitrified Flooring',
-        description: 'Cool, hygienic vitrified tiles easy for children to move safely.',
-        tag: 'Interior Finish',
-        position: [-40, -110, -120],
-        perspective: 'villa-family-main'
-      },
-      {
-        id: 'vf-storage',
-        title: 'Large Multi-Tier Wardrobe',
-        description: 'Generous hanging space and digital safety locker for valuables.',
-        tag: 'Storage',
-        position: [170, 0, 40],
-        perspective: 'villa-family-wardrobe'
-      }
-    ]
-  },
-  'room-family-room': {
-    roomId: 'room-family-room',
-    roomName: 'Family Room',
-    defaultPerspectiveId: 'family-room-main',
-    perspectives: [
-      {
-        id: 'family-room-main',
-        label: 'Dual Bed Setup Chamber',
-        image: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=2000&q=85',
-        description: '220 sq ft suite featuring 1 King Bed plus 1 separate Single Bed for comfortable group stays.'
-      },
-      {
-        id: 'family-room-side',
-        label: 'Single Bed & Desk Angle',
-        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=2000&q=85',
-        description: 'Dedicated individual bedding corner and bedside nightstand.'
-      },
-      {
-        id: 'family-room-view',
-        label: 'Bhelupur City Skyline View',
-        image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=2000&q=85',
-        description: 'High floor view across Varanasi morning cityscape.'
-      }
-    ],
-    hotspots: [
-      {
-        id: 'fr-king',
-        title: 'Primary King Bed',
-        description: 'Luxurious primary sleeping space with bedside electrical charging points.',
-        tag: 'Primary Bed',
-        position: [-70, -25, -170],
-        perspective: 'family-room-main'
-      },
-      {
-        id: 'fr-single',
-        title: 'Additional Single Bed',
-        description: 'Dedicated single mattress for older children or third adult guest.',
-        tag: 'Extra Bed',
-        position: [120, -35, -130],
-        perspective: 'family-room-main'
-      },
-      {
-        id: 'fr-kettle',
-        title: 'In-Room Tea & Coffee Setup',
-        description: 'Electric kettle and refreshment supplies for the whole family.',
-        tag: 'Amenities',
-        position: [160, -10, 60],
-        perspective: 'family-room-side'
-      }
-    ]
-  },
-  'room-deluxe-room': {
-    roomId: 'room-deluxe-room',
+  'room-deluxe': {
+    roomId: 'room-deluxe',
     roomName: 'Deluxe Room',
-    defaultPerspectiveId: 'deluxe-room-main',
+    defaultPerspectiveId: 'deluxe-window-angle',
     perspectives: [
       {
-        id: 'deluxe-room-main',
-        label: 'Deluxe Bed Chamber',
-        image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=2000&q=85',
-        description: 'Warm, cozy room with Queen bed and tasteful lighting for solo pilgrims and couples.'
+        id: 'deluxe-window-angle',
+        label: 'Bed Chamber & Daylight Window',
+        image: HOTEL_ASSETS.deluxeRoomWindowArmchair.optimizedPath,
+        description: 'Authentic view of the Deluxe Room featuring the double bed, blue swirl accent wall, large daylight window, and plush grey armchair.'
       },
       {
-        id: 'deluxe-room-vanity',
-        label: 'Vanity & Acoustic Mirror',
-        image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=2000&q=85',
-        description: 'Dressing table with mirror, laundry hamper, and iron on request.'
+        id: 'deluxe-entrance-angle',
+        label: 'Entrance & Nightstand Angle',
+        image: HOTEL_ASSETS.deluxeRoomEntranceView.optimizedPath,
+        description: 'Full angle showing the room entrance door, bedside console with intercom telephone, and double bed.'
       },
       {
-        id: 'deluxe-room-bath',
-        label: 'En-Suite Bathroom',
-        image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=2000&q=85',
-        description: 'Clean, well-ventilated bathroom with hot and cold shower.'
+        id: 'deluxe-evening-angle',
+        label: 'Evening Lighting & Zebra Blinds',
+        image: HOTEL_ASSETS.deluxeRoomEveningBlinds.optimizedPath,
+        description: 'Warm evening ambience with backlit headboard strip lighting and drawn window zebra blinds.'
       }
     ],
     hotspots: [
       {
         id: 'dlx-bed',
-        title: 'Queen Size Bed',
-        description: 'Comfortable mattress with soft pillows and fresh cotton sheets.',
-        tag: 'Comfort',
-        position: [0, -30, -190],
-        perspective: 'deluxe-room-main'
+        title: 'Double Bed with Gold-Trimmed Headboard',
+        description: 'Comfortable double mattress dressed in clean white cotton linens with quilted runner and pillows.',
+        tag: 'Bedding',
+        position: [0, -25, -180],
+        perspective: 'deluxe-window-angle'
       },
       {
-        id: 'dlx-vanity',
-        title: 'Dressing & Mirror Console',
-        description: 'Functional corner to prepare for early morning Ganga Aarti and temple visits.',
+        id: 'dlx-armchair',
+        title: 'Plush Velvet Lounge Armchair',
+        description: 'Positioned beside the natural daylight window for reading, morning tea, and relaxation.',
+        tag: 'Seating',
+        position: [130, -40, -110],
+        perspective: 'deluxe-window-angle'
+      },
+      {
+        id: 'dlx-intercom',
+        title: 'Bedside Intercom & Power Console',
+        description: 'Direct telephone connection to our 24/7 reception desk and room service along with bedside charging sockets.',
         tag: 'Convenience',
-        position: [140, 10, -90],
-        perspective: 'deluxe-room-vanity'
+        position: [-140, -35, -120],
+        perspective: 'deluxe-entrance-angle'
+      }
+    ]
+  },
+  'room-premium': {
+    roomId: 'room-premium',
+    roomName: 'Premium Room',
+    defaultPerspectiveId: 'premium-arch-main',
+    perspectives: [
+      {
+        id: 'premium-arch-main',
+        label: 'Backlit Arch Feature Wall',
+        image: HOTEL_ASSETS.premiumRoomArchFeatureWide.optimizedPath,
+        description: 'Wide view of the Premium Room showcasing the warm backlit arch-scale wallpaper and teal upholstered headboard.'
       },
       {
-        id: 'dlx-wifi',
-        title: 'High-Speed Optical Wi-Fi',
-        description: 'Uninterrupted fiber internet throughout your stay.',
-        tag: 'Connectivity',
-        position: [-130, 80, -90],
-        perspective: 'deluxe-room-main'
+        id: 'premium-ac-vanity',
+        label: 'Split AC & Vanity Mirror Corner',
+        image: HOTEL_ASSETS.premiumRoomAcVanity.optimizedPath,
+        description: 'Shows the Voltas split air conditioner, wooden entrance door, and built-in dressing mirror with electric kettle.'
+      },
+      {
+        id: 'premium-royal-blue',
+        label: 'Royal Blue Geometric Accent Suite',
+        image: HOTEL_ASSETS.deluxeAcRoomRoyalBlue.optimizedPath,
+        description: 'Alternate room styling featuring a royal blue and gold geometric feature wall and teal cushioned headboard.'
+      }
+    ],
+    hotspots: [
+      {
+        id: 'prm-headboard',
+        title: 'Teal Upholstered Headboard & Cove Lighting',
+        description: 'Wide wooden frame with padded teal headboard panels and warm perimeter LED illumination.',
+        tag: 'Interior Design',
+        position: [0, 30, -180],
+        perspective: 'premium-arch-main'
+      },
+      {
+        id: 'prm-vanity',
+        title: 'Dressing Mirror & Electric Kettle Station',
+        description: 'Built-in vanity alcove equipped with mirror, storage cabinet, and electric tea kettle.',
+        tag: 'In-Room Amenity',
+        position: [-90, 10, -150],
+        perspective: 'premium-ac-vanity'
+      },
+      {
+        id: 'prm-ac',
+        title: 'Voltas Split Air Conditioning',
+        description: 'Individual climate control for year-round comfort in Varanasi.',
+        tag: 'Climate Control',
+        position: [-150, 110, -90],
+        perspective: 'premium-ac-vanity'
+      }
+    ]
+  },
+  'room-family': {
+    roomId: 'room-family',
+    roomName: 'Family Room',
+    defaultPerspectiveId: 'family-triple-main',
+    perspectives: [
+      {
+        id: 'family-triple-main',
+        label: 'Dual Bed & Family Sofa Suite',
+        image: HOTEL_ASSETS.familyRoomTripleBedSofa.optimizedPath,
+        description: 'Authentic Family Room at Hotel D.C. Grand featuring 1 Double Bed, 1 Separate Single Bed, wood wall paneling, and a two-seater sofa with coffee table.'
+      },
+      {
+        id: 'family-lobby-lounge',
+        label: 'Ground-Floor Family Waiting Lounge',
+        image: HOTEL_ASSETS.guestSittingLoungeMandir.optimizedPath,
+        description: 'Spacious family waiting lounge at Hotel D.C. Grand with wooden seating and traditional white mandir.'
+      }
+    ],
+    hotspots: [
+      {
+        id: 'fam-double-bed',
+        title: 'Primary Double Bed',
+        description: 'Main double bed with teal cushioned headboard and full-height wood wall paneling.',
+        tag: 'Primary Bedding',
+        position: [-100, -30, -150],
+        perspective: 'family-triple-main'
+      },
+      {
+        id: 'fam-single-bed',
+        title: 'Separate Single Bed',
+        description: 'Dedicated third-guest single bed ideal for families traveling with children or senior relatives.',
+        tag: 'Family Bedding',
+        position: [40, -25, -170],
+        perspective: 'family-triple-main'
+      },
+      {
+        id: 'fam-sofa',
+        title: 'Two-Seater Lounge Sofa & Table',
+        description: 'In-room sitting area with a comfortable teal two-seater sofa and coffee table for family meals and conversation.',
+        tag: 'Living Space',
+        position: [140, -55, -90],
+        perspective: 'family-triple-main'
+      }
+    ]
+  },
+  'room-honeymoon': {
+    roomId: 'room-honeymoon',
+    roomName: 'Honeymoon / Couple Room',
+    defaultPerspectiveId: 'honeymoon-swan-main',
+    perspectives: [
+      {
+        id: 'honeymoon-swan-main',
+        label: 'Couple Bed Chamber & Floral Wall',
+        image: HOTEL_ASSETS.honeymoonRoomFloralSwan.optimizedPath,
+        description: 'Couple room featuring blue floral backlit wallpaper, tufted brown headboard, towel swan art, Voltas split AC, and dressing mirror.'
+      },
+      {
+        id: 'honeymoon-102-angle',
+        label: 'Room 102 Lounge & Kettle View',
+        image: HOTEL_ASSETS.honeymoonRoom102Interior.optimizedPath,
+        description: 'View towards Room 102 entrance, plush armchair, and bedside electric kettle tray.'
+      },
+      {
+        id: 'honeymoon-celebration',
+        label: 'Anniversary Celebration Setup',
+        image: HOTEL_ASSETS.anniversaryCelebrationDecor.optimizedPath,
+        description: 'Custom Happy Anniversary balloon arch and floral arrangement available on request.'
+      }
+    ],
+    hotspots: [
+      {
+        id: 'hm-bed',
+        title: 'Couple Double Bed with Swan Towel Art',
+        description: 'Prepared with fresh white linens, quilted runner, and celebratory towel presentation.',
+        tag: 'Couple Stay',
+        position: [20, -30, -180],
+        perspective: 'honeymoon-swan-main'
+      },
+      {
+        id: 'hm-kettle',
+        title: 'In-Room Electric Kettle & Armchair',
+        description: 'Convenient tea/coffee kettle setup and cozy velvet armchair.',
+        tag: 'Refreshments',
+        position: [90, -15, -150],
+        perspective: 'honeymoon-102-angle'
+      }
+    ]
+  },
+  'room-super-deluxe': {
+    roomId: 'room-super-deluxe',
+    roomName: 'Super Deluxe AC Room',
+    defaultPerspectiveId: 'super-deluxe-mirror',
+    perspectives: [
+      {
+        id: 'super-deluxe-mirror',
+        label: 'Spotlighted Bed & LED Mirror',
+        image: HOTEL_ASSETS.superDeluxeRoomLedMirror.optimizedPath,
+        description: 'Super Deluxe Room featuring warm ceiling spotlights, botanical feature wall, and vertical LED-lit dressing mirror.'
+      },
+      {
+        id: 'super-deluxe-tv',
+        label: 'Walnut TV Console & Seating Area',
+        image: HOTEL_ASSETS.superDeluxeRoomTvLounge.optimizedPath,
+        description: 'Shows the wall-mounted flat-screen LED TV, walnut wood console desk, and pair of armchairs.'
+      },
+      {
+        id: 'super-deluxe-botanical',
+        label: 'Botanical Cove-Lit Chamber',
+        image: HOTEL_ASSETS.deluxeBotanicalRoomWindow.optimizedPath,
+        description: 'Bright double chamber with recessed ceiling cove lighting, gold botanical wallpaper, and daylight window.'
+      }
+    ],
+    hotspots: [
+      {
+        id: 'sd-mirror',
+        title: 'Illuminated LED Dressing Mirror',
+        description: 'Full-height vertical LED vanity mirror with bedside storage cabinet and power outlets.',
+        tag: 'Vanity & Lighting',
+        position: [110, 15, -140],
+        perspective: 'super-deluxe-mirror'
+      },
+      {
+        id: 'sd-tv',
+        title: 'Wall-Mounted Flat-Screen TV & Desk',
+        description: 'Full-width walnut wood entertainment console with flat-screen television and writing desk.',
+        tag: 'Entertainment & Work',
+        position: [-120, 20, -130],
+        perspective: 'super-deluxe-tv'
       }
     ]
   }

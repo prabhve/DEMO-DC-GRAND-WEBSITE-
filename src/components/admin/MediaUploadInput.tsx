@@ -1,66 +1,67 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Image as ImageIcon, Check, Sparkles, X, ExternalLink } from 'lucide-react';
+import { HOTEL_ASSETS } from '../../data/hotelAssets';
 
 export const CURATED_HOTEL_PHOTOS = [
   {
-    name: 'Luxury Hotel Facade',
-    category: 'Hotel',
-    url: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=85'
-  },
-  {
-    name: 'Grand Reception & Lobby',
+    name: 'Reception & Front Desk Wide',
     category: 'Lobby',
-    url: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.receptionFrontDeskWide.optimizedPath
   },
   {
-    name: 'Executive Deluxe Bedroom',
+    name: 'Reception Waiting Lounge Sofa',
+    category: 'Lobby',
+    url: HOTEL_ASSETS.lobbyTealVelvetLounge.optimizedPath
+  },
+  {
+    name: 'Deluxe Room Window & Armchair',
     category: 'Rooms',
-    url: 'https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.deluxeRoomWindowArmchair.optimizedPath
   },
   {
-    name: 'Presidential Family Suite',
+    name: 'Premium Room Signature Arch',
     category: 'Rooms',
-    url: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.premiumRoomArchFeatureWide.optimizedPath
   },
   {
-    name: 'Twin Deluxe Accommodation',
+    name: 'Family Triple Room',
     category: 'Rooms',
-    url: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.familyRoomTripleBedSofa.optimizedPath
   },
   {
-    name: 'Food Express Restaurant',
+    name: 'Honeymoon / Couple Decor Room',
+    category: 'Rooms',
+    url: HOTEL_ASSETS.honeymoonRoomFloralSwan.optimizedPath
+  },
+  {
+    name: 'Super Deluxe AC Room',
+    category: 'Rooms',
+    url: HOTEL_ASSETS.superDeluxeRoomLedMirror.optimizedPath
+  },
+  {
+    name: 'In-House Restaurant Dining Hall',
     category: 'Dining',
-    url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.inHouseRestaurantDining.optimizedPath
   },
   {
-    name: 'Fine Dining Buffet & Dishes',
-    category: 'Dining',
-    url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80'
+    name: 'Reception Guest Services Board',
+    category: 'Facilities',
+    url: HOTEL_ASSETS.receptionFacilitiesBoard.optimizedPath
   },
   {
     name: 'Banquet & Celebrations Hall',
     category: 'Events',
-    url: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.banquetConferenceHall.optimizedPath
   },
   {
-    name: 'Executive Conference Boardroom',
-    category: 'Events',
-    url: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=1200&q=80'
-  },
-  {
-    name: 'Sacred Ganga Ghats at Sunrise',
+    name: 'Sacred Ganga Ghats Sunrise',
     category: 'Varanasi',
-    url: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.varanasiGhatsSunrise.optimizedPath
   },
   {
-    name: 'Evening Ganga Aarti Celebration',
+    name: 'Evening Ganga Aarti Ceremony',
     category: 'Varanasi',
-    url: 'https://images.unsplash.com/photo-1571536802807-30451e3955d8?auto=format&fit=crop&w=1200&q=80'
-  },
-  {
-    name: 'Kashi Heritage Architecture',
-    category: 'Varanasi',
-    url: 'https://images.unsplash.com/photo-1565018054866-192e44538804?auto=format&fit=crop&w=1200&q=80'
+    url: HOTEL_ASSETS.varanasiGangaAartiEvening.optimizedPath
   }
 ];
 

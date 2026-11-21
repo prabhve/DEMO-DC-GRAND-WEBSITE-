@@ -67,7 +67,7 @@ export const RoomVirtualTourModal: React.FC = () => {
 
   // Selected room inside the tour
   const [selectedRoomId, setSelectedRoomId] = useState<string>(
-    virtualTourRoomId || 'room-super-deluxe'
+    virtualTourRoomId || 'room-deluxe'
   );
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export const RoomVirtualTourModal: React.FC = () => {
 
   // Current tour data
   const tourData: RoomTourData = useMemo(() => {
-    return VIRTUAL_TOUR_ROOMS[selectedRoomId] || VIRTUAL_TOUR_ROOMS['room-super-deluxe'];
+    return VIRTUAL_TOUR_ROOMS[selectedRoomId] || VIRTUAL_TOUR_ROOMS['room-deluxe'];
   }, [selectedRoomId]);
 
   // Active perspective inside current room

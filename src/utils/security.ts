@@ -25,7 +25,7 @@ export function sanitizePhone(phone: string): string {
 }
 
 /**
- * Normalizes phone number into international WhatsApp format (e.g. 919415204991).
+ * Normalizes phone number into international WhatsApp format (e.g. 917084003000).
  * If 10 digits (standard Indian mobile), automatically prefixes with 91.
  */
 export function normalizeWhatsAppNumber(phone: string): string {
