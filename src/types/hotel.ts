@@ -36,6 +36,13 @@ export interface Room {
   hotspots?: RoomHotspot[];
 }
 
+export interface BookingDraftParams {
+  roomId?: string;
+  checkInDate?: string;
+  checkOutDate?: string;
+  guests?: number;
+}
+
 export interface BookingRequest {
   id: string;
   customerName: string;

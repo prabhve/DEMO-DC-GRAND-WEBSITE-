@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Maximize2,
-  Users,
-  Bed,
-  Bath,
-  Eye,
-  Calendar,
-  Sparkles,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2,
-  Info,
-  Compass
+  Compass,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Info
 } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { Room } from '../../types/hotel';
+
+const FALLBACK_ROOM_IMAGE =
+  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80';
 
 export const RoomShowcaseScene: React.FC = () => {
   const { rooms, setActiveRoomForDetail, openBookingModal, openVirtualTour } = useHotel();
@@ -37,271 +35,417 @@ export const RoomShowcaseScene: React.FC = () => {
 
   if (!currentRoom) return null;
 
+  const validRoomImages = (currentRoom.images || []).filter((img) => img && img.trim().length > 0);
+  const currentRoomImageSrc =
+    validRoomImages[activeImageIdx] ||
+    validRoomImages[0] ||
+    currentRoom.coverImage?.trim() ||
+    FALLBACK_ROOM_IMAGE;
+
   return (
     <section
       id="rooms"
-      className="relative py-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0c0d10] via-[#12141c] to-[#0c0d10] overflow-hidden"
+      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
     >
-      {/* Background Ambience Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-[#c5a880]/5 blur-[120px] pointer-events-none" />
+      <div className="max-w-[1440px] mx-auto relative z-10">
+        {/* Section Editorial Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14 sm:mb-16">
+          <div className="lg:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-3 mb-4"
+            >
+              <span className="w-8 h-[1px] bg-[#B69A69]" />
+              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+                Rooms & Suites · Private Sanctuaries
+              </span>
+            </motion.div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Scene 04: Rooms Intro Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.08 }}
+              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[58px] text-[#F5F1E9] font-normal leading-[1.08]"
+            >
+              Spaces Crafted for Restful Repose.
+            </motion.h2>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-3 text-[#c5a880]"
+            transition={{ delay: 0.16 }}
+            className="lg:col-span-5 lg:pb-1"
           >
-            <Sparkles className="w-4 h-4" />
-            <span className="text-xs uppercase tracking-[0.3em] font-medium font-sans">
-              Accommodations
-            </span>
-            <Sparkles className="w-4 h-4" />
+            <p className="text-sm sm:text-base text-[#D9D1C5]/80 font-light leading-relaxed">
+              Each guest chamber at D.C. Grand pairs custom wood millwork, climate-controlled comfort, and thoughtful amenities—accessible via modern elevator across all floors.
+            </p>
           </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl text-[#f3e5d0] font-normal leading-tight mb-4"
-          >
-            Rooms Designed for a Comfortable Stay
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-[#a09a8e] font-light leading-relaxed max-w-2xl mx-auto"
-          >
-            Select from our refined room categories crafted for solo pilgrims, families, and couples seeking modern solace in Bhelupur.
-          </motion.p>
         </div>
 
-        {/* Room Category Tabs / Pill Bar */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap mb-10">
-          {activeRooms.map((room, idx) => {
-            const isSelected = idx === currentIndex;
-            return (
-              <button
-                key={room.id}
-                onClick={() => {
-                  setCurrentIndex(idx);
-                  setActiveImageIdx(0);
-                }}
-                className={`px-4 py-2 rounded-full text-xs uppercase tracking-wider transition-all duration-300 ${
-                  isSelected
-                    ? 'bg-[#c5a880] text-[#0c0d10] font-semibold shadow-[0_0_20px_rgba(197,168,128,0.35)] scale-105'
-                    : 'bg-[#15171e] text-[#a09a8e] border border-[#2a2723] hover:border-[#c5a880]/40 hover:text-[#f3e5d0]'
-                }`}
-              >
-                {room.name}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Scene 05: 3D Floating Room Showcase Panel */}
-        <div className="perspective-container">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentRoom.id}
-              initial={{ opacity: 0, rotateY: 8, scale: 0.96 }}
-              animate={{ opacity: 1, rotateY: 0, scale: 1 }}
-              exit={{ opacity: 0, rotateY: -8, scale: 0.96 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="relative rounded-3xl bg-[#13151d] border border-[#c5a880]/30 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden preserve-3d"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                {/* Left: Interactive Room Gallery & Visual Angle */}
-                <div className="lg:col-span-7 relative bg-[#0c0d10] min-h-[380px] sm:min-h-[460px] flex flex-col justify-between overflow-hidden">
-                  <div className="relative flex-1 group overflow-hidden">
-                    <img
-                      src={currentRoom.images[activeImageIdx] || currentRoom.coverImage}
-                      alt={currentRoom.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        {/* Clean Unboxed Category Selector Bar */}
+        <div className="border-b border-[#D9D1C5]/15 mb-12 overflow-x-auto">
+          <div className="flex items-center gap-6 sm:gap-10 min-w-max">
+            {activeRooms.map((room, idx) => {
+              const isSelected = idx === currentIndex;
+              return (
+                <button
+                  key={room.id}
+                  type="button"
+                  onClick={() => {
+                    setCurrentIndex(idx);
+                    setActiveImageIdx(0);
+                  }}
+                  className={`relative pb-4 text-xs sm:text-sm uppercase tracking-[0.18em] transition-colors cursor-pointer flex items-center gap-2.5 ${
+                    isSelected
+                      ? 'text-[#F5F1E9] font-semibold'
+                      : 'text-[#D9D1C5]/60 hover:text-[#F5F1E9]'
+                  }`}
+                >
+                  <span className="font-mono text-[11px] text-[#B69A69] tabular-nums">
+                    0{idx + 1}
+                  </span>
+                  <span>{room.name}</span>
+                  {isSelected && (
+                    <motion.span
+                      layoutId="activeRoomTabIndicator"
+                      className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#B69A69]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-transparent opacity-80" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-                    {/* Navigation Arrows */}
-                    <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex items-center justify-between pointer-events-none">
+        {/* Part 1: Featured Editorial Room Spotlight */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentRoom.id}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -18 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-12 bg-[#161412] border border-[#D9D1C5]/15 mb-24"
+          >
+            {/* Left 7 Columns: Large Photography & Gallery Strip */}
+            <div className="lg:col-span-7 relative flex flex-col justify-between min-h-[380px] sm:min-h-[540px] bg-[#12100E] overflow-hidden">
+              <div className="relative flex-1 overflow-hidden group">
+                <img
+                  src={currentRoomImageSrc}
+                  alt={`${currentRoom.name} at Hotel D.C. Grand Varanasi`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== FALLBACK_ROOM_IMAGE) target.src = FALLBACK_ROOM_IMAGE;
+                  }}
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#161412] via-transparent to-[#161412]/35" />
+
+                {/* Top Left Unboxed Metadata Overlay */}
+                <div className="absolute top-5 left-5 bg-[#201D19]/85 backdrop-blur-md border border-[#D9D1C5]/20 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-[#F5F1E9]">
+                  {currentRoom.view} · {currentRoom.size}
+                </div>
+
+                {/* Top Right 360 Virtual Tour Trigger */}
+                <button
+                  type="button"
+                  onClick={() => openVirtualTour(currentRoom.id)}
+                  id={`tour-badge-${currentRoom.id}`}
+                  className="absolute top-5 right-5 bg-[#201D19]/90 hover:bg-[#B69A69] text-[#F5F1E9] hover:text-[#201D19] border border-[#B69A69] px-4 py-2 text-[11px] uppercase tracking-[0.18em] font-semibold transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <Compass className="w-3.5 h-3.5" />
+                  <span>360° Spatial Tour</span>
+                </button>
+
+                {/* Prev / Next Room Controls */}
+                <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex items-center justify-between pointer-events-none">
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    aria-label="Previous room category"
+                    className="pointer-events-auto w-11 h-11 bg-[#201D19]/80 hover:bg-[#B69A69] text-[#F5F1E9] hover:text-[#201D19] border border-[#D9D1C5]/25 flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    aria-label="Next room category"
+                    className="pointer-events-auto w-11 h-11 bg-[#201D19]/80 hover:bg-[#B69A69] text-[#F5F1E9] hover:text-[#201D19] border border-[#D9D1C5]/25 flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Angle Thumbnail Switcher */}
+              {validRoomImages.length > 1 && (
+                <div className="p-4 bg-[#161412] border-t border-[#D9D1C5]/15 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-2.5 overflow-x-auto">
+                    {validRoomImages.map((img, idx) => (
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePrev();
-                        }}
-                        className="pointer-events-auto w-10 h-10 rounded-full bg-[#0c0d10]/70 backdrop-blur-md border border-[#c5a880]/30 text-[#f3e5d0] hover:bg-[#c5a880] hover:text-[#0c0d10] flex items-center justify-center transition-all"
-                        aria-label="Previous room"
+                        key={idx}
+                        type="button"
+                        onClick={() => setActiveImageIdx(idx)}
+                        aria-label={`View angle ${idx + 1} of ${currentRoom.name}`}
+                        className={`w-20 h-13 overflow-hidden shrink-0 border transition-all cursor-pointer ${
+                          activeImageIdx === idx
+                            ? 'border-[#B69A69] opacity-100'
+                            : 'border-transparent opacity-50 hover:opacity-85'
+                        }`}
                       >
-                        <ChevronLeft className="w-5 h-5" />
+                        <img
+                          src={img.trim()}
+                          alt={`${currentRoom.name} view ${idx + 1}`}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (target.src !== FALLBACK_ROOM_IMAGE) target.src = FALLBACK_ROOM_IMAGE;
+                          }}
+                          className="w-full h-full object-cover"
+                        />
                       </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleNext();
-                        }}
-                        className="pointer-events-auto w-10 h-10 rounded-full bg-[#0c0d10]/70 backdrop-blur-md border border-[#c5a880]/30 text-[#f3e5d0] hover:bg-[#c5a880] hover:text-[#0c0d10] flex items-center justify-center transition-all"
-                        aria-label="Next room"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    </div>
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#D9D1C5]/60 shrink-0 hidden sm:inline tabular-nums">
+                    Angle 0{activeImageIdx + 1} / 0{validRoomImages.length}
+                  </span>
+                </div>
+              )}
+            </div>
 
-                    {/* View tag */}
-                    <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#0c0d10]/70 backdrop-blur-md border border-[#c5a880]/20 text-[11px] text-[#c5a880] uppercase tracking-widest font-medium">
-                      {currentRoom.view}
-                    </div>
+            {/* Right 5 Columns: Editorial Room Ledger & Direct Booking CTAs */}
+            <div className="lg:col-span-5 p-6 sm:p-10 lg:p-12 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-[#D9D1C5]/15">
+              <div>
+                <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[#B69A69] mb-3">
+                  <span>Category 0{currentIndex + 1}</span>
+                  <span className="font-mono text-[#D9D1C5]/60 tabular-nums">
+                    0{currentIndex + 1} / 0{activeRooms.length}
+                  </span>
+                </div>
 
-                    {/* 360 Tour Quick Badge Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openVirtualTour(currentRoom.id);
-                      }}
-                      className="absolute top-4 right-4 px-3.5 py-1.5 rounded-full bg-[#0c0d10]/90 backdrop-blur-md border border-[#c5a880] text-[11px] text-[#f3e5d0] uppercase tracking-wider font-bold hover:bg-[#c5a880] hover:text-[#0c0d10] transition-all flex items-center gap-1.5 shadow-[0_0_20px_rgba(197,168,128,0.5)] z-10"
-                      id={`tour-badge-${currentRoom.id}`}
-                    >
-                      <Compass className="w-3.5 h-3.5 text-[#c5a880]" />
-                      <span>360° Virtual Tour</span>
-                    </button>
+                <h3 className="font-serif-luxury text-3xl sm:text-4xl text-[#F5F1E9] font-normal mb-4">
+                  {currentRoom.name}
+                </h3>
+
+                <p className="text-sm sm:text-base text-[#D9D1C5]/80 font-light leading-relaxed mb-8">
+                  {currentRoom.description}
+                </p>
+
+                {/* Tabular Specification Ledger */}
+                <div className="grid grid-cols-2 border-y border-[#D9D1C5]/15 divide-x divide-[#D9D1C5]/15 mb-8">
+                  <div className="py-4 pr-4">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/55 block mb-1">
+                      Dimensions
+                    </span>
+                    <span className="text-sm font-medium text-[#F5F1E9] tabular-nums">
+                      {currentRoom.size}
+                    </span>
+                  </div>
+                  <div className="py-4 pl-4">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/55 block mb-1">
+                      Occupancy
+                    </span>
+                    <span className="text-sm font-medium text-[#F5F1E9] tabular-nums">
+                      Up to {currentRoom.maxGuests} Guests
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 border-b border-[#D9D1C5]/15 divide-x divide-[#D9D1C5]/15 -mt-8 mb-8">
+                  <div className="py-4 pr-4">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/55 block mb-1">
+                      Bedding Configuration
+                    </span>
+                    <span className="text-sm font-medium text-[#F5F1E9]">
+                      {currentRoom.bed}
+                    </span>
+                  </div>
+                  <div className="py-4 pl-4">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/55 block mb-1">
+                      Bath & Orientation
+                    </span>
+                    <span className="text-sm font-medium text-[#F5F1E9]">
+                      {currentRoom.bathrooms} En-Suite · {currentRoom.view}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Curated Amenities */}
+                <div className="mb-8">
+                  <div className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium mb-3.5">
+                    Signature Room Appointments
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-4">
+                    {currentRoom.amenities.slice(0, 6).map((amenity) => (
+                      <div key={amenity} className="flex items-center gap-2.5 text-xs text-[#D9D1C5]/85">
+                        <Check className="w-3.5 h-3.5 text-[#B69A69] shrink-0" />
+                        <span className="truncate">{amenity}</span>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Thumbnail Row */}
-                  {currentRoom.images.length > 1 && (
-                    <div className="p-3 bg-[#0c0d10]/90 backdrop-blur-md border-t border-[#2a2723] flex items-center gap-2 overflow-x-auto">
-                      {currentRoom.images.map((img, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setActiveImageIdx(idx)}
-                          className={`w-16 h-12 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${
-                            activeImageIdx === idx
-                              ? 'border-[#c5a880] scale-105 shadow-md'
-                              : 'border-transparent opacity-60 hover:opacity-100'
-                          }`}
-                        >
-                          <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
-                        </button>
-                      ))}
+                  {currentRoom.note && (
+                    <div className="mt-4 pt-3 border-t border-[#D9D1C5]/10 flex items-start gap-2 text-xs text-[#D9D1C5]/75">
+                      <Info className="w-3.5 h-3.5 text-[#B69A69] shrink-0 mt-0.5" />
+                      <span>{currentRoom.note}</span>
                     </div>
                   )}
                 </div>
-
-                {/* Right: Room Specifications & Action Panel */}
-                <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-gradient-to-br from-[#151822] to-[#101117]">
-                  <div>
-                    {/* Category / Super Title */}
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[11px] uppercase tracking-[0.25em] text-[#c5a880] font-sans font-semibold">
-                        Guest Sanctuary
-                      </span>
-                      <span className="text-xs text-[#a09a8e] font-sans">
-                        0{currentIndex + 1} / 0{activeRooms.length}
-                      </span>
-                    </div>
-
-                    <h3 className="font-serif-luxury text-2xl sm:text-4xl text-[#f3e5d0] font-normal mb-3">
-                      {currentRoom.name}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-[#a09a8e] leading-relaxed font-light mb-6">
-                      {currentRoom.description}
-                    </p>
-
-                    {/* Room Key Specifications Grid */}
-                    <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-xl bg-[#0c0d10]/50 border border-[#2a2723]">
-                      <div className="flex items-center gap-2.5">
-                        <Maximize2 className="w-4 h-4 text-[#c5a880] shrink-0" />
-                        <div>
-                          <span className="text-[10px] uppercase tracking-wider text-[#777166] block">Room Size</span>
-                          <span className="text-xs font-semibold text-[#e5e3dc]">{currentRoom.size}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2.5">
-                        <Users className="w-4 h-4 text-[#c5a880] shrink-0" />
-                        <div>
-                          <span className="text-[10px] uppercase tracking-wider text-[#777166] block">Occupancy</span>
-                          <span className="text-xs font-semibold text-[#e5e3dc]">Max {currentRoom.maxGuests} Guests</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2.5">
-                        <Bed className="w-4 h-4 text-[#c5a880] shrink-0" />
-                        <div>
-                          <span className="text-[10px] uppercase tracking-wider text-[#777166] block">Bedding</span>
-                          <span className="text-xs font-semibold text-[#e5e3dc]">{currentRoom.bed}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2.5">
-                        <Bath className="w-4 h-4 text-[#c5a880] shrink-0" />
-                        <div>
-                          <span className="text-[10px] uppercase tracking-wider text-[#777166] block">Bathroom</span>
-                          <span className="text-xs font-semibold text-[#e5e3dc]">{currentRoom.bathrooms} En-Suite</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Amenities List */}
-                    <div className="mb-6">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-[#d1ccc0] mb-3 flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[#c5a880]" />
-                        Included Amenities
-                      </h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {currentRoom.amenities.slice(0, 6).map((amenity) => (
-                          <div key={amenity} className="flex items-center gap-2 text-xs text-[#a09a8e]">
-                            <CheckCircle2 className="w-3 h-3 text-[#c5a880] shrink-0" />
-                            <span className="truncate">{amenity}</span>
-                          </div>
-                        ))}
-                      </div>
-                      {currentRoom.note && (
-                        <div className="mt-3 flex items-start gap-1.5 text-[11px] text-[#c5a880]/90 bg-[#c5a880]/10 p-2 rounded-lg border border-[#c5a880]/20">
-                          <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                          <span>{currentRoom.note}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Actions: 360 TOUR, VIEW DETAILS, & REQUEST BOOKING */}
-                  <div className="pt-4 border-t border-[#2a2723] flex flex-col sm:flex-row items-center gap-2.5">
-                    <button
-                      onClick={() => openVirtualTour(currentRoom.id)}
-                      className="w-full sm:w-auto px-4 py-3 rounded-xl border border-[#c5a880]/60 bg-[#c5a880]/10 hover:bg-[#c5a880] hover:text-[#0c0d10] text-[#f3e5d0] text-xs font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg"
-                      id={`virtual-tour-btn-${currentRoom.id}`}
-                    >
-                      <Compass className="w-4 h-4 text-[#c5a880]" />
-                      <span>360° Tour</span>
-                    </button>
-
-                    <button
-                      onClick={() => setActiveRoomForDetail(currentRoom)}
-                      className="w-full sm:flex-1 py-3 rounded-xl border border-[#2a2723] text-[#f3e5d0] hover:border-[#c5a880]/40 hover:bg-[#1f222d] text-xs font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2"
-                      id={`view-room-btn-${currentRoom.id}`}
-                    >
-                      <Eye className="w-4 h-4 text-[#c5a880]" />
-                      <span>Details</span>
-                    </button>
-
-                    <button
-                      onClick={() => openBookingModal(currentRoom.id)}
-                      className="w-full sm:flex-1 py-3 rounded-xl bg-gradient-to-r from-[#c5a880] to-[#b39366] text-[#0c0d10] hover:shadow-[0_0_20px_rgba(197,168,128,0.4)] text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2"
-                      id={`book-room-btn-${currentRoom.id}`}
-                    >
-                      <Calendar className="w-4 h-4" />
-                      <span>Book</span>
-                    </button>
-                  </div>
-                </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
+
+              {/* Action Deck */}
+              <div className="pt-6 border-t border-[#D9D1C5]/15 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => openBookingModal(currentRoom.id)}
+                  id={`book-room-btn-${currentRoom.id}`}
+                  className="flex-1 py-4 px-6 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Book This Room</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveRoomForDetail(currentRoom)}
+                  id={`view-room-btn-${currentRoom.id}`}
+                  className="py-4 px-5 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-medium uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Explore Room</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => openVirtualTour(currentRoom.id)}
+                  id={`virtual-tour-btn-${currentRoom.id}`}
+                  aria-label="Launch 360 Virtual Room Tour"
+                  className="py-4 px-4 border border-[#536E68] bg-[#536E68]/20 hover:bg-[#536E68]/40 text-[#F5F1E9] text-xs font-medium uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Compass className="w-4 h-4 text-[#B69A69]" />
+                  <span>360°</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Part 2: Complete Accommodations Collection Ledger */}
+        <div className="pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+            <div>
+              <span className="text-xs uppercase tracking-[0.22em] text-[#B69A69] block mb-2">
+                Complete Room Directory
+              </span>
+              <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#F5F1E9] font-normal">
+                Compare All Accommodations
+              </h3>
+            </div>
+            <p className="text-xs uppercase tracking-[0.16em] text-[#D9D1C5]/65">
+              Direct Reservation · Verified Specifications · Instant Concierge Confirmation
+            </p>
+          </div>
+
+          <div className="divide-y divide-[#D9D1C5]/15 border-y border-[#D9D1C5]/15">
+            {activeRooms.map((room, idx) => {
+              const roomImg =
+                room.coverImage?.trim() ||
+                room.images?.find((i) => i && i.trim().length > 0)?.trim() ||
+                FALLBACK_ROOM_IMAGE;
+
+              return (
+                <motion.article
+                  key={room.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, delay: idx * 0.06 }}
+                  className="py-8 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center group"
+                >
+                  {/* Thumbnail */}
+                  <div
+                    onClick={() => setActiveRoomForDetail(room)}
+                    className="lg:col-span-4 relative h-56 sm:h-64 overflow-hidden bg-[#161412] cursor-pointer"
+                  >
+                    <img
+                      src={roomImg}
+                      alt={room.name}
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src !== FALLBACK_ROOM_IMAGE) target.src = FALLBACK_ROOM_IMAGE;
+                      }}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute bottom-3 left-3 bg-[#201D19]/85 backdrop-blur-sm px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-[#F5F1E9]">
+                      {room.size}
+                    </div>
+                  </div>
+
+                  {/* Editorial Summary & Specs */}
+                  <div className="lg:col-span-5">
+                    <div className="text-xs uppercase tracking-[0.2em] text-[#B69A69] mb-2 tabular-nums">
+                      0{idx + 1} · {room.view} · Max {room.maxGuests} Guests
+                    </div>
+                    <h4
+                      onClick={() => setActiveRoomForDetail(room)}
+                      className="font-serif-luxury text-2xl sm:text-3xl text-[#F5F1E9] group-hover:text-[#B69A69] transition-colors cursor-pointer mb-3"
+                    >
+                      {room.name}
+                    </h4>
+                    <p className="text-sm text-[#D9D1C5]/75 font-light leading-relaxed mb-4 line-clamp-2">
+                      {room.description}
+                    </p>
+                    <div className="text-xs text-[#D9D1C5]/65">
+                      <strong className="text-[#F5F1E9] font-medium">Bedding:</strong> {room.bed}{' '}
+                      <span className="mx-2 text-[#B69A69]">·</span>
+                      <strong className="text-[#F5F1E9] font-medium">Highlights:</strong>{' '}
+                      {room.amenities.slice(0, 3).join(' · ')}
+                    </div>
+                  </div>
+
+                  {/* Direct Actions */}
+                  <div className="lg:col-span-3 flex flex-wrap lg:flex-col items-stretch justify-end gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => openBookingModal(room.id)}
+                      className="py-3 px-5 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <span>Book This Room</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </button>
+
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => setActiveRoomForDetail(room)}
+                        className="py-2.5 px-3 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-[11px] uppercase tracking-[0.15em] transition-colors cursor-pointer"
+                      >
+                        Explore
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openVirtualTour(room.id)}
+                        className="py-2.5 px-3 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#D9D1C5] hover:text-[#B69A69] text-[11px] uppercase tracking-[0.15em] transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        <Compass className="w-3.5 h-3.5 text-[#B69A69]" />
+                        <span>360° Tour</span>
+                      </button>
+                    </div>
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

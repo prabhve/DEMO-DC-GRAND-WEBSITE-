@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   Room,
   BookingRequest,
+  BookingDraftParams,
   Enquiry,
   GalleryItem,
   RestaurantData,
@@ -41,7 +42,8 @@ interface HotelContextType {
   isBookingModalOpen: boolean;
   setIsBookingModalOpen: (open: boolean) => void;
   preselectedRoomId: string | null;
-  openBookingModal: (roomId?: string) => void;
+  bookingDraft: BookingDraftParams | null;
+  openBookingModal: (roomIdOrDraft?: string | BookingDraftParams) => void;
   isEnquiryModalOpen: boolean;
   setIsEnquiryModalOpen: (open: boolean) => void;
   initialEnquiryType: Enquiry['enquiryType'];
@@ -111,22 +113,70 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Load from local storage or fallback to defaults
   const [rooms, setRooms] = useState<Room[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.ROOMS);
-    return saved ? JSON.parse(saved) : INITIAL_ROOMS;
+    if (!saved) return INITIAL_ROOMS;
+    try {
+      const parsed: Room[] = JSON.parse(saved);
+      return parsed.map((r, idx) => {
+        const fallbackRoom = INITIAL_ROOMS[idx] || INITIAL_ROOMS[0];
+        const cleanImages = (r.images || []).filter((img) => typeof img === 'string' && img.trim().length > 0);
+        const finalImages = cleanImages.length > 0 ? cleanImages : fallbackRoom.images;
+        const cleanCover = r.coverImage && r.coverImage.trim().length > 0 ? r.coverImage.trim() : finalImages[0];
+        return { ...r, images: finalImages, coverImage: cleanCover };
+      });
+    } catch {
+      return INITIAL_ROOMS;
+    }
   });
 
   const [gallery, setGallery] = useState<GalleryItem[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.GALLERY);
-    return saved ? JSON.parse(saved) : INITIAL_GALLERY;
+    if (!saved) return INITIAL_GALLERY;
+    try {
+      const parsed: GalleryItem[] = JSON.parse(saved);
+      return parsed.map((g, idx) => ({
+        ...g,
+        url:
+          g.url && g.url.trim().length > 0
+            ? g.url.trim()
+            : (INITIAL_GALLERY[idx] || INITIAL_GALLERY[0]).url
+      }));
+    } catch {
+      return INITIAL_GALLERY;
+    }
   });
 
   const [restaurant, setRestaurant] = useState<RestaurantData>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.RESTAURANT);
-    return saved ? JSON.parse(saved) : INITIAL_RESTAURANT;
+    if (!saved) return INITIAL_RESTAURANT;
+    try {
+      const parsed: RestaurantData = JSON.parse(saved);
+      const cleanImages = (parsed.images || []).filter((img) => typeof img === 'string' && img.trim().length > 0);
+      return {
+        ...parsed,
+        images: cleanImages.length > 0 ? cleanImages : INITIAL_RESTAURANT.images
+      };
+    } catch {
+      return INITIAL_RESTAURANT;
+    }
   });
 
   const [events, setEvents] = useState<EventFacilityData[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.EVENTS);
-    return saved ? JSON.parse(saved) : INITIAL_EVENTS;
+    if (!saved) return INITIAL_EVENTS;
+    try {
+      const parsed: EventFacilityData[] = JSON.parse(saved);
+      return parsed.map((ev, idx) => {
+        const fallbackEv = INITIAL_EVENTS[idx] || INITIAL_EVENTS[0];
+        const cleanImages = (ev.images || []).filter((img) => typeof img === 'string' && img.trim().length > 0);
+        return {
+          ...ev,
+          images: cleanImages.length > 0 ? cleanImages : fallbackEv.images,
+          seatingArrangements: ev.seatingArrangements || fallbackEv.seatingArrangements
+        };
+      });
+    } catch {
+      return INITIAL_EVENTS;
+    }
   });
 
   const [policies, setPolicies] = useState<PolicyData>(() => {
@@ -141,7 +191,67 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [homeCms, setHomeCms] = useState<HomeCmsData>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.HOME_CMS);
-    return saved ? JSON.parse(saved) : INITIAL_HOME_CMS;
+    if (!saved) return INITIAL_HOME_CMS;
+    try {
+      const parsed: HomeCmsData = JSON.parse(saved);
+      // Automatically upgrade legacy default hero & intro copy to the Phase 3 & Phase 9 editorial defaults
+      const isLegacyHero =
+        parsed.heroHeadline === 'Comfortable Stay in the Heart of Varanasi' ||
+        !parsed.heroHeadline;
+      const isLegacyIntro =
+        parsed.introHeading === 'D C Grand' || !parsed.introHeading;
+      const isLegacyAbout =
+        parsed.aboutHeading === 'A Gracious Base in the Eternal City' || !parsed.aboutHeading;
+
+      return {
+        ...INITIAL_HOME_CMS,
+        ...parsed,
+        ...(isLegacyHero
+          ? {
+              heroBadge: INITIAL_HOME_CMS.heroBadge,
+              heroSubtitle: INITIAL_HOME_CMS.heroSubtitle,
+              heroHeadline: INITIAL_HOME_CMS.heroHeadline,
+              heroSupportingText: INITIAL_HOME_CMS.heroSupportingText,
+              heroExploreBtnText: INITIAL_HOME_CMS.heroExploreBtnText,
+              heroBookingBtnText: INITIAL_HOME_CMS.heroBookingBtnText
+            }
+          : {}),
+        ...(isLegacyIntro
+          ? {
+              introBadge: INITIAL_HOME_CMS.introBadge,
+              introHeading: INITIAL_HOME_CMS.introHeading,
+              introText: INITIAL_HOME_CMS.introText,
+              introPillar1Title: INITIAL_HOME_CMS.introPillar1Title,
+              introPillar1Desc: INITIAL_HOME_CMS.introPillar1Desc,
+              introPillar2Title: INITIAL_HOME_CMS.introPillar2Title,
+              introPillar2Desc: INITIAL_HOME_CMS.introPillar2Desc
+            }
+          : {}),
+        ...(isLegacyAbout
+          ? {
+              aboutBadge: INITIAL_HOME_CMS.aboutBadge,
+              aboutHeading: INITIAL_HOME_CMS.aboutHeading,
+              aboutText: INITIAL_HOME_CMS.aboutText,
+              aboutSecondaryText: INITIAL_HOME_CMS.aboutSecondaryText,
+              aboutFeatures: INITIAL_HOME_CMS.aboutFeatures
+            }
+          : {}),
+        heroCoverImage:
+          parsed.heroCoverImage && parsed.heroCoverImage.trim().length > 0
+            ? parsed.heroCoverImage.trim()
+            : INITIAL_HOME_CMS.heroCoverImage,
+        introImage:
+          parsed.introImage && parsed.introImage.trim().length > 0
+            ? parsed.introImage.trim()
+            : INITIAL_HOME_CMS.introImage,
+        aboutImage:
+          parsed.aboutImage && parsed.aboutImage.trim().length > 0
+            ? parsed.aboutImage.trim()
+            : INITIAL_HOME_CMS.aboutImage
+      };
+    } catch {
+      return INITIAL_HOME_CMS;
+    }
   });
 
   const [threeSettings, setThreeSettings] = useState<ThreeDSettings>(() => {
@@ -152,7 +262,6 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.BOOKINGS);
     if (saved) return JSON.parse(saved);
-    // Initial sample booking request for admin verification
     return [
       {
         id: 'DCG-BK-9241',
@@ -222,6 +331,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [activeRoomForDetail, setActiveRoomForDetail] = useState<Room | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState<boolean>(false);
   const [preselectedRoomId, setPreselectedRoomId] = useState<string | null>(null);
+  const [bookingDraft, setBookingDraft] = useState<BookingDraftParams | null>(null);
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState<boolean>(false);
   const [initialEnquiryType, setInitialEnquiryType] = useState<Enquiry['enquiryType']>('General Enquiry');
   const [isVirtualTourOpen, setIsVirtualTourOpen] = useState<boolean>(false);
@@ -271,8 +381,17 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [enquiries]);
 
   // Actions
-  const openBookingModal = (roomId?: string) => {
-    setPreselectedRoomId(roomId || null);
+  const openBookingModal = (roomIdOrDraft?: string | BookingDraftParams) => {
+    if (typeof roomIdOrDraft === 'string') {
+      setPreselectedRoomId(roomIdOrDraft);
+      setBookingDraft({ roomId: roomIdOrDraft });
+    } else if (roomIdOrDraft && typeof roomIdOrDraft === 'object') {
+      setPreselectedRoomId(roomIdOrDraft.roomId || null);
+      setBookingDraft(roomIdOrDraft);
+    } else {
+      setPreselectedRoomId(null);
+      setBookingDraft(null);
+    }
     setIsBookingModalOpen(true);
   };
 
@@ -441,6 +560,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         isBookingModalOpen,
         setIsBookingModalOpen,
         preselectedRoomId,
+        bookingDraft,
         openBookingModal,
         isEnquiryModalOpen,
         setIsEnquiryModalOpen,

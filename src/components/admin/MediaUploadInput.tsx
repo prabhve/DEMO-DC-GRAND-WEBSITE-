@@ -240,10 +240,10 @@ export const MediaUploadInput: React.FC<MediaUploadInputProps> = ({
       )}
 
       {/* Live Image Preview */}
-      {value ? (
+      {value && value.trim() ? (
         <div className={`relative rounded-xl overflow-hidden border border-[#2a2723] bg-[#0c0d10] ${previewHeightClass} group`}>
           <img
-            src={value}
+            src={value.trim()}
             alt="Media preview"
             className="w-full h-full object-cover"
             onError={(e) => {

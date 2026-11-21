@@ -1,195 +1,199 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Phone, MessageCircle, Mail, MapPin, Send, ExternalLink, Sparkles } from 'lucide-react';
+import { Phone, MessageCircle, Mail, MapPin, Send, ExternalLink, ArrowUpRight } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 
 export const ContactScene: React.FC = () => {
-  const { contact, openEnquiryModal } = useHotel();
+  const { contact, openEnquiryModal, openBookingModal } = useHotel();
+
+  const cleanWhatsApp = contact.whatsapp.replace(/[^0-9]/g, '');
 
   return (
     <section
       id="contact"
-      className="relative py-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0c0d10] via-[#12141c] to-[#0c0d10] overflow-hidden"
+      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
     >
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+      <div className="max-w-[1440px] mx-auto relative z-10">
+        {/* Section Editorial Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
+          <div className="lg:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-3 mb-4"
+            >
+              <span className="w-8 h-[1px] bg-[#B69A69]" />
+              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+                24/7 Front Desk & Reservations
+              </span>
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.08 }}
+              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[58px] text-[#F5F1E9] font-normal leading-[1.08]"
+            >
+              Connect With Our Concierge.
+            </motion.h2>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-3 text-[#c5a880]"
+            transition={{ delay: 0.14 }}
+            className="lg:col-span-5 lg:pb-1"
           >
-            <Phone className="w-4 h-4" />
-            <span className="text-xs uppercase tracking-[0.3em] font-medium font-sans">
-              Front Desk & Concierge
-            </span>
-            <Phone className="w-4 h-4" />
+            <p className="text-sm sm:text-base text-[#D9D1C5]/80 font-light leading-relaxed">
+              Whether reserving a room for your family pilgrimage, planning a celebratory banquet, or requesting station pickup, our Bhelupur front desk is available around the clock.
+            </p>
           </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl text-[#f3e5d0] font-normal leading-tight mb-4"
-          >
-            Connect With Our Team
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-[#a09a8e] font-light leading-relaxed max-w-2xl mx-auto"
-          >
-            Whether planning a spiritual journey, booking a celebratory banquet, or seeking driving guidance, our front office is at your assistance 24/7.
-          </motion.p>
         </div>
 
-        {/* 3D Floating Contact Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 perspective-container mb-12">
-          {/* Card 1: Direct Voice Call */}
-          <motion.div
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="p-6 rounded-2xl bg-[#151720] border border-[#2a2723] hover:border-[#c5a880]/50 shadow-xl flex flex-col justify-between preserve-3d group transition-all"
-          >
+        {/* 4-Column Architectural Contact Ledger */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-[#D9D1C5]/15 mb-14">
+          {/* 01: Direct Voice Line */}
+          <div className="p-7 sm:p-8 border-r border-b border-[#D9D1C5]/15 bg-[#161412] flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#1e212b] border border-[#c5a880]/20 flex items-center justify-center text-[#c5a880] mb-5 group-hover:bg-[#c5a880] group-hover:text-[#0c0d10] transition-colors">
-                <Phone className="w-5 h-5" />
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-[#B69A69] mb-6">
+                <span className="font-mono">01</span>
+                <span>Direct Line</span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-[#777166] block mb-1">
-                Direct Line
-              </span>
-              <h3 className="text-base font-semibold text-[#f3e5d0] mb-2 font-sans">
-                Voice Telephone
+              <Phone className="w-5 h-5 text-[#B69A69] mb-4" />
+              <h3 className="font-serif-luxury text-2xl text-[#F5F1E9] font-normal mb-2">
+                Front Desk Telephone
               </h3>
-              <p className="text-xs text-[#a09a8e] font-light leading-relaxed mb-6">
-                Connect with our front desk managers for instant questions and availability.
+              <p className="text-xs text-[#D9D1C5]/75 leading-relaxed mb-6">
+                Speak directly with our duty manager for room availability, tariff quotes, and arrival guidance.
               </p>
             </div>
             <a
               href={`tel:${contact.phone}`}
-              className="w-full py-2.5 rounded-xl bg-[#1e212b] border border-[#c5a880]/30 text-[#e8d7be] hover:bg-[#c5a880] hover:text-[#0c0d10] text-xs font-semibold uppercase tracking-wider text-center transition-all"
               id="contact-call-btn"
+              className="py-3.5 px-4 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-semibold uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-2 tabular-nums"
             >
-              Call {contact.phone}
+              <span>Call {contact.phone}</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
-          </motion.div>
+          </div>
 
-          {/* Card 2: WhatsApp Chat */}
-          <motion.div
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="p-6 rounded-2xl bg-[#151720] border border-[#2a2723] hover:border-[#25D366]/50 shadow-xl flex flex-col justify-between preserve-3d group transition-all"
-          >
+          {/* 02: WhatsApp Concierge */}
+          <div className="p-7 sm:p-8 border-r border-b border-[#D9D1C5]/15 bg-[#161412] flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#1e212b] border border-[#25D366]/20 flex items-center justify-center text-[#25D366] mb-5 group-hover:bg-[#25D366] group-hover:text-[#0c0d10] transition-colors">
-                <MessageCircle className="w-5 h-5" />
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-[#B69A69] mb-6">
+                <span className="font-mono">02</span>
+                <span>Instant Messaging</span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-[#777166] block mb-1">
-                Instant Chat
-              </span>
-              <h3 className="text-base font-semibold text-[#f3e5d0] mb-2 font-sans">
-                WhatsApp Messaging
+              <MessageCircle className="w-5 h-5 text-[#B69A69] mb-4" />
+              <h3 className="font-serif-luxury text-2xl text-[#F5F1E9] font-normal mb-2">
+                WhatsApp Concierge
               </h3>
-              <p className="text-xs text-[#a09a8e] font-light leading-relaxed mb-6">
-                Receive room photos, directions, or confirmation details directly on WhatsApp.
+              <p className="text-xs text-[#D9D1C5]/75 leading-relaxed mb-6">
+                Receive instant room photographs, live Google Maps location pins, and reservation assistance on WhatsApp.
               </p>
             </div>
             <a
-              href={`https://wa.me/${contact.whatsapp.replace(/[^0-9]/g, '')}?text=Hello%20D%20C%20Grand,%20I%20would%20like%20to%20inquire%20about%20a%20stay.`}
+              href={`https://wa.me/${cleanWhatsApp}?text=${encodeURIComponent(
+                'Hello Hotel D.C. Grand Varanasi, I would like to inquire about a room reservation.'
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-xl bg-[#1e212b] border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366] hover:text-[#0c0d10] text-xs font-semibold uppercase tracking-wider text-center transition-all"
               id="contact-whatsapp-btn"
+              className="py-3.5 px-4 bg-[#536E68]/30 hover:bg-[#536E68]/50 border border-[#536E68] text-[#F5F1E9] text-xs font-semibold uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-2"
             >
-              Chat on WhatsApp
+              <span>Chat on WhatsApp</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
-          </motion.div>
+          </div>
 
-          {/* Card 3: Email Inquiries */}
-          <motion.div
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="p-6 rounded-2xl bg-[#151720] border border-[#2a2723] hover:border-[#c5a880]/50 shadow-xl flex flex-col justify-between preserve-3d group transition-all"
-          >
+          {/* 03: Electronic Mail */}
+          <div className="p-7 sm:p-8 border-r border-b border-[#D9D1C5]/15 bg-[#161412] flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#1e212b] border border-[#c5a880]/20 flex items-center justify-center text-[#c5a880] mb-5 group-hover:bg-[#c5a880] group-hover:text-[#0c0d10] transition-colors">
-                <Mail className="w-5 h-5" />
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-[#B69A69] mb-6">
+                <span className="font-mono">03</span>
+                <span>Written Inquiries</span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-[#777166] block mb-1">
-                Electronic Mail
-              </span>
-              <h3 className="text-base font-semibold text-[#f3e5d0] mb-2 font-sans">
-                Email Desk
+              <Mail className="w-5 h-5 text-[#B69A69] mb-4" />
+              <h3 className="font-serif-luxury text-2xl text-[#F5F1E9] font-normal mb-2">
+                Reservations Email
               </h3>
-              <p className="text-xs text-[#a09a8e] font-light leading-relaxed mb-6">
-                Formal event RFPs, travel agency partnerships, and written confirmations.
+              <p className="text-xs text-[#D9D1C5]/75 leading-relaxed mb-6">
+                Ideal for corporate bookings, group pilgrimage itineraries, banquet RFPs, and written confirmations.
               </p>
             </div>
             <a
               href={`mailto:${contact.email}`}
-              className="w-full py-2.5 rounded-xl bg-[#1e212b] border border-[#c5a880]/30 text-[#e8d7be] hover:bg-[#c5a880] hover:text-[#0c0d10] text-xs font-semibold uppercase tracking-wider text-center transition-all truncate"
               id="contact-email-btn"
+              className="py-3.5 px-4 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-semibold tracking-wider text-center transition-colors truncate"
             >
               {contact.email}
             </a>
-          </motion.div>
+          </div>
 
-          {/* Card 4: Postal Address & Visit */}
-          <motion.div
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="p-6 rounded-2xl bg-[#151720] border border-[#2a2723] hover:border-[#c5a880]/50 shadow-xl flex flex-col justify-between preserve-3d group transition-all"
-          >
+          {/* 04: Property Address */}
+          <div className="p-7 sm:p-8 border-r border-b border-[#D9D1C5]/15 bg-[#161412] flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#1e212b] border border-[#c5a880]/20 flex items-center justify-center text-[#c5a880] mb-5 group-hover:bg-[#c5a880] group-hover:text-[#0c0d10] transition-colors">
-                <MapPin className="w-5 h-5" />
+              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-[#B69A69] mb-6">
+                <span className="font-mono">04</span>
+                <span>Bhelupur · Varanasi</span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-[#777166] block mb-1">
+              <MapPin className="w-5 h-5 text-[#B69A69] mb-4" />
+              <h3 className="font-serif-luxury text-2xl text-[#F5F1E9] font-normal mb-2">
                 Property Address
-              </span>
-              <h3 className="text-base font-semibold text-[#f3e5d0] mb-2 font-sans">
-                Visit In Person
               </h3>
-              <p className="text-xs text-[#a09a8e] font-light leading-relaxed mb-6">
-                22/24P, Kasmiganj Mohalla, Bhelupur, Varanasi, Uttar Pradesh.
+              <p className="text-xs text-[#D9D1C5]/75 leading-relaxed mb-6">
+                {contact.address}
               </p>
             </div>
             <a
               href={contact.mapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-xl bg-[#1e212b] border border-[#c5a880]/30 text-[#e8d7be] hover:bg-[#c5a880] hover:text-[#0c0d10] text-xs font-semibold uppercase tracking-wider text-center transition-all flex items-center justify-center gap-1.5"
               id="contact-map-btn"
+              className="py-3.5 px-4 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-semibold uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-2"
             >
-              <span>View Map</span>
-              <ExternalLink className="w-3 h-3" />
+              <span>Open in Google Maps</span>
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Central Enquiry Trigger Banner */}
-        <div className="p-8 rounded-3xl bg-gradient-to-r from-[#171a25] via-[#1d202d] to-[#171a25] border border-[#c5a880]/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+        {/* Custom Requirements & Direct Booking Action Banner */}
+        <div className="p-8 sm:p-10 bg-[#161412] border border-[#D9D1C5]/15 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div>
-            <span className="text-[11px] uppercase tracking-[0.25em] text-[#c5a880] font-sans font-semibold block mb-1">
-              Custom Requirements?
+            <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-1.5">
+              Bespoke Requests & Group Stays
             </span>
-            <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#f3e5d0] font-normal mb-2">
-              Send a Specialized Enquiry to Management
+            <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#F5F1E9] font-normal mb-2">
+              Planning a Family Pilgrimage or Special Celebration?
             </h3>
-            <p className="text-xs sm:text-sm text-[#a09a8e] font-light max-w-xl">
-              From group pilgrimage bookings and customized dietary requirements to banquet decoration, we craft tailored solutions for your trip.
+            <p className="text-xs sm:text-sm text-[#D9D1C5]/75 font-light max-w-2xl leading-relaxed">
+              Submit a customized inquiry for multi-room bookings, pure vegetarian/Jain catering at Food Express, or banquet hall decorations.
             </p>
           </div>
 
-          <button
-            onClick={() => openEnquiryModal('General Enquiry')}
-            className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#c5a880] to-[#b39366] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:shadow-[0_0_20px_rgba(197,168,128,0.4)] transition-all flex items-center gap-2 shrink-0"
-            id="open-enquiry-modal-btn"
-          >
-            <Send className="w-4 h-4" />
-            <span>Submit An Enquiry</span>
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0 w-full lg:w-auto">
+            <button
+              type="button"
+              onClick={() => openEnquiryModal('General Enquiry')}
+              id="open-enquiry-modal-btn"
+              className="px-7 py-4 border border-[#D9D1C5]/30 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Send className="w-3.5 h-3.5 text-[#B69A69]" />
+              <span>Send Custom Inquiry</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => openBookingModal()}
+              className="px-7 py-4 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Book Your Stay</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>

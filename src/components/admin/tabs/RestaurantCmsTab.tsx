@@ -235,19 +235,21 @@ export const RestaurantCmsTab: React.FC<RestaurantCmsTabProps> = ({
 
           {/* Current images grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {images.map((imgUrl, i) => (
-              <div key={i} className="relative rounded-xl overflow-hidden group border border-[#202330] bg-[#0c0d10]">
-                <img src={imgUrl} alt={`Dining photo ${i + 1}`} className="w-full h-28 object-cover" />
-                <button
-                  type="button"
-                  onClick={() => handleRemovePhoto(i)}
-                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/80 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Remove photo"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
+            {images.map((imgUrl, i) =>
+              imgUrl && imgUrl.trim() ? (
+                <div key={i} className="relative rounded-xl overflow-hidden group border border-[#202330] bg-[#0c0d10]">
+                  <img src={imgUrl.trim()} alt={`Dining photo ${i + 1}`} className="w-full h-28 object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => handleRemovePhoto(i)}
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/80 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Remove photo"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : null
+            )}
           </div>
 
           {/* Add photo */}

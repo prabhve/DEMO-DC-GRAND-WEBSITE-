@@ -1,16 +1,12 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import {
-  MapPin,
   Navigation,
   Compass,
   Clock,
   Car,
   Footprints,
   ExternalLink,
-  Sparkles,
-  ChevronRight,
-  Layers,
   Check,
   Share2,
   Map as MapIcon,
@@ -22,22 +18,25 @@ import {
 import { VARANASI_LANDMARKS, HOTEL_LOCATION_COORDINATES } from '../../data/landmarksData';
 import { LandmarkItem } from '../../types/hotel';
 
+const FALLBACK_LANDMARK_IMG =
+  'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80';
+
 export const VaranasiInteractiveMap: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>('sankat-mochan');
   const [categoryFilter, setCategoryFilter] = useState<'ALL' | 'TEMPLE' | 'GHAT' | 'CAMPUS' | 'TRANSIT'>('ALL');
   const [mapViewMode, setMapViewMode] = useState<'3D_HERITAGE' | 'GOOGLE_EMBED'>('3D_HERITAGE');
   const [copiedLink, setCopiedLink] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
-  // Parallax tilt effect for 3D map canvas
   const containerRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current || mapViewMode !== '3D_HERITAGE') return;
+    if (prefersReducedMotion || !containerRef.current || mapViewMode !== '3D_HERITAGE') return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: x * 10, y: -y * 10 });
+    setTilt({ x: x * 6, y: -y * 6 });
   };
 
   const handleMouseLeave = () => {
@@ -56,9 +55,8 @@ export const VaranasiInteractiveMap: React.FC = () => {
     return VARANASI_LANDMARKS.filter((l) => l.category === categoryFilter);
   }, [categoryFilter]);
 
-  // Google Maps Directions link from D C Grand, Bhelupur to selected landmark
   const directionsUrl = useMemo(() => {
-    const origin = encodeURIComponent('D C Grand, Bhelupur, Varanasi, Uttar Pradesh');
+    const origin = encodeURIComponent('Hotel D C Grand, Bhelupur, Varanasi, Uttar Pradesh');
     const destination = encodeURIComponent(
       `${selectedLandmark.name}, Varanasi, Uttar Pradesh`
     );
@@ -71,232 +69,192 @@ export const VaranasiInteractiveMap: React.FC = () => {
     setTimeout(() => setCopiedLink(false), 2500);
   };
 
+  const selectedPos = selectedLandmark.mapPosition || { x: 50, y: 50 };
+
   return (
     <div className="w-full">
-      {/* Map Control Toolbar: Mode Switcher & Category Filter Pills */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+      {/* Map Control Toolbar: Clean Unboxed Category Tabs & View Mode Toggle */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-8 border-b border-[#D9D1C5]/15">
         {/* Category Filters */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full sm:w-auto pb-1">
+        <div className="flex items-center gap-6 overflow-x-auto pb-1 md:pb-0">
           {[
-            { id: 'ALL', label: 'All Attractions' },
+            { id: 'ALL', label: 'All Landmarks' },
             { id: 'TEMPLE', label: 'Sacred Temples', icon: Flame },
             { id: 'GHAT', label: 'Ganga Ghats', icon: Waves },
             { id: 'CAMPUS', label: 'BHU Campus', icon: Building2 },
-            { id: 'TRANSIT', label: 'Transit Terminals', icon: Train }
+            { id: 'TRANSIT', label: 'Transit Hubs', icon: Train }
           ].map((cat) => {
             const isSelected = categoryFilter === cat.id;
             const Icon = cat.icon;
             return (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setCategoryFilter(cat.id as typeof categoryFilter)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                className={`relative py-2 text-xs uppercase tracking-[0.18em] whitespace-nowrap flex items-center gap-2 transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-[#c5a880] text-[#0c0d10] font-bold shadow-[0_0_15px_rgba(197,168,128,0.35)] scale-105'
-                    : 'bg-[#151720] text-[#a09a8e] border border-[#2a2723] hover:border-[#c5a880]/40 hover:text-[#f3e5d0]'
+                    ? 'text-[#F5F1E9] font-semibold'
+                    : 'text-[#D9D1C5]/60 hover:text-[#F5F1E9]'
                 }`}
               >
-                {Icon && <Icon className="w-3 h-3" />}
+                {Icon && <Icon className="w-3.5 h-3.5 text-[#B69A69]" />}
                 <span>{cat.label}</span>
+                {isSelected && (
+                  <motion.span
+                    layoutId="mapCategoryUnderline"
+                    className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#B69A69]"
+                  />
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* View Mode Toggle: 3D Heritage Map vs Live Google Map */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-[#13151e] border border-[#2a2723] shrink-0">
+        {/* View Mode Toggle: Heritage Cartography vs Live Google Map */}
+        <div className="flex items-center border border-[#D9D1C5]/20 bg-[#161412] shrink-0 self-start md:self-auto">
           <button
+            type="button"
             onClick={() => setMapViewMode('3D_HERITAGE')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition-colors flex items-center gap-1.5 cursor-pointer ${
               mapViewMode === '3D_HERITAGE'
-                ? 'bg-[#c5a880] text-[#0c0d10]'
-                : 'text-[#a09a8e] hover:text-[#f3e5d0]'
+                ? 'bg-[#B69A69] text-[#201D19] font-semibold'
+                : 'text-[#D9D1C5]/75 hover:text-[#F5F1E9]'
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>3D Heritage Map</span>
+            <span>Interactive Map</span>
           </button>
           <button
+            type="button"
             onClick={() => setMapViewMode('GOOGLE_EMBED')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+            className={`px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition-colors flex items-center gap-1.5 cursor-pointer ${
               mapViewMode === 'GOOGLE_EMBED'
-                ? 'bg-[#c5a880] text-[#0c0d10]'
-                : 'text-[#a09a8e] hover:text-[#f3e5d0]'
+                ? 'bg-[#B69A69] text-[#201D19] font-semibold'
+                : 'text-[#D9D1C5]/75 hover:text-[#F5F1E9]'
             }`}
           >
             <MapIcon className="w-3.5 h-3.5" />
-            <span>Live Satellite Map</span>
+            <span>Google Map</span>
           </button>
         </div>
       </div>
 
-      {/* Main Grid: Interactive Map Visual (Left) & Attraction Spotlight (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        {/* Left Column: Interactive 3D Varanasi Canvas Map */}
-        <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl overflow-hidden border border-[#c5a880]/35 bg-[#0f1118] shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative min-h-[480px] sm:min-h-[560px]">
+      {/* Main 12-Column Split: Interactive Cartography (Left 7) & Selected Landmark Ledger (Right 5) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 bg-[#161412] border border-[#D9D1C5]/15">
+        {/* Left 7 Columns: Interactive Cartography Canvas */}
+        <div className="lg:col-span-7 relative min-h-[460px] sm:min-h-[560px] overflow-hidden bg-[#141210]">
           {mapViewMode === '3D_HERITAGE' ? (
             <div
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-full min-h-[480px] sm:min-h-[560px] overflow-hidden select-none bg-[#0d0f16]"
-              style={{
-                perspective: '1200px'
-              }}
+              className="relative w-full h-full min-h-[460px] sm:min-h-[560px] overflow-hidden select-none bg-[#141210]"
+              style={{ perspective: '1200px' }}
             >
-              {/* Parallax Content Canvas */}
               <motion.div
                 animate={{
                   rotateX: tilt.y,
                   rotateY: tilt.x
                 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+                transition={{ type: 'spring', stiffness: 220, damping: 28 }}
                 className="absolute inset-0 w-full h-full"
               >
-                {/* SVG Layer: Sacred Ganga River, Roads, and Animated Energy Ray */}
+                {/* SVG Cartography Layer: Uttaravahini Ganga River, Arterial Roads, and Active Route */}
                 <svg
                   className="absolute inset-0 w-full h-full pointer-events-none"
                   viewBox="0 0 100 100"
                   preserveAspectRatio="none"
                 >
                   <defs>
-                    {/* Glowing water gradient for Holy Ganga */}
-                    <linearGradient id="gangaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#1e3a5f" stopOpacity="0.8" />
-                      <stop offset="50%" stopColor="#144272" stopOpacity="0.9" />
-                      <stop offset="100%" stopColor="#2c74b3" stopOpacity="0.85" />
+                    <linearGradient id="gangaTealGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#536E68" stopOpacity="0.35" />
+                      <stop offset="50%" stopColor="#3B524D" stopOpacity="0.55" />
+                      <stop offset="100%" stopColor="#536E68" stopOpacity="0.4" />
                     </linearGradient>
-
-                    {/* Gold route glow */}
-                    <filter id="routeGlow" x="-20%" y="-20%" width="140%" height="140%">
-                      <feGaussianBlur stdDeviation="0.8" result="blur" />
-                      <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                      </feMerge>
-                    </filter>
                   </defs>
 
-                  {/* Concentric Distance Rings around D C Grand (38, 44) */}
+                  {/* Concentric Distance Rings around Hotel D.C. Grand (38, 44) */}
                   <circle
                     cx={HOTEL_LOCATION_COORDINATES.mapPosition.x}
                     cy={HOTEL_LOCATION_COORDINATES.mapPosition.y}
                     r="12"
                     fill="none"
-                    stroke="#c5a880"
+                    stroke="#B69A69"
                     strokeWidth="0.18"
                     strokeDasharray="1, 1"
-                    strokeOpacity="0.25"
+                    strokeOpacity="0.28"
                   />
                   <circle
                     cx={HOTEL_LOCATION_COORDINATES.mapPosition.x}
                     cy={HOTEL_LOCATION_COORDINATES.mapPosition.y}
                     r="24"
                     fill="none"
-                    stroke="#c5a880"
+                    stroke="#B69A69"
                     strokeWidth="0.18"
                     strokeDasharray="1.5, 1.5"
-                    strokeOpacity="0.2"
+                    strokeOpacity="0.22"
                   />
                   <circle
                     cx={HOTEL_LOCATION_COORDINATES.mapPosition.x}
                     cy={HOTEL_LOCATION_COORDINATES.mapPosition.y}
                     r="38"
                     fill="none"
-                    stroke="#c5a880"
+                    stroke="#B69A69"
                     strokeWidth="0.15"
                     strokeDasharray="2, 2"
-                    strokeOpacity="0.15"
+                    strokeOpacity="0.16"
                   />
 
-                  {/* Sacred Ganga River Curve (Uttaravahini crescent on the East) */}
+                  {/* Sacred Ganga River Curve (Uttaravahini Crescent on the East) */}
                   <path
                     d="M 66 100 Q 72 75 78 55 T 88 0 L 100 0 L 100 100 Z"
-                    fill="url(#gangaGradient)"
-                    opacity="0.45"
+                    fill="url(#gangaTealGradient)"
                   />
 
-                  {/* River shoreline golden landing accent */}
+                  {/* River Shoreline Champagne Gold Accent */}
                   <path
                     d="M 66 100 Q 72 75 78 55 T 88 0"
                     fill="none"
-                    stroke="#c5a880"
-                    strokeWidth="0.4"
+                    stroke="#B69A69"
+                    strokeWidth="0.35"
                     strokeDasharray="1.5, 1"
-                    strokeOpacity="0.6"
+                    strokeOpacity="0.55"
                   />
 
-                  {/* Major Connecting Arterial Roads of Varanasi */}
-                  {/* Bhelupur to Assi Road */}
-                  <path
-                    d="M 38 44 Q 56 50 74 58"
-                    fill="none"
-                    stroke="#383632"
-                    strokeWidth="0.45"
-                    strokeDasharray="1, 0.5"
-                  />
-                  {/* Bhelupur to Sankat Mochan Road */}
-                  <path
-                    d="M 38 44 Q 40 54 42 64"
-                    fill="none"
-                    stroke="#383632"
-                    strokeWidth="0.45"
-                    strokeDasharray="1, 0.5"
-                  />
-                  {/* Bhelupur to Kashi Vishwanath / Godowlia */}
-                  <path
-                    d="M 38 44 Q 58 38 78 32"
-                    fill="none"
-                    stroke="#383632"
-                    strokeWidth="0.45"
-                    strokeDasharray="1, 0.5"
-                  />
-                  {/* Bhelupur to BHU Lanka */}
-                  <path
-                    d="M 38 44 Q 34 62 30 82"
-                    fill="none"
-                    stroke="#383632"
-                    strokeWidth="0.45"
-                    strokeDasharray="1, 0.5"
-                  />
-                  {/* Bhelupur to Cantt Station */}
-                  <path
-                    d="M 38 44 Q 36 28 34 14"
-                    fill="none"
-                    stroke="#383632"
-                    strokeWidth="0.45"
-                    strokeDasharray="1, 0.5"
-                  />
+                  {/* Major Arterial Roads */}
+                  <path d="M 38 44 Q 56 50 74 58" fill="none" stroke="#35302A" strokeWidth="0.4" strokeDasharray="1, 0.5" />
+                  <path d="M 38 44 Q 40 54 42 64" fill="none" stroke="#35302A" strokeWidth="0.4" strokeDasharray="1, 0.5" />
+                  <path d="M 38 44 Q 58 38 78 32" fill="none" stroke="#35302A" strokeWidth="0.4" strokeDasharray="1, 0.5" />
+                  <path d="M 38 44 Q 34 62 30 82" fill="none" stroke="#35302A" strokeWidth="0.4" strokeDasharray="1, 0.5" />
+                  <path d="M 38 44 Q 36 28 34 14" fill="none" stroke="#35302A" strokeWidth="0.4" strokeDasharray="1, 0.5" />
 
-                  {/* Animated Glowing Golden Trajectory / Route Ray to Selected Landmark */}
+                  {/* Active Route Vector from Hotel D.C. Grand to Selected Landmark */}
                   <path
-                    d={`M ${HOTEL_LOCATION_COORDINATES.mapPosition.x} ${HOTEL_LOCATION_COORDINATES.mapPosition.y} L ${selectedLandmark.mapPosition.x} ${selectedLandmark.mapPosition.y}`}
+                    d={`M ${HOTEL_LOCATION_COORDINATES.mapPosition.x} ${HOTEL_LOCATION_COORDINATES.mapPosition.y} L ${selectedPos.x} ${selectedPos.y}`}
                     fill="none"
-                    stroke="#c5a880"
-                    strokeWidth="0.75"
-                    strokeDasharray="2, 1"
-                    className="animate-pulse"
-                    filter="url(#routeGlow)"
+                    stroke="#B69A69"
+                    strokeWidth="0.65"
+                    strokeDasharray="1.5, 0.8"
                   />
                 </svg>
 
-                {/* River Title Label */}
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 -rotate-90 text-[10px] uppercase tracking-[0.4em] text-[#6998c9]/70 font-serif font-bold pointer-events-none">
-                  Holy River Ganga (Uttaravahini)
+                {/* River Label */}
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 -rotate-90 text-[10px] uppercase tracking-[0.38em] text-[#D9D1C5]/55 font-serif-luxury pointer-events-none">
+                  Sacred River Ganga (Uttaravahini)
                 </div>
 
-                {/* Distance Ring Indicators */}
-                <div className="absolute left-[38%] top-[32%] text-[9px] text-[#c5a880]/50 tracking-widest font-mono pointer-events-none">
-                  1 km
+                {/* Distance Ring Labels */}
+                <div className="absolute left-[38%] top-[32%] text-[9px] text-[#B69A69]/55 tracking-widest font-mono pointer-events-none tabular-nums">
+                  1.0 km
                 </div>
-                <div className="absolute left-[38%] top-[20%] text-[9px] text-[#c5a880]/40 tracking-widest font-mono pointer-events-none">
-                  2 km
+                <div className="absolute left-[38%] top-[20%] text-[9px] text-[#B69A69]/45 tracking-widest font-mono pointer-events-none tabular-nums">
+                  2.0 km
                 </div>
-                <div className="absolute left-[38%] top-[6%] text-[9px] text-[#c5a880]/30 tracking-widest font-mono pointer-events-none">
-                  4 km
+                <div className="absolute left-[38%] top-[6%] text-[9px] text-[#B69A69]/35 tracking-widest font-mono pointer-events-none tabular-nums">
+                  4.0 km
                 </div>
 
-                {/* D C GRAND - Central Hotel Pin (38%, 44%) */}
+                {/* Hotel D.C. Grand Central Base Marker */}
                 <div
                   style={{
                     left: `${HOTEL_LOCATION_COORDINATES.mapPosition.x}%`,
@@ -304,19 +262,12 @@ export const VaranasiInteractiveMap: React.FC = () => {
                   }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-auto"
                 >
-                  <div className="relative group cursor-pointer">
-                    {/* Concentric pulsing radar waves */}
-                    <div className="absolute -inset-4 rounded-full bg-[#c5a880]/20 animate-ping" />
-                    <div className="absolute -inset-2 rounded-full bg-[#c5a880]/30 animate-pulse" />
-
-                    {/* Central Gold Beacon Badge */}
-                    <div className="relative w-9 h-9 rounded-2xl bg-gradient-to-br from-[#c5a880] to-[#9e8055] text-[#0c0d10] font-black flex items-center justify-center shadow-[0_0_25px_rgba(197,168,128,0.8)] border border-[#f3e5d0]">
-                      <span className="font-serif text-xs font-bold">DCG</span>
+                  <div className="relative flex flex-col items-center">
+                    <div className="w-9 h-9 bg-[#B69A69] text-[#201D19] font-serif-luxury font-bold text-xs flex items-center justify-center border border-[#F5F1E9] shadow-[0_0_24px_rgba(182,154,105,0.6)]">
+                      DCG
                     </div>
-
-                    {/* Floating permanent hotel identifier */}
-                    <div className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-md bg-[#0c0d10]/95 border border-[#c5a880] text-[10px] font-bold text-[#f3e5d0] uppercase tracking-wider whitespace-nowrap shadow-xl">
-                      D C GRAND (Hotel Base)
+                    <div className="mt-1.5 px-2.5 py-0.5 bg-[#201D19]/95 border border-[#B69A69] text-[10px] font-semibold text-[#F5F1E9] uppercase tracking-[0.14em] whitespace-nowrap">
+                      Hotel D.C. Grand
                     </div>
                   </div>
                 </div>
@@ -324,35 +275,28 @@ export const VaranasiInteractiveMap: React.FC = () => {
                 {/* Landmark Interactive Pins */}
                 {filteredLandmarks.map((landmark) => {
                   const isSelected = landmark.id === selectedId;
-                  const isSankatMochan = landmark.id === 'sankat-mochan';
+                  const pos = landmark.mapPosition || { x: 50, y: 50 };
 
                   return (
                     <div
                       key={landmark.id}
                       style={{
-                        left: `${landmark.mapPosition.x}%`,
-                        top: `${landmark.mapPosition.y}%`
+                        left: `${pos.x}%`,
+                        top: `${pos.y}%`
                       }}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 z-15 pointer-events-auto transition-all duration-300"
+                      className="absolute -translate-x-1/2 -translate-y-1/2 z-15 pointer-events-auto"
                     >
                       <button
+                        type="button"
                         onClick={() => setSelectedId(landmark.id)}
-                        className="group relative flex items-center justify-center p-2 focus:outline-none"
-                        aria-label={`Select ${landmark.name}`}
+                        className="group relative flex flex-col items-center p-1.5 focus:outline-none cursor-pointer"
+                        aria-label={`Inspect ${landmark.name}`}
                       >
-                        {/* Selected or Sankat Mochan special glow */}
-                        {(isSelected || isSankatMochan) && (
-                          <span className="absolute w-7 h-7 rounded-full bg-[#c5a880]/40 animate-ping" />
-                        )}
-
-                        {/* Pin Dot / Icon */}
                         <span
-                          className={`relative w-6 h-6 rounded-full flex items-center justify-center transition-all ${
+                          className={`w-6 h-6 flex items-center justify-center transition-all duration-300 border ${
                             isSelected
-                              ? 'bg-[#c5a880] text-[#0c0d10] scale-125 shadow-[0_0_20px_rgba(197,168,128,0.8)]'
-                              : isSankatMochan
-                              ? 'bg-[#e07a5f] text-white ring-2 ring-[#c5a880]'
-                              : 'bg-[#181a24] text-[#a09a8e] border border-[#3b3834] group-hover:border-[#c5a880] group-hover:text-[#f3e5d0]'
+                              ? 'bg-[#B69A69] text-[#201D19] border-[#F5F1E9] scale-125 shadow-[0_0_16px_rgba(182,154,105,0.7)]'
+                              : 'bg-[#201D19] text-[#D9D1C5] border-[#D9D1C5]/35 group-hover:border-[#B69A69] group-hover:text-[#B69A69]'
                           }`}
                         >
                           {landmark.category === 'TEMPLE' && <Flame className="w-3 h-3" />}
@@ -361,18 +305,15 @@ export const VaranasiInteractiveMap: React.FC = () => {
                           {landmark.category === 'TRANSIT' && <Train className="w-3 h-3" />}
                         </span>
 
-                        {/* Floating Name & Distance Pill */}
                         <div
-                          className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-lg border whitespace-nowrap text-[10px] transition-all shadow-xl ${
+                          className={`mt-1 px-2 py-0.5 border whitespace-nowrap text-[10px] transition-colors tabular-nums ${
                             isSelected
-                              ? 'bg-[#0c0d10] border-[#c5a880] text-[#c5a880] font-bold scale-105 z-30'
-                              : isSankatMochan
-                              ? 'bg-[#0c0d10]/90 border-[#e07a5f]/60 text-[#e07a5f] font-semibold'
-                              : 'bg-[#0c0d10]/85 border-[#2a2723] text-[#a09a8e] group-hover:text-[#f3e5d0]'
+                              ? 'bg-[#201D19] border-[#B69A69] text-[#F5F1E9] font-semibold z-30'
+                              : 'bg-[#201D19]/90 border-[#D9D1C5]/20 text-[#D9D1C5]/80 group-hover:text-[#F5F1E9]'
                           }`}
                         >
                           <span>{landmark.name.split('&')[0]}</span>
-                          <span className="ml-1 text-[9px] text-[#c5a880]">({landmark.distance})</span>
+                          <span className="ml-1 text-[#B69A69]">· {landmark.distance}</span>
                         </div>
                       </button>
                     </div>
@@ -380,43 +321,43 @@ export const VaranasiInteractiveMap: React.FC = () => {
                 })}
               </motion.div>
 
-              {/* Bottom Quick Stats Banner */}
-              <div className="absolute bottom-4 left-4 right-4 p-3 rounded-2xl bg-[#0c0d10]/90 backdrop-blur-md border border-[#2a2723] flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2 text-[#a09a8e]">
-                  <Compass className="w-3.5 h-3.5 text-[#c5a880]" />
+              {/* Bottom Status Ledger */}
+              <div className="absolute bottom-4 left-4 right-4 p-3.5 bg-[#201D19]/95 backdrop-blur-md border border-[#D9D1C5]/20 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-2 text-[#D9D1C5]">
+                  <Compass className="w-3.5 h-3.5 text-[#B69A69]" />
                   <span>
-                    Viewing: <strong className="text-[#f3e5d0]">{selectedLandmark.name}</strong>
+                    Route to: <strong className="text-[#F5F1E9] font-medium">{selectedLandmark.name}</strong>
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#c5a880] font-semibold flex items-center gap-1">
+                <div className="flex items-center gap-4 tabular-nums">
+                  <span className="text-[#B69A69] font-medium flex items-center gap-1.5">
                     <Car className="w-3.5 h-3.5" />
-                    {selectedLandmark.travelTimeDrive} by road
+                    <span>{selectedLandmark.travelTimeDrive} by cab</span>
                   </span>
                   {selectedLandmark.travelTimeWalk && (
-                    <span className="text-[#a09a8e] hidden sm:flex items-center gap-1">
+                    <span className="text-[#D9D1C5]/75 hidden sm:flex items-center gap-1.5">
                       <Footprints className="w-3.5 h-3.5" />
-                      {selectedLandmark.travelTimeWalk} walk
+                      <span>{selectedLandmark.travelTimeWalk} walk</span>
                     </span>
                   )}
                 </div>
               </div>
             </div>
           ) : (
-            /* Live Google Satellite & Road Embed View */
-            <div className="relative w-full h-full min-h-[480px] sm:min-h-[560px]">
+            /* Live Google Map Embed */
+            <div className="relative w-full h-full min-h-[460px] sm:min-h-[560px]">
               <iframe
-                title="D C Grand Live Google Map"
+                title="Hotel D.C. Grand Bhelupur Varanasi Google Map"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14429.358242485586!2d82.9839446!3d25.2927236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398e32049d5656c9%3A0xb3551fa16db6192!2sBhelupur%2C%20Varanasi%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 className="w-full h-full border-0 filter invert contrast-125 opacity-85 hover:opacity-100 transition-opacity"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
-              <div className="absolute top-4 left-4 p-3 rounded-xl bg-[#0c0d10]/90 backdrop-blur-md border border-[#c5a880]/40 shadow-xl max-w-xs">
-                <span className="text-xs font-bold text-[#c5a880] uppercase tracking-wider block">
-                  D C Grand Varanasi
+              <div className="absolute top-4 left-4 p-3.5 bg-[#201D19]/95 border border-[#D9D1C5]/25 max-w-xs">
+                <span className="text-[11px] font-semibold text-[#B69A69] uppercase tracking-[0.18em] block mb-0.5">
+                  Hotel D.C. Grand Varanasi
                 </span>
-                <span className="text-[11px] text-[#d1ccc0]">
+                <span className="text-xs text-[#D9D1C5]">
                   {HOTEL_LOCATION_COORDINATES.address}
                 </span>
               </div>
@@ -424,144 +365,120 @@ export const VaranasiInteractiveMap: React.FC = () => {
           )}
         </div>
 
-        {/* Right Column: Selected Attraction Spotlight & Navigation Card */}
-        <div className="lg:col-span-5 flex flex-col justify-between">
+        {/* Right 5 Columns: Selected Landmark Editorial Ledger */}
+        <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-[#D9D1C5]/15 flex flex-col justify-between p-6 sm:p-8 lg:p-10 bg-[#161412]">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedLandmark.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="p-6 sm:p-7 rounded-3xl bg-[#141620] border border-[#c5a880]/30 shadow-2xl flex flex-col justify-between h-full"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.25 }}
+              className="flex flex-col justify-between h-full"
             >
               <div>
-                {/* Photo & Category Header */}
-                <div className="relative h-44 sm:h-48 rounded-2xl overflow-hidden mb-5 border border-[#2a2723]">
+                {/* Landmark Photograph */}
+                <div className="relative h-48 sm:h-52 overflow-hidden mb-6 bg-[#201D19] border border-[#D9D1C5]/15">
                   <img
-                    src={selectedLandmark.image}
+                    src={
+                      selectedLandmark.image && selectedLandmark.image.trim().length > 0
+                        ? selectedLandmark.image.trim()
+                        : FALLBACK_LANDMARK_IMG
+                    }
                     alt={selectedLandmark.name}
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== FALLBACK_LANDMARK_IMG) target.src = FALLBACK_LANDMARK_IMG;
+                    }}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#141620] via-transparent to-black/30" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#161412] via-transparent to-transparent" />
 
-                  {/* Category & Proximity Pill */}
-                  <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full bg-[#0c0d10]/80 backdrop-blur-md border border-[#c5a880]/30 text-[10px] font-bold text-[#c5a880] uppercase tracking-wider">
-                      {selectedLandmark.category}
-                    </span>
-                    {selectedLandmark.id === 'sankat-mochan' && (
-                      <span className="px-2.5 py-1 rounded-full bg-[#e07a5f]/90 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg">
-                        Prime Proximity
-                      </span>
-                    )}
+                  <div className="absolute top-3 left-3 bg-[#201D19]/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-[#B69A69] font-medium">
+                    {selectedLandmark.category}
                   </div>
 
-                  {/* Exact Distance Badge */}
-                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-xl bg-[#0c0d10]/90 backdrop-blur-md border border-[#c5a880]/50 text-xs font-bold text-[#f3e5d0]">
-                    {selectedLandmark.distance} from D C Grand
+                  <div className="absolute bottom-3 right-3 bg-[#201D19]/90 border border-[#D9D1C5]/20 px-3 py-1 text-xs font-medium text-[#F5F1E9] tabular-nums">
+                    {selectedLandmark.distance} from Hotel
                   </div>
                 </div>
 
-                {/* Attraction Title */}
-                <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#f3e5d0] font-normal leading-tight mb-2">
+                <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#F5F1E9] font-normal leading-snug mb-3">
                   {selectedLandmark.name}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-[#a09a8e] font-light leading-relaxed mb-5">
+                <p className="text-sm text-[#D9D1C5]/80 font-light leading-relaxed mb-6">
                   {selectedLandmark.desc}
                 </p>
 
-                {/* Travel Time & Transit Estimation Metric Box */}
-                <div className="grid grid-cols-2 gap-3 mb-5 p-3.5 rounded-2xl bg-[#0c0d10]/60 border border-[#2a2723]">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-[#c5a880]/15 border border-[#c5a880]/30 flex items-center justify-center text-[#c5a880] shrink-0">
-                      <Car className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="text-[10px] uppercase tracking-wider text-[#777166] block">
-                        Auto / Cab
-                      </span>
-                      <span className="text-xs font-bold text-[#f3e5d0]">
-                        {selectedLandmark.travelTimeDrive}
-                      </span>
-                    </div>
-                  </div>
-
-                  {selectedLandmark.travelTimeWalk ? (
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-[#c5a880]/15 border border-[#c5a880]/30 flex items-center justify-center text-[#c5a880] shrink-0">
-                        <Footprints className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] uppercase tracking-wider text-[#777166] block">
-                          Walking
-                        </span>
-                        <span className="text-xs font-bold text-[#f3e5d0]">
-                          {selectedLandmark.travelTimeWalk}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-[#c5a880]/15 border border-[#c5a880]/30 flex items-center justify-center text-[#c5a880] shrink-0">
-                        <Clock className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] uppercase tracking-wider text-[#777166] block">
-                          Distance
-                        </span>
-                        <span className="text-xs font-bold text-[#f3e5d0]">
-                          {selectedLandmark.distance}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Best Time to Visit */}
-                <div className="mb-5 p-3 rounded-xl bg-[#171a24] border border-[#2a2723] text-xs">
-                  <span className="text-[10px] uppercase tracking-wider text-[#c5a880] font-bold block mb-0.5 flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> Recommended Visiting Hours
-                  </span>
-                  <span className="text-[#d1ccc0] leading-snug block">
-                    {selectedLandmark.bestTimeToVisit}
-                  </span>
-                </div>
-
-                {/* Highlights Pills */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
-                  {selectedLandmark.highlights.map((h, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-lg bg-[#0c0d10] border border-[#2a2723] text-[11px] text-[#c5a880]"
-                    >
-                      {h}
+                {/* Tabular Travel Ledger */}
+                <div className="grid grid-cols-2 border-y border-[#D9D1C5]/15 divide-x divide-[#D9D1C5]/15 mb-6">
+                  <div className="py-3.5 pr-4">
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-[#D9D1C5]/55 block mb-0.5">
+                      Auto / Cab Time
                     </span>
-                  ))}
+                    <span className="text-sm font-medium text-[#F5F1E9] tabular-nums">
+                      {selectedLandmark.travelTimeDrive}
+                    </span>
+                  </div>
+                  <div className="py-3.5 pl-4">
+                    <span className="text-[10px] uppercase tracking-[0.18em] text-[#D9D1C5]/55 block mb-0.5">
+                      {selectedLandmark.travelTimeWalk ? 'Walking Time' : 'Verified Distance'}
+                    </span>
+                    <span className="text-sm font-medium text-[#F5F1E9] tabular-nums">
+                      {selectedLandmark.travelTimeWalk || selectedLandmark.distance}
+                    </span>
+                  </div>
                 </div>
+
+                {/* Recommended Hours */}
+                {selectedLandmark.bestTimeToVisit && (
+                  <div className="mb-6">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#B69A69] font-medium flex items-center gap-1.5 mb-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>Recommended Visiting Hours</span>
+                    </span>
+                    <p className="text-xs text-[#D9D1C5]/85 leading-relaxed">
+                      {selectedLandmark.bestTimeToVisit}
+                    </p>
+                  </div>
+                )}
+
+                {/* Unboxed Key Highlights */}
+                {selectedLandmark.highlights && selectedLandmark.highlights.length > 0 && (
+                  <div className="mb-6 text-xs text-[#D9D1C5]/75">
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-[#B69A69] block mb-1">
+                      Cultural Highlights
+                    </span>
+                    <span>{selectedLandmark.highlights.join(' · ')}</span>
+                  </div>
+                )}
               </div>
 
-              {/* Action Buttons: Get Turn-by-Turn Directions & Share */}
-              <div className="pt-4 border-t border-[#2a2723] flex items-center gap-3">
+              {/* Direct Turn-by-Turn Navigation CTA */}
+              <div className="pt-5 border-t border-[#D9D1C5]/15 flex items-center gap-3">
                 <a
                   href={directionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#c5a880] to-[#b39366] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:shadow-[0_0_20px_rgba(197,168,128,0.4)] transition-all flex items-center justify-center gap-2"
                   id={`get-directions-${selectedLandmark.id}`}
+                  className="flex-1 py-3.5 px-5 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2"
                 >
-                  <Navigation className="w-4 h-4" />
+                  <Navigation className="w-3.5 h-3.5" />
                   <span>Get Driving Directions</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
 
                 <button
+                  type="button"
                   onClick={handleShare}
-                  className="p-3 rounded-xl border border-[#2a2723] text-[#a09a8e] hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-colors"
+                  aria-label="Copy Directions Link"
                   title="Copy Directions Link"
+                  className="p-3.5 border border-[#D9D1C5]/25 text-[#D9D1C5] hover:text-[#B69A69] hover:border-[#B69A69] transition-colors cursor-pointer"
                 >
-                  {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
+                  {copiedLink ? <Check className="w-4 h-4 text-[#B69A69]" /> : <Share2 className="w-4 h-4" />}
                 </button>
               </div>
             </motion.div>
@@ -569,45 +486,38 @@ export const VaranasiInteractiveMap: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Attraction Slider Row Below Map */}
+      {/* Quick Landmark Directory Grid Below Map */}
       <div className="mt-8">
-        <h4 className="text-xs uppercase tracking-[0.2em] text-[#c5a880] font-semibold mb-4 flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5" />
-          Browse Key Pilgrimage & Travel Distances
-        </h4>
+        <div className="text-xs uppercase tracking-[0.22em] text-[#B69A69] font-medium mb-4">
+          Select Any Landmark to Preview Route & Travel Time
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-[#D9D1C5]/15">
           {filteredLandmarks.map((lm) => {
             const isSelected = lm.id === selectedId;
             return (
               <button
                 key={lm.id}
+                type="button"
                 onClick={() => setSelectedId(lm.id)}
-                className={`p-3.5 rounded-2xl border text-left transition-all flex items-center justify-between gap-3 ${
+                className={`p-4 border-r border-b border-[#D9D1C5]/15 text-left transition-colors flex items-center justify-between gap-3 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#171a24] border-[#c5a880] shadow-[0_0_15px_rgba(197,168,128,0.15)] scale-[1.02]'
-                    : 'bg-[#10121a] border-[#22242e] hover:border-[#c5a880]/40 text-[#a09a8e]'
+                    ? 'bg-[#28241F] text-[#F5F1E9]'
+                    : 'bg-[#161412] hover:bg-[#201D19] text-[#D9D1C5]/80'
                 }`}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-xs font-semibold text-[#f3e5d0] truncate block">
-                      {lm.name}
-                    </span>
-                    {lm.id === 'sankat-mochan' && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#e07a5f] shrink-0" />
-                    )}
-                  </div>
-                  <span className="text-[11px] text-[#7d776d] block truncate">
-                    {lm.travelTimeDrive} by auto/car • {lm.category}
+                  <span className="text-sm font-serif-luxury text-[#F5F1E9] truncate block">
+                    {lm.name}
+                  </span>
+                  <span className="text-[11px] text-[#D9D1C5]/60 block truncate">
+                    {lm.travelTimeDrive} by cab · {lm.category}
                   </span>
                 </div>
 
-                <div className="shrink-0 text-right">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#0c0d10] text-[#c5a880] text-xs font-bold block border border-[#2a2723]">
-                    {lm.distance}
-                  </span>
-                </div>
+                <span className="font-mono text-xs font-semibold text-[#B69A69] tabular-nums shrink-0">
+                  {lm.distance}
+                </span>
               </button>
             );
           })}

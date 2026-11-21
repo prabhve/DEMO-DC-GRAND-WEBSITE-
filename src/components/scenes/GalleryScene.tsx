@@ -1,230 +1,336 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Maximize2, X, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 import { GalleryItem } from '../../types/hotel';
+
+const FALLBACK_GALLERY_IMG =
+  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80';
 
 export const GalleryScene: React.FC = () => {
   const { gallery } = useHotel();
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const categories = ['ALL', 'HOTEL', 'ROOMS', 'RESTAURANT', 'MEETINGS & EVENTS', 'ABOUT'];
 
-  const filteredItems = selectedCategory === 'ALL'
-    ? gallery
-    : gallery.filter((item) => item.category === selectedCategory);
+  const filteredItems =
+    selectedCategory === 'ALL'
+      ? gallery
+      : gallery.filter((item) => item.category === selectedCategory);
 
   const activeLightboxItem: GalleryItem | null =
-    activeLightboxIndex !== null ? filteredItems[activeLightboxIndex] : null;
+    activeLightboxIndex !== null ? filteredItems[activeLightboxIndex] || null : null;
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const goPrev = useCallback(() => {
+    setActiveLightboxIndex((prev) => {
+      if (prev === null || filteredItems.length === 0) return null;
+      return prev === 0 ? filteredItems.length - 1 : prev - 1;
+    });
+  }, [filteredItems.length]);
+
+  const goNext = useCallback(() => {
+    setActiveLightboxIndex((prev) => {
+      if (prev === null || filteredItems.length === 0) return null;
+      return prev === filteredItems.length - 1 ? 0 : prev + 1;
+    });
+  }, [filteredItems.length]);
+
+  // Keyboard Navigation for Full-Screen Lightbox (Phase 10)
+  useEffect(() => {
     if (activeLightboxIndex === null) return;
-    setActiveLightboxIndex(
-      activeLightboxIndex === 0 ? filteredItems.length - 1 : activeLightboxIndex - 1
-    );
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveLightboxIndex(null);
+      } else if (e.key === 'ArrowLeft') {
+        goPrev();
+      } else if (e.key === 'ArrowRight') {
+        goNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeLightboxIndex, goPrev, goNext]);
+
+  // Mobile Touch Swipe Support
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
   };
 
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (activeLightboxIndex === null) return;
-    setActiveLightboxIndex(
-      activeLightboxIndex === filteredItems.length - 1 ? 0 : activeLightboxIndex + 1
-    );
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(deltaX) > 45) {
+      if (deltaX > 0) {
+        goPrev();
+      } else {
+        goNext();
+      }
+    }
+    setTouchStartX(null);
+  };
+
+  // Asymmetric editorial grid column spans (12-column bento rhythm)
+  const getGridSpanClass = (index: number) => {
+    const pattern = index % 6;
+    if (pattern === 0) return 'md:col-span-7 h-[340px] sm:h-[440px]';
+    if (pattern === 1) return 'md:col-span-5 h-[340px] sm:h-[440px]';
+    if (pattern === 2) return 'md:col-span-4 h-[300px] sm:h-[360px]';
+    if (pattern === 3) return 'md:col-span-4 h-[300px] sm:h-[360px]';
+    if (pattern === 4) return 'md:col-span-4 h-[300px] sm:h-[360px]';
+    return 'md:col-span-12 h-[340px] sm:h-[460px]';
   };
 
   return (
     <section
       id="gallery"
-      className="relative py-28 px-4 sm:px-6 lg:px-8 bg-[#0c0d10] overflow-hidden"
+      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
     >
-      {/* Background Decorative Lighting */}
-      <div className="absolute top-1/2 left-10 w-96 h-96 rounded-full bg-[#c5a880]/5 blur-3xl pointer-events-none" />
+      <div className="max-w-[1440px] mx-auto relative z-10">
+        {/* Section Editorial Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-12">
+          <div className="lg:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-3 mb-4"
+            >
+              <span className="w-8 h-[1px] bg-[#B69A69]" />
+              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+                Visual Archive · Property Portfolio
+              </span>
+            </motion.div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.08 }}
+              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[58px] text-[#F5F1E9] font-normal leading-[1.08]"
+            >
+              Atmosphere & Architecture.
+            </motion.h2>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 mb-3 text-[#c5a880]"
+            transition={{ delay: 0.14 }}
+            className="lg:col-span-5 lg:pb-1"
           >
-            <Sparkles className="w-4 h-4" />
-            <span className="text-xs uppercase tracking-[0.3em] font-medium font-sans">
-              Visual Archive
-            </span>
-            <Sparkles className="w-4 h-4" />
+            <p className="text-sm sm:text-base text-[#D9D1C5]/80 font-light leading-relaxed">
+              Explore our reception foyer, guest suites, Food Express dining hall, and celebration spaces. Click any photograph for full-screen inspection.
+            </p>
           </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl text-[#f3e5d0] font-normal leading-tight mb-4"
-          >
-            Atmosphere & Architecture
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-[#a09a8e] font-light leading-relaxed max-w-2xl mx-auto"
-          >
-            Explore the bespoke interiors, grand banquet hall, Food Express dining rooms, and ambient chambers of D C Grand.
-          </motion.p>
         </div>
 
-        {/* Category Filter Pills */}
-        <div className="flex items-center justify-center gap-2 flex-wrap mb-12">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider transition-all duration-300 ${
-                selectedCategory === cat
-                  ? 'bg-[#c5a880] text-[#0c0d10] font-semibold shadow-[0_0_15px_rgba(197,168,128,0.3)]'
-                  : 'bg-[#151720] text-[#a09a8e] border border-[#2a2723] hover:border-[#c5a880]/40 hover:text-[#f3e5d0]'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* 3D Tilted Photo Wall Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 perspective-container">
-          <AnimatePresence>
-            {filteredItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                whileHover={{
-                  y: -8,
-                  scale: 1.02,
-                  transition: { duration: 0.25 }
-                }}
-                onClick={() => setActiveLightboxIndex(index)}
-                className="group relative h-80 rounded-2xl overflow-hidden border border-[#2a2723] hover:border-[#c5a880]/60 bg-[#151720] cursor-pointer shadow-xl preserve-3d"
-              >
-                <img
-                  src={item.url}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-
-                {/* Dark Vignette Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-[#0c0d10]/20 to-transparent opacity-60 group-hover:opacity-85 transition-opacity" />
-
-                {/* Category Pill on top */}
-                <div className="absolute top-4 left-4">
-                  <span className="px-2.5 py-1 rounded-full bg-[#0c0d10]/70 backdrop-blur-md border border-[#c5a880]/20 text-[10px] text-[#c5a880] uppercase tracking-wider">
-                    {item.category}
-                  </span>
-                </div>
-
-                {/* Expand icon on top right */}
-                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#0c0d10]/70 backdrop-blur-md border border-[#c5a880]/20 text-[#f3e5d0] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Maximize2 className="w-3.5 h-3.5" />
-                </div>
-
-                {/* Bottom Information */}
-                <div className="absolute bottom-4 left-4 right-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="font-serif-luxury text-xl text-[#f3e5d0] font-normal mb-1 drop-shadow">
-                    {item.title}
-                  </h3>
-                  {item.caption && (
-                    <p className="text-xs text-[#a09a8e] line-clamp-2 font-light">
-                      {item.caption}
-                    </p>
+        {/* Clean Unboxed Category Filter Bar */}
+        <div className="border-b border-[#D9D1C5]/15 mb-12 overflow-x-auto">
+          <div className="flex items-center gap-7 sm:gap-10 min-w-max">
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setActiveLightboxIndex(null);
+                  }}
+                  className={`relative pb-4 text-xs uppercase tracking-[0.2em] transition-colors cursor-pointer ${
+                    isSelected
+                      ? 'text-[#F5F1E9] font-semibold'
+                      : 'text-[#D9D1C5]/60 hover:text-[#F5F1E9]'
+                  }`}
+                >
+                  <span>{cat}</span>
+                  {isSelected && (
+                    <motion.span
+                      layoutId="galleryCategoryUnderline"
+                      className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#B69A69]"
+                    />
                   )}
-                </div>
-              </motion.div>
-            ))}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Asymmetric Editorial Photograph Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+          <AnimatePresence>
+            {filteredItems.map((item, index) => {
+              const spanClass = getGridSpanClass(index);
+              const imgUrl =
+                item.url && item.url.trim().length > 0
+                  ? item.url.trim()
+                  : FALLBACK_GALLERY_IMG;
+
+              return (
+                <motion.figure
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.45, delay: index * 0.04 }}
+                  onClick={() => setActiveLightboxIndex(index)}
+                  className={`group relative overflow-hidden bg-[#201D19] border border-[#D9D1C5]/15 cursor-pointer ${spanClass}`}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={item.title}
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== FALLBACK_GALLERY_IMG) target.src = FALLBACK_GALLERY_IMG;
+                    }}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+
+                  {/* Subtle Editorial Gradient Scrim */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#161412]/90 via-[#161412]/20 to-transparent opacity-75 group-hover:opacity-90 transition-opacity" />
+
+                  {/* Top Metadata & Expand Trigger */}
+                  <div className="absolute top-4 left-5 right-5 flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-[0.22em] text-[#B69A69] font-medium bg-[#201D19]/85 backdrop-blur-sm px-3 py-1">
+                      0{index + 1} · {item.category}
+                    </span>
+
+                    <span className="w-9 h-9 bg-[#201D19]/85 text-[#F5F1E9] border border-[#D9D1C5]/25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Maximize2 className="w-4 h-4 text-[#B69A69]" />
+                    </span>
+                  </div>
+
+                  {/* Caption Block */}
+                  <figcaption className="absolute bottom-5 left-5 right-5">
+                    <h3 className="font-serif-luxury text-2xl text-[#F5F1E9] font-normal mb-1">
+                      {item.title}
+                    </h3>
+                    {item.caption && (
+                      <p className="text-xs text-[#D9D1C5]/80 line-clamp-2 font-light max-w-xl">
+                        {item.caption}
+                      </p>
+                    )}
+                  </figcaption>
+                </motion.figure>
+              );
+            })}
           </AnimatePresence>
         </div>
       </div>
 
-      {/* Lightbox Viewer */}
+      {/* Full-Screen Lightbox with Keyboard & Touch Swipe Support */}
       <AnimatePresence>
-        {activeLightboxItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        {activeLightboxItem && activeLightboxIndex !== null && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={activeLightboxItem.title}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+          >
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setActiveLightboxIndex(null)}
-              className="fixed inset-0 bg-[#08090b]/95 backdrop-blur-lg"
+              className="fixed inset-0 bg-[#161412]/96 backdrop-blur-md"
             />
 
-            {/* Lightbox Content Container */}
+            {/* Lightbox Frame */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="relative max-w-5xl w-full z-10 flex flex-col items-center"
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.25 }}
+              className="relative max-w-6xl w-full z-10 flex flex-col"
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setActiveLightboxIndex(null)}
-                className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-[#151720] border border-[#c5a880]/40 text-[#f3e5d0] hover:text-[#c5a880] flex items-center justify-center transition-colors"
-                aria-label="Close Lightbox"
-                id="close-lightbox-btn"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              {/* Top Bar */}
+              <div className="flex items-center justify-between pb-4 text-xs uppercase tracking-[0.2em] text-[#D9D1C5]">
+                <span>
+                  {activeLightboxItem.category} · Frame 0{activeLightboxIndex + 1} / 0
+                  {filteredItems.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setActiveLightboxIndex(null)}
+                  id="close-lightbox-btn"
+                  aria-label="Close gallery lightbox"
+                  className="px-4 py-2 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <span>Close (Esc)</span>
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-              {/* Main Image with Navigation */}
-              <div className="relative w-full max-h-[75vh] flex items-center justify-center rounded-2xl overflow-hidden bg-[#0c0d10] border border-[#c5a880]/30 shadow-2xl">
+              {/* Image Viewport */}
+              <div className="relative w-full h-[65vh] sm:h-[74vh] flex items-center justify-center bg-[#201D19] border border-[#D9D1C5]/20 overflow-hidden">
                 <img
-                  src={activeLightboxItem.url}
+                  src={
+                    activeLightboxItem.url && activeLightboxItem.url.trim().length > 0
+                      ? activeLightboxItem.url.trim()
+                      : FALLBACK_GALLERY_IMG
+                  }
                   alt={activeLightboxItem.title}
-                  className="max-h-[75vh] w-auto max-w-full object-contain"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== FALLBACK_GALLERY_IMG) target.src = FALLBACK_GALLERY_IMG;
+                  }}
+                  className="max-h-full max-w-full object-contain select-none"
                 />
 
                 {/* Prev Button */}
                 <button
-                  onClick={handlePrev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#0c0d10]/80 border border-[#c5a880]/40 text-[#f3e5d0] hover:bg-[#c5a880] hover:text-[#0c0d10] flex items-center justify-center transition-all"
-                  aria-label="Previous image"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goPrev();
+                  }}
+                  aria-label="Previous photograph"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#201D19]/85 hover:bg-[#B69A69] text-[#F5F1E9] hover:text-[#201D19] border border-[#D9D1C5]/25 flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
 
                 {/* Next Button */}
                 <button
-                  onClick={handleNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#0c0d10]/80 border border-[#c5a880]/40 text-[#f3e5d0] hover:bg-[#c5a880] hover:text-[#0c0d10] flex items-center justify-center transition-all"
-                  aria-label="Next image"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goNext();
+                  }}
+                  aria-label="Next photograph"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#201D19]/85 hover:bg-[#B69A69] text-[#F5F1E9] hover:text-[#201D19] border border-[#D9D1C5]/25 flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
               </div>
 
-              {/* Caption & Metadata */}
-              <div className="w-full mt-4 p-4 rounded-xl bg-[#151720]/80 border border-[#2a2723] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              {/* Bottom Caption */}
+              <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <span className="text-[10px] uppercase tracking-widest text-[#c5a880] block mb-0.5">
-                    {activeLightboxItem.category} • Image {activeLightboxIndex! + 1} of {filteredItems.length}
-                  </span>
-                  <h4 className="font-serif-luxury text-xl text-[#f3e5d0]">
+                  <h4 className="font-serif-luxury text-2xl text-[#F5F1E9]">
                     {activeLightboxItem.title}
                   </h4>
                   {activeLightboxItem.caption && (
-                    <p className="text-xs text-[#a09a8e] mt-1 font-light">
+                    <p className="text-xs sm:text-sm text-[#D9D1C5]/75 font-light mt-0.5">
                       {activeLightboxItem.caption}
                     </p>
                   )}
                 </div>
+                <span className="text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/50">
+                  Use Arrow Keys or Swipe to Navigate
+                </span>
               </div>
             </motion.div>
           </div>

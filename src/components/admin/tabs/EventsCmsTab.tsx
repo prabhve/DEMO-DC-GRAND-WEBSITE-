@@ -190,7 +190,12 @@ export const EventsCmsTab: React.FC<EventsCmsTabProps> = ({
           <MediaUploadInput
             label="Initial Venue Photo"
             value={newEventData.images?.[0] || ''}
-            onChange={(url) => setNewEventData({ ...newEventData, images: [url] })}
+            onChange={(url) =>
+              setNewEventData({
+                ...newEventData,
+                images: url.trim() ? [url.trim()] : []
+              })
+            }
             placeholder="Paste URL, upload photo, or pick curated events photo"
             previewHeightClass="h-36"
           />
@@ -222,7 +227,14 @@ export const EventsCmsTab: React.FC<EventsCmsTabProps> = ({
         {events.map((evt) => (
           <div key={evt.id} className="rounded-2xl overflow-hidden border border-[#202330] bg-[#12141c]">
             <div className="relative h-44 bg-[#0c0d10]">
-              <img src={evt.images?.[0]} alt={evt.name} className="w-full h-full object-cover" />
+              <img
+                src={
+                  evt.images?.find((u) => u && u.trim()) ||
+                  'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=80'
+                }
+                alt={evt.name}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-[#12141c] via-transparent to-transparent" />
               <div className="absolute bottom-3 left-4 right-4">
                 <h3 className="font-serif-luxury text-xl text-[#f3e5d0]">{evt.name}</h3>
@@ -337,18 +349,20 @@ export const EventsCmsTab: React.FC<EventsCmsTabProps> = ({
               </label>
 
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                {editingEvent.images?.map((url, i) => (
-                  <div key={i} className="relative rounded-lg overflow-hidden group border border-[#252838]">
-                    <img src={url} alt={`Venue photo ${i + 1}`} className="w-full h-20 object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePhotoFromEditing(i)}
-                      className="absolute top-1 right-1 p-1 rounded bg-black/80 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
+                {editingEvent.images?.map((url, i) =>
+                  url && url.trim() ? (
+                    <div key={i} className="relative rounded-lg overflow-hidden group border border-[#252838]">
+                      <img src={url.trim()} alt={`Venue photo ${i + 1}`} className="w-full h-20 object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhotoFromEditing(i)}
+                        className="absolute top-1 right-1 p-1 rounded bg-black/80 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : null
+                )}
               </div>
 
               <div className="pt-2 border-t border-[#1a1d28]">

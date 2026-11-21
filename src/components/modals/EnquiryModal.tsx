@@ -4,8 +4,6 @@ import {
   X,
   Send,
   CheckCircle2,
-  MessageSquare,
-  Sparkles,
   MessageCircle,
   Mail,
   Phone
@@ -41,6 +39,15 @@ export const EnquiryModal: React.FC = () => {
       setFormData((prev) => ({ ...prev, enquiryType: initialEnquiryType }));
     }
   }, [initialEnquiryType]);
+
+  useEffect(() => {
+    if (!isEnquiryModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsEnquiryModalOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isEnquiryModalOpen, setIsEnquiryModalOpen]);
 
   if (!isEnquiryModalOpen) return null;
 
@@ -108,10 +115,10 @@ export const EnquiryModal: React.FC = () => {
   };
 
   const hotelWhatsAppPhone = contact.whatsapp || '+919415204991';
-  const customerWhatsAppMessage = `*New Customer Enquiry - Hotel D C Grand*%0A%0A*Reference:* ${generatedId}%0A*Name:* ${formData.name}%0A*Type:* ${formData.enquiryType}%0A*Subject:* ${formData.subject || 'General Enquiry'}%0A*Message:* ${formData.message}%0A%0ANamaste! I submitted this enquiry on your website. Please advise.`;
+  const customerWhatsAppMessage = `*New Customer Enquiry - Hotel D.C. Grand*%0A%0A*Reference:* ${generatedId}%0A*Name:* ${formData.name}%0A*Type:* ${formData.enquiryType}%0A*Subject:* ${formData.subject || 'General Enquiry'}%0A*Message:* ${formData.message}%0A%0ANamaste! I submitted this enquiry on your website. Please advise.`;
 
   const customerEmailSubject = `Customer Enquiry [Ref: ${generatedId}] - ${formData.name}`;
-  const customerEmailBody = `Dear Hotel D C Grand Management,
+  const customerEmailBody = `Dear Hotel D.C. Grand Management,
 
 Reference ID: ${generatedId}
 Name: ${formData.name}
@@ -128,45 +135,47 @@ Warm regards,
 ${formData.name}`;
 
   const customerWhatsAppLink = createWhatsAppLink(hotelWhatsAppPhone, decodeURIComponent(customerWhatsAppMessage));
-  const customerEmailLink = createMailtoLink(contact.email || 'info@hoteldcgrand.com', customerEmailSubject, customerEmailBody);
+  const customerEmailLink = createMailtoLink(contact.email || 'stay@dcgrandvaranasi.com', customerEmailSubject, customerEmailBody);
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Send an Enquiry to Hotel D.C. Grand"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+      >
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={handleClose}
-          className="fixed inset-0 bg-[#08090b]/90 backdrop-blur-md"
+          className="fixed inset-0 bg-[#161412]/92 backdrop-blur-md"
         />
 
         {/* Modal Container */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94, y: 20 }}
+          initial={{ opacity: 0, scale: 0.96, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.94, y: 20 }}
-          className="relative w-full max-w-xl bg-[#13151f] rounded-3xl border border-[#c5a880]/40 shadow-2xl overflow-hidden z-10 my-auto"
+          exit={{ opacity: 0, scale: 0.96, y: 16 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full max-w-xl bg-[#201D19] text-[#F5F1E9] border border-[#D9D1C5]/25 shadow-2xl overflow-hidden z-10 my-auto"
         >
           {/* Header */}
-          <div className="p-6 bg-gradient-to-b from-[#181b27] to-[#13151f] border-b border-[#2a2723] flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#c5a880]/20 flex items-center justify-center text-[#c5a880]">
-                <MessageSquare className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-[#c5a880] block font-semibold">
-                  D C Grand Front Office
-                </span>
-                <h2 className="font-serif-luxury text-2xl text-[#f3e5d0]">
-                  Send an Enquiry
-                </h2>
-              </div>
+          <div className="p-6 bg-[#161412] border-b border-[#D9D1C5]/15 flex items-center justify-between">
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.22em] text-[#B69A69] block font-medium mb-1">
+                D.C. Grand Concierge & Events Desk
+              </span>
+              <h2 className="font-serif-luxury text-2xl sm:text-3xl text-[#F5F1E9]">
+                Submit a Custom Inquiry
+              </h2>
             </div>
             <button
+              type="button"
               onClick={handleClose}
-              className="w-9 h-9 rounded-full bg-[#0c0d10]/60 text-[#a09a8e] hover:text-[#f3e5d0] flex items-center justify-center transition-colors"
+              className="w-10 h-10 bg-[#201D19] border border-[#D9D1C5]/20 text-[#D9D1C5] hover:text-[#B69A69] hover:border-[#B69A69] flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Close modal"
               id="close-enquiry-modal-btn"
             >
@@ -175,50 +184,48 @@ ${formData.name}`;
           </div>
 
           {/* Body */}
-          <div className="p-6">
+          <div className="p-6 sm:p-8">
             {generatedId ? (
               /* Success State */
-              <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-[#c5a880]/20 border border-[#c5a880] text-[#c5a880] flex items-center justify-center mx-auto mb-4 animate-bounce">
-                  <CheckCircle2 className="w-8 h-8" />
+              <div className="text-center py-4">
+                <div className="w-14 h-14 bg-[#B69A69]/15 border border-[#B69A69] text-[#B69A69] flex items-center justify-center mx-auto mb-5">
+                  <CheckCircle2 className="w-7 h-7" />
                 </div>
-                <h3 className="font-serif-luxury text-3xl text-[#f3e5d0] mb-2">
-                  Enquiry Received
+                <h3 className="font-serif-luxury text-3xl text-[#F5F1E9] mb-2">
+                  Inquiry Registered
                 </h3>
-                <p className="text-xs text-[#a09a8e] max-w-md mx-auto mb-6">
-                  Thank you for reaching out to D C Grand. Your enquiry has been registered and assigned to our guest relations team.
+                <p className="text-xs sm:text-sm text-[#D9D1C5]/80 max-w-md mx-auto mb-6 leading-relaxed">
+                  Thank you for reaching out to Hotel D.C. Grand. Your inquiry has been assigned to our guest relations team.
                 </p>
 
-                <div className="p-4 rounded-xl bg-[#0c0d10] border border-[#c5a880]/30 max-w-sm mx-auto mb-6">
-                  <span className="text-[10px] uppercase tracking-widest text-[#777166] block">
-                    Your Reference ID
+                <div className="p-4 bg-[#161412] border border-[#D9D1C5]/20 max-w-sm mx-auto mb-6">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/60 block mb-1">
+                    Reference ID
                   </span>
-                  <span className="text-lg font-mono font-bold text-[#c5a880]">
+                  <span className="text-lg font-mono font-semibold text-[#B69A69] tabular-nums">
                     {generatedId}
                   </span>
                 </div>
 
                 <div className="space-y-3 max-w-sm mx-auto mb-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {/* Direct WhatsApp */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <a
                       href={customerWhatsAppLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-[#0c0d10] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md transition-colors"
+                      className="py-3 px-4 bg-[#536E68] hover:bg-[#617f78] text-[#F5F1E9] font-semibold text-xs uppercase tracking-[0.16em] flex items-center justify-center gap-2 transition-colors"
                       id="enquiry-confirm-whatsapp-btn"
                     >
-                      <MessageCircle className="w-4 h-4 text-[#0c0d10]" />
+                      <MessageCircle className="w-4 h-4 text-[#B69A69]" />
                       <span>WhatsApp Us</span>
                     </a>
 
-                    {/* Direct Email */}
                     <a
                       href={customerEmailLink}
-                      className="py-2.5 px-3 rounded-xl bg-[#1d2232] hover:bg-[#262c40] text-[#f3e5d0] border border-[#3b435c] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors"
+                      className="py-3 px-4 bg-[#161412] hover:border-[#B69A69] text-[#F5F1E9] border border-[#D9D1C5]/25 font-semibold text-xs uppercase tracking-[0.16em] flex items-center justify-center gap-2 transition-colors"
                       id="enquiry-confirm-email-btn"
                     >
-                      <Mail className="w-4 h-4 text-[#c5a880]" />
+                      <Mail className="w-4 h-4 text-[#B69A69]" />
                       <span>Email Us</span>
                     </a>
                   </div>
@@ -226,17 +233,18 @@ ${formData.name}`;
                   <div className="text-center pt-1">
                     <a
                       href={`tel:${hotelWhatsAppPhone}`}
-                      className="text-xs text-[#a09a8e] hover:text-[#f3e5d0] transition-colors inline-flex items-center gap-1.5"
+                      className="text-xs text-[#D9D1C5]/80 hover:text-[#F5F1E9] transition-colors inline-flex items-center gap-1.5 tabular-nums"
                     >
-                      <Phone className="w-3.5 h-3.5 text-[#c5a880]" />
+                      <Phone className="w-3.5 h-3.5 text-[#B69A69]" />
                       <span>Call Front Desk: <strong>{contact.phone}</strong></span>
                     </a>
                   </div>
                 </div>
 
                 <button
+                  type="button"
                   onClick={handleClose}
-                  className="px-8 py-2.5 rounded-xl bg-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:bg-[#d8bf9a] transition-colors"
+                  className="px-8 py-3 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.18em] transition-colors cursor-pointer"
                 >
                   Done
                 </button>
@@ -245,13 +253,13 @@ ${formData.name}`;
               /* Form */
               <form onSubmit={handleSubmit} className="space-y-4">
                 {validationError && (
-                  <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-800 text-xs text-rose-300">
+                  <div className="p-3.5 bg-rose-950/70 border border-rose-800 text-xs text-rose-200">
                     {validationError}
                   </div>
                 )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
+                    <label className="block text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/75 mb-1.5 font-medium">
                       Your Full Name *
                     </label>
                     <input
@@ -260,12 +268,12 @@ ${formData.name}`;
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Rajesh Kumar"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] focus:border-[#c5a880] text-sm text-[#f3e5d0] focus:outline-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-[#161412] border border-[#D9D1C5]/20 focus:border-[#B69A69] text-sm text-[#F5F1E9] focus:outline-none transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
+                    <label className="block text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/75 mb-1.5 font-medium">
                       Phone Number *
                     </label>
                     <input
@@ -274,14 +282,14 @@ ${formData.name}`;
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+91 98765 43210"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] focus:border-[#c5a880] text-sm text-[#f3e5d0] focus:outline-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-[#161412] border border-[#D9D1C5]/20 focus:border-[#B69A69] text-sm text-[#F5F1E9] focus:outline-none transition-colors tabular-nums"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
+                    <label className="block text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/75 mb-1.5 font-medium">
                       Email Address
                     </label>
                     <input
@@ -289,13 +297,13 @@ ${formData.name}`;
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="name@example.com"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] focus:border-[#c5a880] text-sm text-[#f3e5d0] focus:outline-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-[#161412] border border-[#D9D1C5]/20 focus:border-[#B69A69] text-sm text-[#F5F1E9] focus:outline-none transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
-                      Enquiry Category *
+                    <label className="block text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/75 mb-1.5 font-medium">
+                      Inquiry Category *
                     </label>
                     <select
                       value={formData.enquiryType}
@@ -305,19 +313,19 @@ ${formData.name}`;
                           enquiryType: e.target.value as Enquiry['enquiryType']
                         })
                       }
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] focus:border-[#c5a880] text-sm text-[#f3e5d0] focus:outline-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-[#161412] border border-[#D9D1C5]/20 focus:border-[#B69A69] text-sm text-[#F5F1E9] focus:outline-none transition-colors cursor-pointer"
                     >
-                      <option value="General Enquiry">General Enquiry</option>
-                      <option value="Room Enquiry">Room Enquiry</option>
-                      <option value="Restaurant Enquiry">Food Express Restaurant</option>
-                      <option value="Meeting / Event Enquiry">Meeting / Banquet Event</option>
-                      <option value="Other">Other</option>
+                      <option value="General Enquiry" className="bg-[#201D19]">General Enquiry</option>
+                      <option value="Room Enquiry" className="bg-[#201D19]">Room Enquiry</option>
+                      <option value="Restaurant Enquiry" className="bg-[#201D19]">Food Express Restaurant</option>
+                      <option value="Meeting / Event Enquiry" className="bg-[#201D19]">Meeting / Banquet Event</option>
+                      <option value="Other" className="bg-[#201D19]">Other</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
+                  <label className="block text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/75 mb-1.5 font-medium">
                     Subject
                   </label>
                   <input
@@ -325,12 +333,12 @@ ${formData.name}`;
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     placeholder="Brief description of your request"
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] focus:border-[#c5a880] text-sm text-[#f3e5d0] focus:outline-none transition-colors"
+                    className="w-full px-4 py-2.5 bg-[#161412] border border-[#D9D1C5]/20 focus:border-[#B69A69] text-sm text-[#F5F1E9] focus:outline-none transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-[#a09a8e] mb-1.5 font-medium">
+                  <label className="block text-[11px] uppercase tracking-[0.18em] text-[#D9D1C5]/75 mb-1.5 font-medium">
                     Detailed Message *
                   </label>
                   <textarea
@@ -338,8 +346,8 @@ ${formData.name}`;
                     required
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Please specify dates, number of guests, or specific requirements..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#0c0d10] border border-[#2a2723] focus:border-[#c5a880] text-sm text-[#f3e5d0] focus:outline-none transition-colors resize-none"
+                    placeholder="Please specify dates, number of guests, or catering/banquet requirements..."
+                    className="w-full px-4 py-2.5 bg-[#161412] border border-[#D9D1C5]/20 focus:border-[#B69A69] text-sm text-[#F5F1E9] focus:outline-none transition-colors resize-none"
                   />
                 </div>
 
@@ -347,11 +355,11 @@ ${formData.name}`;
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#c5a880] to-[#b39366] text-[#0c0d10] font-bold text-xs uppercase tracking-wider hover:shadow-[0_0_20px_rgba(197,168,128,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full py-4 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                     id="submit-enquiry-form-btn"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{isSubmitting ? 'Submitting...' : 'Submit Enquiry'}</span>
+                    <span>{isSubmitting ? 'Submitting...' : 'Submit Inquiry'}</span>
                   </button>
                 </div>
               </form>

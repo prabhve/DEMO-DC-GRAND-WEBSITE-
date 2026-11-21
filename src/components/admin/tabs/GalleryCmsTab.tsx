@@ -184,7 +184,10 @@ export const GalleryCmsTab: React.FC<GalleryCmsTabProps> = ({
           >
             <div className="relative h-44 bg-[#0c0d10] overflow-hidden">
               <img
-                src={item.url}
+                src={
+                  item.url?.trim() ||
+                  'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80'
+                }
                 alt={item.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />

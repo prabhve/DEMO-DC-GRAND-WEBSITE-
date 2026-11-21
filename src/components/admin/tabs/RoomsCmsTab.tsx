@@ -208,13 +208,15 @@ export const RoomsCmsTab: React.FC<RoomsCmsTabProps> = ({
           <MediaUploadInput
             label="Room Cover Photo (Main Card & Hero Banner)"
             value={newRoomData.coverImage}
-            onChange={(url) =>
+            onChange={(url) => {
+              const trimmed = url.trim();
+              const existingValid = (newRoomData.images || []).filter((img) => img && img.trim());
               setNewRoomData({
                 ...newRoomData,
-                coverImage: url,
-                images: newRoomData.images?.length ? newRoomData.images : [url]
-              })
-            }
+                coverImage: trimmed,
+                images: existingValid.length ? existingValid : trimmed ? [trimmed] : []
+              });
+            }}
             previewHeightClass="h-36"
           />
 
@@ -256,7 +258,11 @@ export const RoomsCmsTab: React.FC<RoomsCmsTabProps> = ({
           >
             <div className="relative h-48 bg-[#0c0d10] overflow-hidden">
               <img
-                src={room.coverImage || room.images?.[0]}
+                src={
+                  room.coverImage?.trim() ||
+                  room.images?.find((img) => img && img.trim()) ||
+                  'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1600&q=80'
+                }
                 alt={room.name}
                 className="w-full h-full object-cover"
               />
@@ -464,24 +470,26 @@ export const RoomsCmsTab: React.FC<RoomsCmsTabProps> = ({
 
               {/* Thumbnails list */}
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                {editingRoom.images?.map((imgUrl, i) => (
-                  <div key={i} className="relative rounded-lg overflow-hidden group border border-[#252838]">
-                    <img src={imgUrl} alt={`Room photo ${i + 1}`} className="w-full h-20 object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePhotoFromEditing(i)}
-                      className="absolute top-1 right-1 p-1 rounded bg-black/80 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Delete photo"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                    {editingRoom.coverImage === imgUrl && (
-                      <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-[#c5a880] text-[#0c0d10] text-[8px] font-bold uppercase">
-                        Cover
-                      </span>
-                    )}
-                  </div>
-                ))}
+                {editingRoom.images?.map((imgUrl, i) =>
+                  imgUrl && imgUrl.trim() ? (
+                    <div key={i} className="relative rounded-lg overflow-hidden group border border-[#252838]">
+                      <img src={imgUrl.trim()} alt={`Room photo ${i + 1}`} className="w-full h-20 object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePhotoFromEditing(i)}
+                        className="absolute top-1 right-1 p-1 rounded bg-black/80 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Delete photo"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                      {editingRoom.coverImage === imgUrl && (
+                        <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-[#c5a880] text-[#0c0d10] text-[8px] font-bold uppercase">
+                          Cover
+                        </span>
+                      )}
+                    </div>
+                  ) : null
+                )}
               </div>
 
               {/* Add photo to room */}

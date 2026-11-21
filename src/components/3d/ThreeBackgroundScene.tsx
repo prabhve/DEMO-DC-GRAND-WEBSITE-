@@ -1,94 +1,116 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useHotel } from '../../context/HotelContext';
 import { useLevelOfDetail } from '../../hooks/useLevelOfDetail';
+
+function isSoftwareWebGL(): boolean {
+  try {
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+    if (!gl) return true;
+    const ext = (gl as WebGLRenderingContext).getExtension('WEBGL_debug_renderer_info');
+    if (!ext) return false;
+    const rendererInfo = (gl as WebGLRenderingContext).getParameter(ext.UNMASKED_RENDERER_WEBGL) || '';
+    return /SwiftShader|Software|llvmpipe|Mesa OffScreen|Microsoft Basic Render/i.test(String(rendererInfo));
+  } catch {
+    return true;
+  }
+}
 
 export const ThreeBackgroundScene: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { threeSettings } = useHotel();
   const { profile, activeTier } = useLevelOfDetail();
+  const [fallbackActive, setFallbackActive] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // Check user preferences for reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isSmallMobile = window.innerWidth < 768;
 
-    // Setup scene, camera, renderer with LOD profiles
+    // Avoid unnecessary background WebGL GPU cost on small mobile screens or software renderers
+    if (isSmallMobile || prefersReducedMotion || isSoftwareWebGL() || !threeSettings.heroAnimationEnabled) {
+      setFallbackActive(true);
+      return;
+    }
+    setFallbackActive(false);
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: profile.antialias,
+        powerPreference: profile.powerPreference
+      });
+    } catch {
+      setFallbackActive(true);
+      return;
+    }
+
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0c0d10, 0.0018);
+    scene.fog = new THREE.FogExp2(0x201d19, 0.002);
 
     const camera = new THREE.PerspectiveCamera(
-      60,
+      55,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 40;
+    camera.position.z = 42;
     camera.position.y = 0;
 
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: profile.antialias,
-      powerPreference: profile.powerPreference
-    });
-    renderer.setPixelRatio(profile.pixelRatio);
+    renderer.setPixelRatio(Math.min(profile.pixelRatio, 1.75));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
 
     container.appendChild(renderer.domElement);
 
-    // Warm atmospheric lighting
-    const ambientLight = new THREE.AmbientLight(0xfff4e0, 0.6);
+    // Warm Champagne & Muted Teal atmospheric lighting
+    const ambientLight = new THREE.AmbientLight(0xf5f1e9, 0.55);
     scene.add(ambientLight);
 
-    const goldPointLight = new THREE.PointLight(0xc5a880, 2.5, 80);
-    goldPointLight.position.set(10, 15, 20);
+    const goldPointLight = new THREE.PointLight(0xb69a69, 2.0, 85);
+    goldPointLight.position.set(12, 16, 22);
     scene.add(goldPointLight);
 
-    const warmFillLight = new THREE.PointLight(0xb58e58, 1.8, 70);
-    warmFillLight.position.set(-15, -10, 10);
-    scene.add(warmFillLight);
+    const tealFillLight = new THREE.PointLight(0x536e68, 1.5, 75);
+    tealFillLight.position.set(-16, -10, 12);
+    scene.add(tealFillLight);
 
-    // Floating Golden Dust / Atmospheric Particle System with LOD tier count
-    const particleCount = prefersReducedMotion ? 30 : profile.bgParticleCount;
+    // Atmospheric Dust System with controlled particle count
+    const particleCount = Math.min(profile.bgParticleCount, 90);
     const particleGeometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    const scales = new Float32Array(particleCount);
-    const opacities = new Float32Array(particleCount);
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 80;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 60;
-      scales[i] = Math.random() * 0.8 + 0.2;
-      opacities[i] = Math.random() * 0.7 + 0.2;
+      positions[i * 3] = (Math.random() - 0.5) * 85;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 85;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 55;
     }
 
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    particleGeometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
 
-    // Particle texture (soft circular glow)
     const canvas = document.createElement('canvas');
     canvas.width = 32;
     canvas.height = 32;
     const ctx = canvas.getContext('2d');
     if (ctx) {
       const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
-      gradient.addColorStop(0, 'rgba(232, 215, 190, 1)');
-      gradient.addColorStop(0.3, 'rgba(197, 168, 128, 0.7)');
-      gradient.addColorStop(1, 'rgba(197, 168, 128, 0)');
+      gradient.addColorStop(0, 'rgba(245, 241, 233, 0.9)');
+      gradient.addColorStop(0.35, 'rgba(182, 154, 105, 0.6)');
+      gradient.addColorStop(1, 'rgba(182, 154, 105, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 32, 32);
     }
     const particleTexture = new THREE.CanvasTexture(canvas);
 
     const particleMaterial = new THREE.PointsMaterial({
-      size: activeTier === 'low' ? 1.2 : 1.6,
+      size: activeTier === 'low' ? 1.1 : 1.4,
       map: particleTexture,
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.5,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -96,19 +118,19 @@ export const ThreeBackgroundScene: React.FC = () => {
     const particles = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particles);
 
-    // Architectural 3D floating rings with LOD segments
+    // Subtle Architectural Wireframe Geometry
     const ringGroup = new THREE.Group();
 
     const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0xc5a880,
+      color: 0xb69a69,
       wireframe: true,
       transparent: true,
-      opacity: 0.12
+      opacity: 0.07
     });
 
     const ringGeom1 = new THREE.TorusGeometry(
-      12,
-      0.05,
+      13,
+      0.04,
       profile.bgTorusSegments.ring1.radial,
       profile.bgTorusSegments.ring1.tubular
     );
@@ -117,8 +139,8 @@ export const ThreeBackgroundScene: React.FC = () => {
     ringGroup.add(ring1);
 
     const ringGeom2 = new THREE.TorusGeometry(
-      18,
-      0.04,
+      19,
+      0.035,
       profile.bgTorusSegments.ring2.radial,
       profile.bgTorusSegments.ring2.tubular
     );
@@ -126,26 +148,16 @@ export const ThreeBackgroundScene: React.FC = () => {
     ring2.rotation.y = Math.PI / 4;
     ringGroup.add(ring2);
 
-    const ringGeom3 = new THREE.IcosahedronGeometry(7, profile.bgIcosahedronDetail);
-    const ringMaterial2 = new THREE.MeshBasicMaterial({
-      color: 0xe8d7be,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.08
-    });
-    const octa = new THREE.Mesh(ringGeom3, ringMaterial2);
-    ringGroup.add(octa);
-
-    ringGroup.position.set(12, -4, -10);
+    ringGroup.position.set(14, -4, -12);
     scene.add(ringGroup);
 
-    // Mouse and scroll variables for continuous 3D camera travel
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
     let scrollY = 0;
     let targetScrollY = 0;
+    let isTabVisible = !document.hidden;
 
     const handleMouseMove = (event: MouseEvent) => {
       mouseX = (event.clientX / window.innerWidth) * 2 - 1;
@@ -156,10 +168,14 @@ export const ThreeBackgroundScene: React.FC = () => {
       scrollY = window.scrollY;
     };
 
+    const handleVisibilityChange = () => {
+      isTabVisible = !document.hidden;
+    };
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Handle Window Resize
     const handleResize = () => {
       if (!container) return;
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -168,71 +184,46 @@ export const ThreeBackgroundScene: React.FC = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // Animation Loop
     let animationFrameId: number;
     const clock = new THREE.Clock();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
+      // Skip GPU render calls when tab is hidden
+      if (!isTabVisible) return;
+
       const elapsedTime = clock.getElapsedTime();
       const speedMult = threeSettings.animationSpeed || 1;
 
-      // Smooth mouse interpolation
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-
-      // Smooth scroll interpolation
-      targetScrollY += (scrollY - targetScrollY) * 0.08;
+      targetX += (mouseX - targetX) * 0.04;
+      targetY += (mouseY - targetY) * 0.04;
+      targetScrollY += (scrollY - targetScrollY) * 0.07;
 
       const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
       const scrollProgress = targetScrollY / maxScroll;
 
-      // 3D Camera forward flight & parallax through the hotel space
-      if (threeSettings.heroAnimationEnabled && !prefersReducedMotion) {
-        // As user scrolls, camera gently glides forward and shifts view
-        camera.position.z = 40 - scrollProgress * 15;
-        camera.position.y = -scrollProgress * 25 + targetY * 2;
-        camera.position.x = Math.sin(scrollProgress * Math.PI * 2) * 3 + targetX * 2.5;
-        camera.lookAt(targetX * 1.5, -scrollProgress * 25, 0);
+      camera.position.z = 42 - scrollProgress * 12;
+      camera.position.y = -scrollProgress * 20 + targetY * 1.4;
+      camera.position.x = Math.sin(scrollProgress * Math.PI * 2) * 2 + targetX * 1.8;
+      camera.lookAt(targetX, -scrollProgress * 20, 0);
 
-        // Particle motion based on LOD capability
-        if (profile.bgParticleVertexAnimation) {
-          // Dynamic wavy motion on capable devices
-          const posAttr = particleGeometry.attributes.position as THREE.BufferAttribute;
-          const arr = posAttr.array as Float32Array;
-          for (let i = 0; i < particleCount; i++) {
-            arr[i * 3 + 1] += Math.sin(elapsedTime * speedMult + i) * 0.02;
-            arr[i * 3] += Math.cos(elapsedTime * speedMult * 0.7 + i) * 0.015;
-          }
-          posAttr.needsUpdate = true;
-        } else {
-          // Ultra lightweight GPU group rotation on Mobile/Eco tier (0 CPU vertex loop!)
-          particles.rotation.y = elapsedTime * 0.04 * speedMult;
-        }
-
-        // Rotate subtle architectural rings
-        ringGroup.rotation.x = elapsedTime * 0.1 * speedMult + scrollProgress * 2;
-        ringGroup.rotation.y = elapsedTime * 0.15 * speedMult + scrollProgress * 1.5;
-        ringGroup.position.y = -4 - scrollProgress * 20;
-
-        // Light pulse (only on High/Medium to preserve fragment cycles on budget devices)
-        if (activeTier !== 'low') {
-          goldPointLight.intensity = 2.0 + Math.sin(elapsedTime * 1.5) * 0.5;
-        }
-      }
+      particles.rotation.y = elapsedTime * 0.02 * speedMult;
+      ringGroup.rotation.x = elapsedTime * 0.06 * speedMult + scrollProgress * 1.4;
+      ringGroup.rotation.y = elapsedTime * 0.09 * speedMult + scrollProgress * 1.1;
+      ringGroup.position.y = -4 - scrollProgress * 16;
 
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // Clean up
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -241,19 +232,22 @@ export const ThreeBackgroundScene: React.FC = () => {
       particleTexture.dispose();
       ringGeom1.dispose();
       ringGeom2.dispose();
-      ringGeom3.dispose();
       ringMaterial.dispose();
-      ringMaterial2.dispose();
       renderer.dispose();
     };
   }, [threeSettings, profile, activeTier]);
+
+  if (fallbackActive) {
+    return null;
+  }
 
   return (
     <div
       ref={containerRef}
       id="three-background-canvas"
+      aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
-      style={{ opacity: 0.85 }}
+      style={{ opacity: 0.65 }}
     />
   );
 };

@@ -335,38 +335,38 @@ export const INITIAL_CONTACT: ContactData = {
 
 export const INITIAL_HOME_CMS: HomeCmsData = {
   // Hero
-  heroBadge: 'Bhelupur, Varanasi • Newly Opened Property',
-  heroSubtitle: 'Welcome To D C Grand',
-  heroHeadline: 'Comfortable Stay in the Heart of Varanasi',
-  heroSupportingText: "A convenient stay in Bhelupur, Varanasi, close to the city's spiritual and cultural attractions.",
+  heroBadge: 'Bhelupur, Varanasi · Boutique Hospitality',
+  heroSubtitle: 'Hotel D.C. Grand · Varanasi',
+  heroHeadline: 'Your Story of Comfort Begins in Varanasi.',
+  heroSupportingText: 'Discover thoughtful hospitality, inviting spaces and a memorable stay in the spiritual heart of Varanasi.',
   heroCoverImage: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=85',
-  heroExploreBtnText: 'Explore Rooms',
-  heroBookingBtnText: 'Request Booking',
+  heroExploreBtnText: 'Explore the Hotel',
+  heroBookingBtnText: 'Book Your Stay',
 
   // Intro / Sanctuary
-  introBadge: 'The Sanctuary',
-  introHeading: 'D C Grand',
-  introText: "D C Grand is a newly opened property in Bhelupur, Varanasi, offering a convenient stay for guests exploring the city's spiritual and cultural attractions.",
+  introBadge: 'The Sanctuary · Bhelupur',
+  introHeading: 'Thoughtful Architecture Meets Timeless Banarasi Warmth.',
+  introText: "Nestled in the serene, well-connected neighbourhood of Bhelupur, Hotel D.C. Grand offers a tranquil architectural sanctuary moments away from Kashi's sacred ghats, temples, and cultural landmarks.",
   introImage: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1000&q=80',
-  introImageBadgeTitle: 'Grand Welcome',
-  introImageBadgeDesc: 'Double-height reception foyer with crystal chandeliers and warm hospitality.',
-  introPillar1Title: 'Peace of Mind',
-  introPillar1Desc: '24/7 dedicated security, CCTV surveillance, continuous power backup, and pristine hygiene protocols.',
-  introPillar2Title: 'Personalized Service',
-  introPillar2Desc: 'Warm, traditional Banarasi care paired with prompt attention for your spiritual itinerary and temple visits.',
+  introImageBadgeTitle: 'Grand Arrival',
+  introImageBadgeDesc: 'Double-height reception foyer with ambient chandelier lighting and 24/7 concierge care.',
+  introPillar1Title: 'Uninterrupted Peace of Mind',
+  introPillar1Desc: '24/7 security, 100% heavy-duty power backup, modern elevator access across all floors, and meticulous housekeeping.',
+  introPillar2Title: 'Personalized Banarasi Care',
+  introPillar2Desc: 'Attentive local hosts dedicated to arranging temple darshan logistics, dawn boat rides, and curated dining.',
 
   // About / Philosophy
-  aboutBadge: 'Our Philosophy',
-  aboutHeading: 'A Gracious Base in the Eternal City',
-  aboutText: "D C Grand offers a convenient stay in Bhelupur, Varanasi, providing guests with a comfortable base for exploring the city's spiritual and cultural attractions.",
-  aboutSecondaryText: 'Varanasi is a sacred convergence of time, devotion, and timeless ghats. Situated in the well-connected neighbourhood of Bhelupur, D C Grand is designed to be your serene oasis—where contemporary comforts, dedicated power backup, and authentic culinary hospitality meet the warmth of Banarasi traditions.',
+  aboutBadge: 'Destination & Heritage',
+  aboutHeading: 'Experience the Spirit of Varanasi.',
+  aboutText: "Varanasi is more than a destination—it is a living tapestry of devotion, dawn chants along the Ganges, and centuries of philosophical heritage.",
+  aboutSecondaryText: 'Situated in Bhelupur with effortless wide-road car and cab access, D.C. Grand places you within a short, comfortable drive of Kashi Vishwanath Temple, Assi Ghat, Dashashwamedh Ghat, Sankat Mochan Temple, and Banaras Hindu University—allowing you to immerse in the city and return to quiet, climate-controlled comfort.',
   aboutImage: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1000&q=80',
-  aboutImageCaption: 'Timeless spiritual heritage along the sacred Ganga Ghats, moments from D C Grand',
+  aboutImageCaption: 'Sacred ghats and timeless rituals along the Ganges, a short drive from Hotel D.C. Grand in Bhelupur',
   aboutFeatures: [
-    '2 km from Sankat Mochan Temple',
-    'Close to Assi Ghat & BHU',
-    'Modern Elevator & Generator Backup',
-    'In-House Food Express Dining'
+    '2.0 km from Sankat Mochan Temple',
+    '2.1 km from Assi Ghat & Morning Aarti',
+    '2.2 km from Dashashwamedh Ghat',
+    '2.8 km from Kashi Vishwanath Corridor'
   ],
 
   // Highlights

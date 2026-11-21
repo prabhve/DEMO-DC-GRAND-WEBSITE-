@@ -1,78 +1,69 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Calendar, Phone, Sparkles } from 'lucide-react';
+import { ArrowRight, Phone } from 'lucide-react';
 import { useHotel } from '../../context/HotelContext';
 
 export const FinalCtaScene: React.FC = () => {
-  const { openBookingModal, homeCms } = useHotel();
-
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+  const { openBookingModal, homeCms, contact } = useHotel();
 
   return (
-    <section className="relative py-28 px-4 sm:px-6 lg:px-8 bg-gradient-to-t from-[#08090b] via-[#0e1017] to-[#0c0d10] overflow-hidden text-center">
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-[#c5a880]/10 blur-[130px] pointer-events-none" />
-
+    <section className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden text-center border-b border-[#D9D1C5]/15">
       <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center">
-        {/* Monogram emblem */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="w-16 h-16 rounded-full border border-[#c5a880]/50 flex items-center justify-center bg-[#151720] shadow-[0_0_30px_rgba(197,168,128,0.2)] mb-6"
+          className="text-xs uppercase tracking-[0.26em] text-[#B69A69] font-medium mb-4"
         >
-          <span className="font-display text-[#c5a880] text-2xl font-semibold tracking-widest">
-            DC
-          </span>
+          Hotel D.C. Grand · Bhelupur, Varanasi
         </motion.div>
 
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-[#f3e5d0] font-normal leading-tight mb-4"
+          transition={{ delay: 0.08 }}
+          className="font-serif-luxury text-4xl sm:text-6xl lg:text-[64px] text-[#F5F1E9] font-normal leading-[1.08] mb-5"
         >
-          {homeCms.finalCtaHeading || 'Your Varanasi Stay Starts Here.'}
+          {homeCms.finalCtaHeading || 'Your Story of Comfort Begins in Varanasi.'}
         </motion.h2>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="text-base sm:text-xl text-[#cbc6bc] font-light max-w-xl mx-auto mb-10 tracking-wide"
+          transition={{ delay: 0.14 }}
+          className="text-base sm:text-lg text-[#D9D1C5]/80 font-light max-w-xl mx-auto mb-10 leading-relaxed"
         >
-          {homeCms.finalCtaSubtitle || 'D C Grand — Comfortable hospitality in Bhelupur, Varanasi.'}
+          {homeCms.finalCtaSubtitle ||
+            'Reserve directly with our front desk for personalized assistance, verified rates, and warm Banarasi hospitality.'}
         </motion.p>
 
-        {/* Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
         >
           <button
+            type="button"
             onClick={() => openBookingModal()}
-            className="w-full sm:w-auto px-10 py-4 rounded-full bg-gradient-to-r from-[#c5a880] via-[#dfcaaa] to-[#c5a880] text-[#0c0d10] font-bold text-xs uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(197,168,128,0.4)] hover:shadow-[0_0_40px_rgba(197,168,128,0.6)] hover:scale-105 transition-all flex items-center justify-center gap-2"
             id="final-cta-request-booking-btn"
+            className="px-9 py-4 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-3 cursor-pointer"
           >
-            <Calendar className="w-4 h-4" />
-            <span>{homeCms.finalCtaBookingBtnText || 'Request Booking'}</span>
+            <span>{homeCms.finalCtaBookingBtnText || 'Book Your Stay'}</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
 
-          <button
-            onClick={() => scrollToSection('contact')}
-            className="w-full sm:w-auto px-10 py-4 rounded-full border border-[#c5a880]/60 text-[#f3e5d0] hover:bg-[#151720] text-xs font-semibold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2"
+          <a
+            href={`tel:${contact.phone}`}
             id="final-cta-contact-btn"
+            className="px-9 py-4 border border-[#D9D1C5]/30 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-medium uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2.5"
           >
-            <Phone className="w-4 h-4 text-[#c5a880]" />
-            <span>{homeCms.finalCtaContactBtnText || 'Contact Front Desk'}</span>
-          </button>
+            <Phone className="w-3.5 h-3.5 text-[#B69A69]" />
+            <span>Call {contact.phone}</span>
+          </a>
         </motion.div>
       </div>
     </section>
