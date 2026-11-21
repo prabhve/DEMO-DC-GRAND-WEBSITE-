@@ -32,7 +32,14 @@ export const VaranasiInteractiveMap: React.FC = () => {
   const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (prefersReducedMotion || !containerRef.current || mapViewMode !== '3D_HERITAGE') return;
+    if (
+      prefersReducedMotion ||
+      !containerRef.current ||
+      mapViewMode !== '3D_HERITAGE' ||
+      (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches)
+    ) {
+      return;
+    }
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -74,9 +81,9 @@ export const VaranasiInteractiveMap: React.FC = () => {
   return (
     <div className="w-full">
       {/* Map Control Toolbar: Clean Unboxed Category Tabs & View Mode Toggle */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-8 border-b border-[#D9D1C5]/15">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-6 sm:mb-8 border-b border-[#D9D1C5]/15">
         {/* Category Filters */}
-        <div className="flex items-center gap-6 overflow-x-auto pb-1 md:pb-0">
+        <div className="flex items-center gap-5 sm:gap-6 overflow-x-auto no-scrollbar pb-1 md:pb-0">
           {[
             { id: 'ALL', label: 'All Landmarks' },
             { id: 'TEMPLE', label: 'Sacred Temples', icon: Flame },
@@ -91,7 +98,7 @@ export const VaranasiInteractiveMap: React.FC = () => {
                 key={cat.id}
                 type="button"
                 onClick={() => setCategoryFilter(cat.id as typeof categoryFilter)}
-                className={`relative py-2 text-xs uppercase tracking-[0.18em] whitespace-nowrap flex items-center gap-2 transition-colors cursor-pointer ${
+                className={`relative min-h-[44px] py-2 text-xs uppercase tracking-[0.18em] whitespace-nowrap flex items-center gap-2 transition-colors cursor-pointer ${
                   isSelected
                     ? 'text-[#F5F1E9] font-semibold'
                     : 'text-[#D9D1C5]/60 hover:text-[#F5F1E9]'
@@ -111,11 +118,11 @@ export const VaranasiInteractiveMap: React.FC = () => {
         </div>
 
         {/* View Mode Toggle: Heritage Cartography vs Live Google Map */}
-        <div className="flex items-center border border-[#D9D1C5]/20 bg-[#161412] shrink-0 self-start md:self-auto">
+        <div className="grid grid-cols-2 md:flex items-center border border-[#D9D1C5]/20 bg-[#161412] shrink-0 w-full md:w-auto">
           <button
             type="button"
             onClick={() => setMapViewMode('3D_HERITAGE')}
-            className={`px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition-colors flex items-center gap-1.5 cursor-pointer ${
+            className={`min-h-[44px] px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-1.5 cursor-pointer ${
               mapViewMode === '3D_HERITAGE'
                 ? 'bg-[#B69A69] text-[#201D19] font-semibold'
                 : 'text-[#D9D1C5]/75 hover:text-[#F5F1E9]'
@@ -127,7 +134,7 @@ export const VaranasiInteractiveMap: React.FC = () => {
           <button
             type="button"
             onClick={() => setMapViewMode('GOOGLE_EMBED')}
-            className={`px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition-colors flex items-center gap-1.5 cursor-pointer ${
+            className={`min-h-[44px] px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-1.5 cursor-pointer ${
               mapViewMode === 'GOOGLE_EMBED'
                 ? 'bg-[#B69A69] text-[#201D19] font-semibold'
                 : 'text-[#D9D1C5]/75 hover:text-[#F5F1E9]'
@@ -142,13 +149,13 @@ export const VaranasiInteractiveMap: React.FC = () => {
       {/* Main 12-Column Split: Interactive Cartography (Left 7) & Selected Landmark Ledger (Right 5) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 bg-[#161412] border border-[#D9D1C5]/15">
         {/* Left 7 Columns: Interactive Cartography Canvas */}
-        <div className="lg:col-span-7 relative min-h-[460px] sm:min-h-[560px] overflow-hidden bg-[#141210]">
+        <div className="lg:col-span-7 relative min-h-[380px] sm:min-h-[540px] overflow-hidden bg-[#141210]">
           {mapViewMode === '3D_HERITAGE' ? (
             <div
               ref={containerRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full h-full min-h-[460px] sm:min-h-[560px] overflow-hidden select-none bg-[#141210]"
+              className="relative w-full h-full min-h-[380px] sm:min-h-[540px] overflow-hidden select-none bg-[#141210]"
               style={{ perspective: '1200px' }}
             >
               <motion.div

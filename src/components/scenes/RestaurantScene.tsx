@@ -26,20 +26,20 @@ export const RestaurantScene: React.FC = () => {
   return (
     <section
       id="restaurant"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Section Editorial Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end mb-10 sm:mb-16">
           <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 mb-4"
+              className="flex items-center gap-3 mb-3.5 sm:mb-4"
             >
               <span className="w-8 h-[1px] bg-[#B69A69]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#B69A69] font-medium">
                 Gastronomy · In-House Multi-Cuisine Dining
               </span>
             </motion.div>
@@ -49,7 +49,7 @@ export const RestaurantScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
-              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[58px] text-[#F5F1E9] font-normal leading-[1.08]"
+              className="font-serif-luxury heading-section-fluid text-[#F5F1E9] font-normal"
             >
               {restaurant.name} — Culinary Craft in Bhelupur.
             </motion.h2>
@@ -72,7 +72,7 @@ export const RestaurantScene: React.FC = () => {
         </div>
 
         {/* Main 12-Column Editorial Spread */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-start">
           {/* Left 7 Columns: Large Photography & Angle Switcher */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -91,11 +91,11 @@ export const RestaurantScene: React.FC = () => {
                   const target = e.currentTarget;
                   if (target.src !== FALLBACK_RESTAURANT_IMG) target.src = FALLBACK_RESTAURANT_IMG;
                 }}
-                className="w-full h-[380px] sm:h-[480px] object-cover transition-transform duration-1000 hover:scale-[1.03]"
+                className="w-full h-[270px] min-[400px]:h-[330px] sm:h-[480px] object-cover transition-transform duration-1000 hover:scale-[1.03]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#161412]/90 via-transparent to-transparent" />
 
-              <div className="absolute bottom-5 left-5 right-5 flex flex-wrap items-end justify-between gap-4">
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <span className="text-[10px] uppercase tracking-[0.22em] text-[#B69A69] block mb-1">
                     Signature Dining Atmosphere
@@ -109,14 +109,14 @@ export const RestaurantScene: React.FC = () => {
 
             {/* Thumbnail Strip */}
             {validImages.length > 1 && (
-              <div className="grid grid-cols-4 gap-3 mt-3">
+              <div className="grid grid-cols-4 gap-2 sm:gap-3 mt-2.5 sm:mt-3">
                 {validImages.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setActiveImgIdx(idx)}
                     aria-label={`View dining image ${idx + 1}`}
-                    className={`relative h-20 sm:h-24 overflow-hidden border transition-all cursor-pointer ${
+                    className={`relative h-16 sm:h-24 overflow-hidden border transition-all cursor-pointer ${
                       activeImgIdx === idx
                         ? 'border-[#B69A69] opacity-100'
                         : 'border-[#D9D1C5]/15 opacity-55 hover:opacity-90'
@@ -148,13 +148,13 @@ export const RestaurantScene: React.FC = () => {
             className="lg:col-span-5 flex flex-col justify-between"
           >
             <div>
-              <p className="text-base sm:text-lg text-[#D9D1C5] font-light leading-relaxed mb-8">
+              <p className="text-sm sm:text-lg text-[#D9D1C5] font-light leading-relaxed mb-6 sm:mb-8">
                 {restaurant.description}
               </p>
 
               {/* Unboxed Cuisine Specialities Ledger (Zero Pill Clutter) */}
-              <div className="py-6 border-t border-[#D9D1C5]/15">
-                <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-2.5">
+              <div className="py-5 sm:py-6 border-t border-[#D9D1C5]/15">
+                <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-2">
                   Culinary Repertoire
                 </span>
                 <p className="font-serif-luxury text-xl sm:text-2xl text-[#F5F1E9] leading-relaxed">
@@ -163,7 +163,7 @@ export const RestaurantScene: React.FC = () => {
               </div>
 
               {/* Service Timings Ledger */}
-              <div className="py-6 border-t border-[#D9D1C5]/15">
+              <div className="py-5 sm:py-6 border-t border-[#D9D1C5]/15">
                 <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium mb-2">
                   <Clock className="w-3.5 h-3.5" />
                   <span>Daily Service Hours</span>
@@ -174,7 +174,7 @@ export const RestaurantScene: React.FC = () => {
               </div>
 
               {/* Dining & Room Service Appointments */}
-              <div className="py-6 border-y border-[#D9D1C5]/15 mb-8">
+              <div className="py-5 sm:py-6 border-y border-[#D9D1C5]/15 mb-6 sm:mb-8">
                 <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-3.5">
                   Dining & Hospitality Highlights
                 </span>
@@ -195,7 +195,7 @@ export const RestaurantScene: React.FC = () => {
                 type="button"
                 onClick={() => openEnquiryModal('Restaurant Enquiry')}
                 id="restaurant-enquiry-btn"
-                className="flex-1 py-4 px-6 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 min-h-[48px] py-3.5 sm:py-4 px-6 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Reserve a Table / Dining Inquiry</span>
                 <ArrowRight className="w-4 h-4" />
@@ -203,7 +203,7 @@ export const RestaurantScene: React.FC = () => {
 
               <a
                 href={`tel:${contact.phone}`}
-                className="py-4 px-5 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-medium uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2"
+                className="min-h-[48px] py-3.5 sm:py-4 px-5 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-medium uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2"
               >
                 <PhoneCall className="w-3.5 h-3.5 text-[#B69A69]" />
                 <span>Room Service</span>

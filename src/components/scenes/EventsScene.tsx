@@ -28,20 +28,20 @@ export const EventsScene: React.FC = () => {
   return (
     <section
       id="events"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Section Editorial Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end mb-10 sm:mb-14">
           <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 mb-4"
+              className="flex items-center gap-3 mb-3.5 sm:mb-4"
             >
               <span className="w-8 h-[1px] bg-[#B69A69]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#B69A69] font-medium">
                 Banquets & Executive Gatherings
               </span>
             </motion.div>
@@ -51,7 +51,7 @@ export const EventsScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
-              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[56px] text-[#F5F1E9] font-normal leading-[1.08]"
+              className="font-serif-luxury heading-section-fluid text-[#F5F1E9] font-normal"
             >
               Meet, Gather & Celebrate.
             </motion.h2>
@@ -72,7 +72,7 @@ export const EventsScene: React.FC = () => {
 
         {/* Venue Tab Selector */}
         {events.length > 1 && (
-          <div className="border-b border-[#D9D1C5]/15 mb-12 flex items-center gap-8 overflow-x-auto">
+          <div className="border-b border-[#D9D1C5]/15 mb-8 sm:mb-12 flex items-center gap-7 sm:gap-8 overflow-x-auto no-scrollbar">
             {events.map((ev, idx) => {
               const isSelected = activeEvent.id === ev.id;
               return (
@@ -80,7 +80,7 @@ export const EventsScene: React.FC = () => {
                   key={ev.id}
                   type="button"
                   onClick={() => setSelectedEventId(ev.id)}
-                  className={`relative pb-4 text-xs sm:text-sm uppercase tracking-[0.18em] transition-colors cursor-pointer flex items-center gap-2.5 whitespace-nowrap ${
+                  className={`relative min-h-[48px] pb-3.5 pt-2 text-xs sm:text-sm uppercase tracking-[0.18em] transition-colors cursor-pointer flex items-center gap-2.5 whitespace-nowrap ${
                     isSelected
                       ? 'text-[#F5F1E9] font-semibold'
                       : 'text-[#D9D1C5]/60 hover:text-[#F5F1E9]'
@@ -111,7 +111,7 @@ export const EventsScene: React.FC = () => {
           className="grid grid-cols-1 lg:grid-cols-12 bg-[#161412] border border-[#D9D1C5]/15"
         >
           {/* Left 6 Columns: Venue Photography */}
-          <div className="lg:col-span-6 relative min-h-[340px] sm:min-h-[460px] overflow-hidden bg-[#12100E]">
+          <div className="lg:col-span-6 relative min-h-[260px] sm:min-h-[460px] overflow-hidden bg-[#12100E]">
             <img
               src={eventImageSrc}
               alt={activeEvent.name}
@@ -124,29 +124,29 @@ export const EventsScene: React.FC = () => {
               className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#161412] via-transparent to-transparent" />
-            <div className="absolute bottom-6 left-6 right-6">
+            <div className="absolute bottom-5 left-5 right-5 sm:bottom-6 sm:left-6 sm:right-6">
               <div className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] mb-1">
                 Capacity · {activeEvent.capacity}
               </div>
-              <h3 className="font-serif-luxury text-3xl text-[#F5F1E9] font-normal">
+              <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#F5F1E9] font-normal">
                 {activeEvent.name}
               </h3>
             </div>
           </div>
 
           {/* Right 6 Columns: Editorial Specifications */}
-          <div className="lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-[#D9D1C5]/15">
+          <div className="lg:col-span-6 p-5 sm:p-10 lg:p-12 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-[#D9D1C5]/15">
             <div>
               <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-3">
                 Venue Profile
               </span>
-              <p className="text-sm sm:text-base text-[#D9D1C5]/85 font-light leading-relaxed mb-8">
+              <p className="text-sm sm:text-base text-[#D9D1C5]/85 font-light leading-relaxed mb-6 sm:mb-8">
                 {activeEvent.description}
               </p>
 
               {/* Capacity & Availability Ledger */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 border-y border-[#D9D1C5]/15 divide-y sm:divide-y-0 sm:divide-x divide-[#D9D1C5]/15 mb-8">
-                <div className="py-4 sm:pr-4 flex items-start gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 border-y border-[#D9D1C5]/15 divide-y sm:divide-y-0 sm:divide-x divide-[#D9D1C5]/15 mb-6 sm:mb-8">
+                <div className="py-3.5 sm:py-4 sm:pr-4 flex items-start gap-3">
                   <Users className="w-4 h-4 text-[#B69A69] shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/55 block mb-1">
@@ -158,7 +158,7 @@ export const EventsScene: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="py-4 sm:pl-4 flex items-start gap-3">
+                <div className="py-3.5 sm:py-4 sm:pl-4 flex items-start gap-3">
                   <Clock className="w-4 h-4 text-[#B69A69] shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[10px] uppercase tracking-[0.2em] text-[#D9D1C5]/55 block mb-1">
@@ -182,7 +182,7 @@ export const EventsScene: React.FC = () => {
               </div>
 
               {/* Included Technical & Banquet Facilities */}
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8">
                 <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-3">
                   Included Event Support
                 </span>
@@ -197,12 +197,12 @@ export const EventsScene: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-6 border-t border-[#D9D1C5]/15">
+            <div className="pt-5 sm:pt-6 border-t border-[#D9D1C5]/15">
               <button
                 type="button"
                 onClick={() => openEnquiryModal('Meeting / Event Enquiry')}
                 id="events-enquire-btn"
-                className="w-full sm:w-auto py-4 px-8 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2.5 cursor-pointer"
+                className="w-full sm:w-auto min-h-[48px] py-3.5 sm:py-4 px-8 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2.5 cursor-pointer"
               >
                 <span>Request Banquet / Event Proposal</span>
                 <ArrowRight className="w-4 h-4" />

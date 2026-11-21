@@ -44,20 +44,20 @@ export const GuestReviewsScene: React.FC = () => {
   return (
     <section
       id="reviews"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Top Editorial Header & Live Google Listing Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mb-16 sm:mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-end mb-12 sm:mb-20">
           <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 mb-4"
+              className="flex items-center gap-3 mb-3.5 sm:mb-4"
             >
               <span className="w-8 h-[1px] bg-[#536E68]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#536E68] font-semibold">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#536E68] font-semibold">
                 Social Proof & Verified Guest Impressions
               </span>
             </motion.div>
@@ -67,7 +67,7 @@ export const GuestReviewsScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
-              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[58px] text-[#201D19] font-normal leading-[1.08]"
+              className="font-serif-luxury heading-section-fluid text-[#201D19] font-normal"
             >
               Trusted by Pilgrims, Families & Discerning Travelers.
             </motion.h2>
@@ -79,7 +79,7 @@ export const GuestReviewsScene: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.14 }}
-            className="lg:col-span-5 bg-[#201D19] text-[#F5F1E9] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
+            className="lg:col-span-5 bg-[#201D19] text-[#F5F1E9] p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-5 sm:gap-6"
           >
             <div>
               <div className="flex items-center gap-1.5 text-[#B69A69] mb-2">
@@ -103,7 +103,7 @@ export const GuestReviewsScene: React.FC = () => {
               href={googleReviewsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-3.5 px-5 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.16em] whitespace-nowrap transition-colors flex items-center justify-center gap-2 shrink-0"
+              className="min-h-[46px] py-3.5 px-5 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] text-xs font-semibold uppercase tracking-[0.16em] whitespace-nowrap transition-colors flex items-center justify-center gap-2 shrink-0"
             >
               <span>Google Reviews</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -112,7 +112,7 @@ export const GuestReviewsScene: React.FC = () => {
         </div>
 
         {/* 3-Column Editorial Feedback Ledger */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 border-t border-l border-[#201D19]/15 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 border-t border-l border-[#201D19]/15 mb-10 sm:mb-12">
           {VERIFIED_GUEST_THEMES.map((item, idx) => (
             <motion.article
               key={item.id}
@@ -120,26 +120,26 @@ export const GuestReviewsScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="p-8 sm:p-10 border-r border-b border-[#201D19]/15 bg-[#F5F1E9] hover:bg-[#ECE6DA] transition-colors flex flex-col justify-between"
+              className="p-6 sm:p-10 border-r border-b border-[#201D19]/15 bg-[#F5F1E9] hover:bg-[#ECE6DA] transition-colors flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[#536E68] font-semibold mb-6">
+                <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[#536E68] font-semibold mb-5 sm:mb-6">
                   <span>{item.category}</span>
                   <span className="font-mono tabular-nums">{item.rating}</span>
                 </div>
 
-                <h3 className="font-serif-luxury text-2xl sm:text-3xl text-[#201D19] font-normal leading-snug mb-4">
+                <h3 className="font-serif-luxury text-xl sm:text-3xl text-[#201D19] font-normal leading-snug mb-3.5 sm:mb-4">
                   “{item.title}”
                 </h3>
 
-                <p className="text-sm sm:text-base text-[#201D19]/75 leading-relaxed mb-8">
+                <p className="text-sm sm:text-base text-[#201D19]/75 leading-relaxed mb-6 sm:mb-8">
                   {item.summary}
                 </p>
               </div>
 
-              <div className="pt-5 border-t border-[#201D19]/10 flex items-center justify-between text-xs text-[#536E68] font-medium">
+              <div className="pt-4 sm:pt-5 border-t border-[#201D19]/10 flex items-center justify-between text-xs text-[#536E68] font-medium">
                 <span className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#536E68]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#536E68] shrink-0" />
                   <span>{item.verifiedHighlight}</span>
                 </span>
               </div>
@@ -158,7 +158,7 @@ export const GuestReviewsScene: React.FC = () => {
               href={googleReviewsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-[#201D19] hover:text-[#536E68] pb-1 border-b border-[#201D19] hover:border-[#536E68] transition-colors"
+              className="min-h-[44px] inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-[#201D19] hover:text-[#536E68] pb-1 border-b border-[#201D19] hover:border-[#536E68] transition-colors"
             >
               <span>View All Reviews on Google</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -169,7 +169,7 @@ export const GuestReviewsScene: React.FC = () => {
                 href={contact.tripAdvisorUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-medium text-[#201D19]/75 hover:text-[#201D19] pb-1 border-b border-transparent hover:border-[#201D19] transition-colors"
+                className="min-h-[44px] inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-medium text-[#201D19]/75 hover:text-[#201D19] pb-1 border-b border-transparent hover:border-[#201D19] transition-colors"
               >
                 <span>TripAdvisor Listing</span>
                 <ArrowUpRight className="w-4 h-4" />

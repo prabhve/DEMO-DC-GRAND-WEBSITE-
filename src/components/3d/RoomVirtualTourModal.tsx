@@ -498,6 +498,24 @@ export const RoomVirtualTourModal: React.FC = () => {
     }
   };
 
+  // Close on Escape key & lock background scroll when open
+  useEffect(() => {
+    if (!isVirtualTourOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeVirtualTour();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isVirtualTourOpen, closeVirtualTour]);
+
   if (!isVirtualTourOpen) return null;
 
   const currentRoom = rooms.find((r) => r.id === selectedRoomId) || rooms[0];
@@ -566,7 +584,7 @@ export const RoomVirtualTourModal: React.FC = () => {
               initial={{ opacity: 0, y: 30, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
-              className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20 w-full max-w-sm px-4 pointer-events-auto"
+              className="absolute bottom-36 sm:bottom-28 left-1/2 -translate-x-1/2 z-20 w-full max-w-sm px-4 pointer-events-auto"
             >
               <div className="p-4 sm:p-5 rounded-2xl bg-[#0e1017]/95 backdrop-blur-xl border border-[#c5a880]/50 shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-left">
                 <div className="flex items-center justify-between mb-2">
@@ -575,7 +593,7 @@ export const RoomVirtualTourModal: React.FC = () => {
                   </span>
                   <button
                     onClick={() => setSelectedHotspot(null)}
-                    className="w-6 h-6 rounded-full bg-[#1e212b] text-[#a09a8e] hover:text-[#f3e5d0] flex items-center justify-center"
+                    className="w-7 h-7 rounded-full bg-[#1e212b] text-[#a09a8e] hover:text-[#f3e5d0] flex items-center justify-center"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -596,30 +614,30 @@ export const RoomVirtualTourModal: React.FC = () => {
         </AnimatePresence>
 
         {/* Top Header HUD */}
-        <div className="absolute top-0 inset-x-0 p-4 sm:p-6 flex items-center justify-between z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
-          <div className="pointer-events-auto flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#0c0d10]/90 border border-[#c5a880]/40 flex items-center justify-center shadow-lg">
-              <Compass className="w-5 h-5 text-[#c5a880] animate-spin-slow" />
+        <div className="absolute top-0 inset-x-0 p-3 sm:p-6 flex items-center justify-between gap-2 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
+          <div className="pointer-events-auto flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0c0d10]/90 border border-[#c5a880]/40 flex items-center justify-center shadow-lg shrink-0">
+              <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-[#c5a880] animate-spin-slow" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#c5a880] font-bold">
-                  360° 3D Virtual Tour
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#c5a880] font-bold truncate">
+                  360° 3D Tour
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               </div>
-              <h2 className="font-serif-luxury text-xl sm:text-2xl text-[#f3e5d0] font-normal leading-tight">
+              <h2 className="font-serif-luxury text-base sm:text-2xl text-[#f3e5d0] font-normal leading-tight truncate">
                 {tourData.roomName}
               </h2>
             </div>
           </div>
 
-          <div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
+          <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Level of Detail (LOD) & Real-time Performance Monitor */}
             <div className="relative">
               <button
                 onClick={() => setShowLODDropdown((prev) => !prev)}
-                className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all shadow-md ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1 sm:gap-1.5 transition-all shadow-md ${
                   activeTier === 'low'
                     ? 'bg-amber-900/40 border-amber-500/60 text-amber-300 hover:bg-amber-900/60'
                     : activeTier === 'medium'

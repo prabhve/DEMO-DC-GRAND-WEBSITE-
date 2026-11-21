@@ -78,19 +78,19 @@ export const VaranasiSeoFaqSection: React.FC = () => {
   return (
     <section
       id="varanasi-guide"
-      className="relative py-24 sm:py-28 px-4 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] border-b border-[#D9D1C5]/15 overflow-hidden"
+      className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] border-b border-[#D9D1C5]/15 overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Editorial Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end mb-10 sm:mb-14">
           <div className="lg:col-span-7">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-3.5 sm:mb-4">
               <span className="w-8 h-[1px] bg-[#B69A69]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#B69A69] font-medium">
                 Varanasi Travel & Stay Guide
               </span>
             </div>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl text-[#F5F1E9] font-normal leading-[1.08]">
+            <h2 className="font-serif-luxury heading-section-fluid text-[#F5F1E9] font-normal">
               Frequently Asked Questions for Your Kashi Stay.
             </h2>
           </div>
@@ -103,11 +103,11 @@ export const VaranasiSeoFaqSection: React.FC = () => {
         </div>
 
         {/* Verified Distance Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 border-t border-l border-[#D9D1C5]/15 mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 border-t border-l border-[#D9D1C5]/15 mb-12 sm:mb-16">
           {LOCAL_PROXIMITY_LEDGER.map((item, idx) => (
             <div
               key={idx}
-              className="p-4 border-r border-b border-[#D9D1C5]/15 bg-[#201D19] flex flex-col justify-between"
+              className="p-3.5 sm:p-4 border-r border-b border-[#D9D1C5]/15 bg-[#201D19] flex flex-col justify-between"
             >
               <span className="text-[11px] text-[#D9D1C5]/70 block mb-2 leading-snug">
                 {item.name}
@@ -125,10 +125,10 @@ export const VaranasiSeoFaqSection: React.FC = () => {
         </div>
 
         {/* 12-Column Split: Bhelupur Advantage Ledger & Interactive Accordion */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
           {/* Left 4 Columns */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="p-7 bg-[#201D19] border border-[#D9D1C5]/15">
+            <div className="p-6 sm:p-7 bg-[#201D19] border border-[#D9D1C5]/15">
               <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-2">
                 The Bhelupur Advantage
               </span>
@@ -161,7 +161,7 @@ export const VaranasiSeoFaqSection: React.FC = () => {
               <div className="pt-5 border-t border-[#D9D1C5]/15 flex flex-col sm:flex-row gap-3">
                 <a
                   href={`tel:${contact.phone}`}
-                  className="flex-1 py-3 px-4 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 min-h-[46px] py-3 px-4 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>Call Desk</span>
@@ -172,7 +172,7 @@ export const VaranasiSeoFaqSection: React.FC = () => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-3 px-4 border border-[#536E68] bg-[#536E68]/20 hover:bg-[#536E68]/40 text-[#F5F1E9] font-semibold text-xs uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-1.5"
+                  className="min-h-[46px] py-3 px-4 border border-[#536E68] bg-[#536E68]/20 hover:bg-[#536E68]/40 text-[#F5F1E9] font-semibold text-xs uppercase tracking-[0.16em] text-center transition-colors flex items-center justify-center gap-1.5"
                 >
                   <MessageCircle className="w-3.5 h-3.5 text-[#B69A69]" />
                   <span>WhatsApp</span>

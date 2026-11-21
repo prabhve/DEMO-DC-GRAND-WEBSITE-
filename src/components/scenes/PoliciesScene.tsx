@@ -43,15 +43,15 @@ export const PoliciesScene: React.FC = () => {
   return (
     <section
       id="policies"
-      className="relative py-20 sm:py-24 px-4 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] border-b border-[#D9D1C5]/15"
+      className="relative py-16 sm:py-24 px-5 sm:px-8 lg:px-12 bg-[#161412] text-[#F5F1E9] border-b border-[#D9D1C5]/15"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start">
           {/* Left 4 Columns: Header */}
           <div className="lg:col-span-4">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-3.5 sm:mb-4">
               <span className="w-8 h-[1px] bg-[#B69A69]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#B69A69] font-medium">
                 Transparency & Guidelines
               </span>
             </div>
@@ -65,7 +65,7 @@ export const PoliciesScene: React.FC = () => {
 
           {/* Right 8 Columns: Tabbed Ledger */}
           <div className="lg:col-span-8">
-            <div className="border-b border-[#D9D1C5]/15 mb-8 overflow-x-auto">
+            <div className="border-b border-[#D9D1C5]/15 mb-6 sm:mb-8 overflow-x-auto no-scrollbar">
               <div className="flex items-center gap-6 sm:gap-8 min-w-max">
                 {policySections.map((sec) => {
                   const isSelected = activeTab === sec.id;
@@ -74,7 +74,7 @@ export const PoliciesScene: React.FC = () => {
                       key={sec.id}
                       type="button"
                       onClick={() => setActiveTab(sec.id)}
-                      className={`relative pb-3.5 text-xs uppercase tracking-[0.18em] transition-colors cursor-pointer ${
+                      className={`relative min-h-[48px] pb-3.5 pt-2 text-xs uppercase tracking-[0.18em] transition-colors cursor-pointer ${
                         isSelected
                           ? 'text-[#F5F1E9] font-semibold'
                           : 'text-[#D9D1C5]/60 hover:text-[#F5F1E9]'
@@ -93,7 +93,7 @@ export const PoliciesScene: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-6 sm:p-8 bg-[#201D19] border border-[#D9D1C5]/15">
+            <div className="p-5 sm:p-8 bg-[#201D19] border border-[#D9D1C5]/15">
               <AnimatePresence mode="wait">
                 {policySections
                   .filter((s) => s.id === activeTab)

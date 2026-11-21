@@ -10,20 +10,20 @@ export const LocationScene: React.FC = () => {
   return (
     <section
       id="location"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#201D19] text-[#F5F1E9] overflow-hidden border-b border-[#D9D1C5]/15"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end mb-10 sm:mb-14">
           <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 mb-4"
+              className="flex items-center gap-3 mb-3.5 sm:mb-4"
             >
               <span className="w-8 h-[1px] bg-[#B69A69]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#B69A69] font-medium">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#B69A69] font-medium">
                 Sacred Geography & Interactive Map
               </span>
             </motion.div>
@@ -33,7 +33,7 @@ export const LocationScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
-              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[56px] text-[#F5F1E9] font-normal leading-[1.08]"
+              className="font-serif-luxury heading-section-fluid text-[#F5F1E9] font-normal"
             >
               Connected to Every Corner of Kashi.
             </motion.h2>
@@ -58,7 +58,7 @@ export const LocationScene: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12"
+          className="mb-10 sm:mb-12"
         >
           <VaranasiInteractiveMap />
         </motion.div>
@@ -68,7 +68,7 @@ export const LocationScene: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="p-6 sm:p-8 bg-[#161412] border border-[#D9D1C5]/15 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
+          className="p-5 sm:p-8 bg-[#161412] border border-[#D9D1C5]/15 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
         >
           <div>
             <span className="text-[11px] uppercase tracking-[0.22em] text-[#B69A69] font-medium block mb-1.5">
@@ -85,7 +85,7 @@ export const LocationScene: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0 w-full lg:w-auto">
             <a
               href={`tel:${contact.phone}`}
-              className="px-6 py-3.5 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-medium uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2"
+              className="min-h-[48px] px-6 py-3.5 border border-[#D9D1C5]/25 hover:border-[#B69A69] text-[#F5F1E9] hover:text-[#B69A69] text-xs font-medium uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2"
             >
               <Phone className="w-3.5 h-3.5 text-[#B69A69]" />
               <span>Call Concierge</span>
@@ -96,7 +96,7 @@ export const LocationScene: React.FC = () => {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3.5 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2"
+              className="min-h-[48px] px-6 py-3.5 bg-[#B69A69] hover:bg-[#c7ab7a] text-[#201D19] font-semibold text-xs uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2"
             >
               <MessageSquare className="w-3.5 h-3.5" />
               <span>WhatsApp Travel Desk</span>

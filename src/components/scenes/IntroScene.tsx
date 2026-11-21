@@ -23,11 +23,11 @@ export const IntroScene: React.FC = () => {
   return (
     <section
       id="intro"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
     >
       <div className="max-w-[1440px] mx-auto">
         {/* Editorial Header Row: Asymmetric Magazine Lead */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-16 sm:mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-end mb-12 sm:mb-20 lg:mb-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -35,14 +35,14 @@ export const IntroScene: React.FC = () => {
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-8"
           >
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-4 sm:mb-5">
               <span className="w-8 h-[1px] bg-[#536E68]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#536E68] font-semibold">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#536E68] font-semibold">
                 {homeCms.introBadge || 'The Sanctuary · Bhelupur'}
               </span>
             </div>
 
-            <h2 className="font-serif-luxury text-4xl sm:text-5xl lg:text-[60px] text-[#201D19] font-normal leading-[1.08] tracking-[-0.015em]">
+            <h2 className="font-serif-luxury heading-section-fluid text-[#201D19] font-normal">
               {homeCms.introHeading ||
                 'Thoughtful Architecture Meets Timeless Banarasi Warmth.'}
             </h2>
@@ -55,7 +55,7 @@ export const IntroScene: React.FC = () => {
             transition={{ duration: 0.75, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-4 lg:pb-2"
           >
-            <p className="text-xs uppercase tracking-[0.2em] text-[#201D19]/65 leading-relaxed">
+            <p className="text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#201D19]/65 leading-relaxed">
               22/24P, Kasmiganj Mohalla · Bhelupur · Varanasi
               <span className="block mt-1 text-[#536E68] font-medium">
                 2.0 km to Sankat Mochan · 2.1 km to Assi Ghat
@@ -65,7 +65,7 @@ export const IntroScene: React.FC = () => {
         </div>
 
         {/* Asymmetrical Editorial Image & Narrative Spread */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-start">
           {/* Left 7 Columns: Offset Architectural Composition */}
           <div className="lg:col-span-7 relative sm:pb-12">
             <motion.div
@@ -84,7 +84,7 @@ export const IntroScene: React.FC = () => {
                   const target = e.currentTarget;
                   if (target.src !== FALLBACK_INTRO_IMG) target.src = FALLBACK_INTRO_IMG;
                 }}
-                className="w-full h-[380px] sm:h-[520px] object-cover transition-transform duration-1000 hover:scale-[1.03]"
+                className="w-full h-[270px] min-[400px]:h-[320px] sm:h-[520px] object-cover transition-transform duration-1000 hover:scale-[1.03]"
               />
             </motion.div>
 
@@ -94,9 +94,9 @@ export const IntroScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-6 sm:mt-0 sm:absolute sm:-bottom-10 sm:right-0 sm:w-[52%] bg-[#201D19] text-[#F5F1E9] p-5 sm:p-6 shadow-[0_24px_50px_rgba(32,29,25,0.22)]"
+              className="mt-4 sm:mt-0 sm:absolute sm:-bottom-10 sm:right-0 sm:w-[52%] bg-[#201D19] text-[#F5F1E9] p-4 sm:p-6 shadow-[0_24px_50px_rgba(32,29,25,0.22)]"
             >
-              <div className="overflow-hidden mb-4 h-40 sm:h-44 bg-[#161412]">
+              <div className="overflow-hidden mb-3.5 sm:mb-4 h-36 sm:h-44 bg-[#161412]">
                 <img
                   src={secondaryImage}
                   alt="Hotel D.C. Grand Evening Facade in Varanasi"
@@ -128,17 +128,17 @@ export const IntroScene: React.FC = () => {
             className="lg:col-span-5 flex flex-col justify-between sm:pt-4 lg:pt-8"
           >
             <div>
-              <p className="font-serif-luxury text-2xl sm:text-3xl text-[#201D19] leading-[1.35] mb-6">
+              <p className="font-serif-luxury text-xl sm:text-3xl text-[#201D19] leading-[1.35] mb-5 sm:mb-6">
                 “A serene architectural haven where the spiritual rhythm of Kashi meets effortless contemporary comfort.”
               </p>
 
-              <p className="text-base text-[#201D19]/80 leading-relaxed font-normal mb-10 max-w-[60ch]">
+              <p className="text-sm sm:text-base text-[#201D19]/80 leading-relaxed font-normal mb-8 sm:mb-10 max-w-[60ch]">
                 {homeCms.introText}
               </p>
 
               {/* Editorial Numbered Ledger (Zero Generic Cards) */}
               <div className="border-t border-[#201D19]/15 divide-y divide-[#201D19]/15">
-                <div className="py-6 flex items-start gap-5">
+                <div className="py-5 sm:py-6 flex items-start gap-4 sm:gap-5">
                   <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#536E68] font-semibold pt-1 tabular-nums">
                     01
                   </span>
@@ -153,7 +153,7 @@ export const IntroScene: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="py-6 flex items-start gap-5">
+                <div className="py-5 sm:py-6 flex items-start gap-4 sm:gap-5">
                   <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#536E68] font-semibold pt-1 tabular-nums">
                     02
                   </span>
@@ -179,7 +179,7 @@ export const IntroScene: React.FC = () => {
               <button
                 type="button"
                 onClick={() => openBookingModal()}
-                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-[#201D19] hover:text-[#536E68] transition-colors pb-1 border-b border-[#201D19] hover:border-[#536E68] cursor-pointer"
+                className="min-h-[44px] inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-[#201D19] hover:text-[#536E68] transition-colors pb-1 border-b border-[#201D19] hover:border-[#536E68] cursor-pointer"
               >
                 <span>Reserve Your Stay</span>
                 <ArrowUpRight className="w-4 h-4" />

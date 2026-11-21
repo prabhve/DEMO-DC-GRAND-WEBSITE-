@@ -13,9 +13,9 @@ export const Footer: React.FC = () => {
   const cleanWhatsApp = contact.whatsapp.replace(/[^0-9]/g, '');
 
   return (
-    <footer className="bg-[#161412] text-[#D9D1C5] pt-20 pb-24 md:pb-14 px-4 sm:px-8 lg:px-12 border-t border-[#D9D1C5]/15">
+    <footer className="bg-[#161412] text-[#D9D1C5] pt-16 sm:pt-20 pb-24 md:pb-14 px-5 sm:px-8 lg:px-12 border-t border-[#D9D1C5]/15">
       <div className="max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-[#D9D1C5]/15">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 sm:gap-12 pb-12 sm:pb-16 border-b border-[#D9D1C5]/15">
           {/* Column 1: Brand Identity */}
           <div className="lg:col-span-4">
             <a
@@ -40,7 +40,7 @@ export const Footer: React.FC = () => {
               <a
                 href={`tel:${contact.phone}`}
                 aria-label="Call Front Desk"
-                className="w-10 h-10 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
+                className="w-11 h-11 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
               >
                 <Phone className="w-4 h-4" />
               </a>
@@ -49,14 +49,14 @@ export const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp Concierge"
-                className="w-10 h-10 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
+                className="w-11 h-11 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
               >
                 <MessageCircle className="w-4 h-4" />
               </a>
               <a
                 href={`mailto:${contact.email}`}
                 aria-label="Email Reservations"
-                className="w-10 h-10 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
+                className="w-11 h-11 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
               >
                 <Mail className="w-4 h-4" />
               </a>
@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Google Maps Directions"
-                className="w-10 h-10 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
+                className="w-11 h-11 border border-[#D9D1C5]/20 hover:border-[#B69A69] text-[#B69A69] flex items-center justify-center transition-colors"
               >
                 <MapPin className="w-4 h-4" />
               </a>
@@ -228,7 +228,7 @@ export const Footer: React.FC = () => {
               type="button"
               onClick={() => setIsAdminMode(!isAdminMode)}
               id="footer-admin-btn"
-              className={`inline-flex items-center gap-2 px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] font-semibold transition-colors border cursor-pointer ${
+              className={`min-h-[44px] inline-flex items-center gap-2 px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] font-semibold transition-colors border cursor-pointer ${
                 isAdminMode
                   ? 'bg-[#B69A69] text-[#201D19] border-[#B69A69]'
                   : 'bg-[#201D19] text-[#B69A69] border-[#D9D1C5]/20 hover:border-[#B69A69]'
@@ -241,14 +241,14 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Copyright & Policies */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-[#D9D1C5]/60 gap-4">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-[#D9D1C5]/60 gap-4 text-center md:text-left">
           <p>© {new Date().getFullYear()} Hotel D.C. Grand, Bhelupur, Varanasi. All rights reserved.</p>
 
-          <div className="flex items-center gap-4 uppercase tracking-[0.14em] text-[11px]">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 uppercase tracking-[0.14em] text-[11px]">
             <button
               type="button"
               onClick={() => scrollTo('policies')}
-              className="hover:text-[#F5F1E9] transition-colors cursor-pointer"
+              className="py-1 hover:text-[#F5F1E9] transition-colors cursor-pointer"
             >
               Privacy Policy
             </button>
@@ -256,7 +256,7 @@ export const Footer: React.FC = () => {
             <button
               type="button"
               onClick={() => scrollTo('policies')}
-              className="hover:text-[#F5F1E9] transition-colors cursor-pointer"
+              className="py-1 hover:text-[#F5F1E9] transition-colors cursor-pointer"
             >
               Cancellation Policy
             </button>
@@ -264,7 +264,7 @@ export const Footer: React.FC = () => {
             <button
               type="button"
               onClick={() => scrollTo('policies')}
-              className="hover:text-[#F5F1E9] transition-colors cursor-pointer"
+              className="py-1 hover:text-[#F5F1E9] transition-colors cursor-pointer"
             >
               Terms of Stay
             </button>

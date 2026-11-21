@@ -84,6 +84,7 @@
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -97,6 +98,39 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #B69A69;
+}
+
+/* Hide scrollbar on horizontal mobile nav/filter strips while keeping scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Responsive fluid typography & spacing system */
+.heading-hero-fluid {
+  font-size: clamp(2rem, 6.2vw + 0.25rem, 4.25rem);
+  line-height: 1.07;
+  letter-spacing: -0.015em;
+}
+
+.heading-section-fluid {
+  font-size: clamp(1.875rem, 4.2vw + 0.35rem, 3.625rem);
+  line-height: 1.09;
+  letter-spacing: -0.012em;
+}
+
+/* Minimum 44x44px touch target helper for mobile hospitality ergonomics */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Safe area padding for modern mobile viewports */
+.pb-safe {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
 }
 
 /* Respect Reduced Motion Preferences */

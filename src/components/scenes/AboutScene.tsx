@@ -57,11 +57,11 @@ export const AboutScene: React.FC = () => {
   return (
     <section
       id="about"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Top Editorial Spread */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-center mb-14 sm:mb-20">
           {/* Left 6 Columns: Narrative */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -70,29 +70,29 @@ export const AboutScene: React.FC = () => {
             transition={{ duration: 0.75 }}
             className="lg:col-span-6"
           >
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3 mb-3.5 sm:mb-4">
               <span className="w-8 h-[1px] bg-[#536E68]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#536E68] font-semibold">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#536E68] font-semibold">
                 {homeCms.aboutBadge || 'Varanasi Destination Storytelling'}
               </span>
             </div>
 
-            <h2 className="font-serif-luxury text-4xl sm:text-5xl lg:text-[60px] text-[#201D19] font-normal leading-[1.08] mb-6">
+            <h2 className="font-serif-luxury heading-section-fluid text-[#201D19] font-normal mb-5 sm:mb-6">
               Experience the Spirit of Varanasi.
             </h2>
 
-            <p className="text-base sm:text-lg text-[#201D19]/85 font-normal leading-relaxed mb-5">
+            <p className="text-sm sm:text-lg text-[#201D19]/85 font-normal leading-relaxed mb-4 sm:mb-5">
               {homeCms.aboutText ||
                 'Varanasi is more than a destination—it is a living tapestry of devotion, dawn chants along the Ganges, and centuries of philosophical heritage.'}
             </p>
 
-            <p className="text-sm sm:text-base text-[#201D19]/75 font-normal leading-relaxed mb-8">
+            <p className="text-sm sm:text-base text-[#201D19]/75 font-normal leading-relaxed mb-6 sm:mb-8">
               {homeCms.aboutSecondaryText ||
                 'While the ancient riverside lanes near the ghats restrict direct vehicular entry, Hotel D.C. Grand is thoughtfully situated in Bhelupur—offering direct cab access to our front door while placing you within 7 to 12 minutes of the city’s most revered ghats and temples.'}
             </p>
 
             {/* Unboxed Verified Proximity Facts */}
-            <div className="py-5 border-y border-[#201D19]/15 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs uppercase tracking-[0.16em] text-[#536E68] font-semibold mb-8">
+            <div className="py-4 sm:py-5 border-y border-[#201D19]/15 flex flex-wrap items-center gap-x-5 sm:gap-x-6 gap-y-2 text-[11px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.16em] text-[#536E68] font-semibold mb-6 sm:mb-8">
               {(homeCms.aboutFeatures && homeCms.aboutFeatures.length > 0
                 ? homeCms.aboutFeatures
                 : [
@@ -103,7 +103,7 @@ export const AboutScene: React.FC = () => {
                   ]
               ).map((feat, idx) => (
                 <span key={idx} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-[#B69A69]" />
+                  <span className="w-1.5 h-1.5 bg-[#B69A69] shrink-0" />
                   <span>{feat}</span>
                 </span>
               ))}
@@ -112,7 +112,7 @@ export const AboutScene: React.FC = () => {
             <button
               type="button"
               onClick={scrollToLocation}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-[#201D19] hover:text-[#536E68] pb-1 border-b border-[#201D19] hover:border-[#536E68] transition-colors cursor-pointer"
+              className="min-h-[44px] inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-semibold text-[#201D19] hover:text-[#536E68] pb-1 border-b border-[#201D19] hover:border-[#536E68] transition-colors cursor-pointer"
             >
               <span>Explore Interactive Pilgrimage Map</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -128,7 +128,7 @@ export const AboutScene: React.FC = () => {
             className="lg:col-span-6"
           >
             <div className="relative bg-[#201D19] p-3 sm:p-4 shadow-[0_24px_60px_rgba(32,29,25,0.18)]">
-              <div className="overflow-hidden h-[380px] sm:h-[460px]">
+              <div className="overflow-hidden h-[270px] min-[400px]:h-[330px] sm:h-[460px]">
                 <img
                   src={destinationImg}
                   alt="Sacred Ghats of Varanasi near Hotel D.C. Grand"
@@ -141,7 +141,7 @@ export const AboutScene: React.FC = () => {
                   className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
                 />
               </div>
-              <div className="pt-4 pb-1 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[#F5F1E9]">
+              <div className="pt-3.5 sm:pt-4 pb-1 px-1.5 sm:px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[#F5F1E9]">
                 <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[#B69A69]">
                   <MapPin className="w-3.5 h-3.5 shrink-0" />
                   <span>Sacred Kashi · From Bhelupur Base</span>
@@ -155,13 +155,13 @@ export const AboutScene: React.FC = () => {
         </div>
 
         {/* Curated Destination Storytelling Ledger: Kashi Vishwanath, Ganga Aarti, Assi Ghat, Sankat Mochan */}
-        <div className="border-t border-[#201D19]/15 pt-14">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div className="border-t border-[#201D19]/15 pt-10 sm:pt-14">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 mb-8 sm:mb-10">
             <div>
               <span className="text-xs uppercase tracking-[0.22em] text-[#536E68] font-semibold block mb-2">
                 Curated Concierge Guide
               </span>
-              <h3 className="font-serif-luxury text-3xl sm:text-4xl text-[#201D19] font-normal">
+              <h3 className="font-serif-luxury text-2xl sm:text-4xl text-[#201D19] font-normal">
                 Sacred Landmarks Moments from Our Doors
               </h3>
             </div>
@@ -178,28 +178,28 @@ export const AboutScene: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.07 }}
-                className="p-7 sm:p-8 border-r border-b border-[#201D19]/15 bg-[#F5F1E9] hover:bg-[#ECE6DA] transition-colors flex flex-col justify-between"
+                className="p-6 sm:p-8 border-r border-b border-[#201D19]/15 bg-[#F5F1E9] hover:bg-[#ECE6DA] transition-colors flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[#536E68] font-semibold mb-5 tabular-nums">
+                  <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-[#536E68] font-semibold mb-4 sm:mb-5 tabular-nums">
                     <span className="font-mono">{dest.number}</span>
                     <span>{dest.distance.split('·')[0]}</span>
                   </div>
 
-                  <h4 className="font-serif-luxury text-2xl text-[#201D19] font-medium mb-2 leading-snug">
+                  <h4 className="font-serif-luxury text-xl sm:text-2xl text-[#201D19] font-medium mb-2 leading-snug">
                     {dest.name}
                   </h4>
 
-                  <div className="text-[11px] uppercase tracking-[0.15em] text-[#536E68] font-medium mb-4 tabular-nums">
+                  <div className="text-[11px] uppercase tracking-[0.15em] text-[#536E68] font-medium mb-3.5 sm:mb-4 tabular-nums">
                     {dest.distance}
                   </div>
 
-                  <p className="text-sm text-[#201D19]/75 leading-relaxed mb-6">
+                  <p className="text-sm text-[#201D19]/75 leading-relaxed mb-5 sm:mb-6">
                     {dest.narrative}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-[#201D19]/10 text-[11px] uppercase tracking-[0.14em] text-[#201D19]/65">
+                <div className="pt-3.5 sm:pt-4 border-t border-[#201D19]/10 text-[11px] uppercase tracking-[0.14em] text-[#201D19]/65">
                   {dest.timings}
                 </div>
               </motion.article>

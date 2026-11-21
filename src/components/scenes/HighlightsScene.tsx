@@ -124,20 +124,20 @@ export const HighlightsScene: React.FC = () => {
   return (
     <section
       id="highlights"
-      className="relative py-24 sm:py-32 px-4 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
+      className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-8 lg:px-12 bg-[#F5F1E9] text-[#201D19] overflow-hidden border-b border-[#201D19]/10"
     >
       <div className="max-w-[1440px] mx-auto relative z-10">
         {/* Editorial Section Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16 sm:mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end mb-12 sm:mb-20">
           <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 mb-4"
+              className="flex items-center gap-3 mb-3.5 sm:mb-4"
             >
               <span className="w-8 h-[1px] bg-[#536E68]" />
-              <span className="text-xs uppercase tracking-[0.24em] text-[#536E68] font-semibold">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#536E68] font-semibold">
                 Facilities & Guest Services
               </span>
             </motion.div>
@@ -147,7 +147,7 @@ export const HighlightsScene: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
-              className="font-serif-luxury text-4xl sm:text-5xl lg:text-[56px] text-[#201D19] font-normal leading-[1.08]"
+              className="font-serif-luxury heading-section-fluid text-[#201D19] font-normal"
             >
               {homeCms.highlightsHeading || 'Modern Conveniences & Banarasi Hospitality.'}
             </motion.h2>
@@ -178,11 +178,11 @@ export const HighlightsScene: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="group p-7 sm:p-8 border-r border-b border-[#201D19]/15 bg-[#F5F1E9] hover:bg-[#ECE6DA] transition-colors duration-300 flex flex-col justify-between"
+                className="group p-6 sm:p-8 border-r border-b border-[#201D19]/15 bg-[#F5F1E9] hover:bg-[#ECE6DA] transition-colors duration-300 flex flex-col justify-between"
               >
                 <div>
                   {/* Unboxed Header: Index & Category */}
-                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-[#536E68] font-medium mb-6">
+                  <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-[#536E68] font-medium mb-5 sm:mb-6">
                     <span className="font-mono tabular-nums">0{index + 1}</span>
                     <span>{item.tag}</span>
                   </div>

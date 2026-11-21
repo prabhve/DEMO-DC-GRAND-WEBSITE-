@@ -52,11 +52,11 @@ const MobileStickyActionBar: React.FC = () => {
   return (
     <div
       aria-label="Mobile Quick Reservation Bar"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 h-13 bg-[#201D19]/95 backdrop-blur-md border-t border-[#D9D1C5]/20 grid grid-cols-3 divide-x divide-[#D9D1C5]/15 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 min-h-[52px] pb-safe bg-[#201D19]/95 backdrop-blur-md border-t border-[#D9D1C5]/20 grid grid-cols-3 divide-x divide-[#D9D1C5]/15 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]"
     >
       <a
         href={`tel:${contact.phone}`}
-        className="flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F5F1E9] font-medium"
+        className="min-h-[48px] flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F5F1E9] font-medium"
       >
         <Phone className="w-3.5 h-3.5 text-[#B69A69]" />
         <span>Call</span>
@@ -68,7 +68,7 @@ const MobileStickyActionBar: React.FC = () => {
         )}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F5F1E9] font-medium"
+        className="min-h-[48px] flex items-center justify-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-[#F5F1E9] font-medium"
       >
         <MessageCircle className="w-3.5 h-3.5 text-[#B69A69]" />
         <span>WhatsApp</span>
@@ -77,7 +77,7 @@ const MobileStickyActionBar: React.FC = () => {
       <button
         type="button"
         onClick={() => openBookingModal()}
-        className="flex items-center justify-center gap-1.5 bg-[#B69A69] text-[#201D19] text-[11px] uppercase tracking-[0.16em] font-semibold cursor-pointer"
+        className="min-h-[48px] flex items-center justify-center gap-1.5 bg-[#B69A69] text-[#201D19] text-[11px] uppercase tracking-[0.16em] font-semibold cursor-pointer"
       >
         <Calendar className="w-3.5 h-3.5" />
         <span>Book Stay</span>
